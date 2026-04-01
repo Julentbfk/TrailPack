@@ -1,4 +1,4 @@
-package com.julen.trailpack.vistas.componentes
+package com.julen.trailpack.vistas.componentes.formulario
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
