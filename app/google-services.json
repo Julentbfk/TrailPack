@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525714658722",
+    "project_id": "trailpack-5fe83",
+    "storage_bucket": "trailpack-5fe83.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525714658722:android:2060ad9de63971d9ed4efb",
+        "android_client_info": {
+          "package_name": "com.julen.trailpack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZkOVF52M6j9vTmbye45B6BAgpIGu5W2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
