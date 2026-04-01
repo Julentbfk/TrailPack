@@ -9,7 +9,7 @@ class AuthRepository {
     private val auth = FirebaseAuth.getInstance()// la autentificacion de fireAuth
     private val firestoreDB = FirebaseFirestore.getInstance()// la base de datos de firestore
 
-    //Funcion para iniciar Sesion
+    //Callback para iniciar Sesion
     fun loginUsuario(email: String, password: String, onResult: (Boolean, String?) -> Unit){
 
         auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { loginTask ->
@@ -46,7 +46,7 @@ class AuthRepository {
 
     }
 
-    //Funcion para registrar usuario
+    //Callback para registrar usuario
     fun registroUsuario(username: String, email: String, password: String, onResult: (Boolean,String?) -> Unit ){
 
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { authTask ->
