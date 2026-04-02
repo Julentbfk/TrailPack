@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.julen.trailpack.routing.AppNavegation
+import com.julen.trailpack.vistas.componentes.marcogeneral.ScaffoldTrailPack
 
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-                AppNavegation()
+                ScaffoldTrailPack()
         }
     }
 }
