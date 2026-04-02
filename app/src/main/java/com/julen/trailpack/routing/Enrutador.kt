@@ -27,4 +27,13 @@ class Enrutador(private val navController: NavController) {
     fun navToPerfilUsuario(){
         navController.navigate("perfilusuario")
     }
+
+    //Nav to ScaffoldTrailPack
+    fun navToScaffoldTrailPack() {
+        navController.navigate("scaffoldtrailpack") {
+            popUpTo("login") {
+                inclusive = true
+            }
+        }
+    }
 }

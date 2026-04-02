@@ -1,5 +1,7 @@
 package com.julen.trailpack.data
 
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.julen.trailpack.modelos.Usuario
@@ -7,44 +9,8 @@ import com.julen.trailpack.modelos.Usuario
 class AuthRepository {
 
     private val auth = FirebaseAuth.getInstance()// la autentificacion de fireAuth
+
     private val firestoreDB = FirebaseFirestore.getInstance()// la base de datos de firestore
-
-    //Callback para iniciar Sesion
-    fun loginUsuario(email: String, password: String, onResult: (Boolean, String?) -> Unit){
-
-        auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { loginTask ->
-            if(loginTask.isSuccessful){
-                val user = auth.currentUser
-
-                //Chequeamos si ha verificado el correo
-                if(user != null && user.isEmailVerified){//Cuando en el registro enviamos el email, se crea un campo en firebase llamado isEmailVerified a false que cuando verificas cambia a true
-
-                    //Chequeamos si esta ya verificado de antes
-                    firestoreDB.collection("usuarios").document(user.uid).get().addOnSuccessListener { docTask ->
-                        var isVerified: Boolean = docTask.getBoolean("verificado") ?: false
-                        if(!isVerified){
-                            //Si es su primer login recuperamos de la coleccion users el campo con uid del usuario y updateaamos el campo verificado a true
-                            firestoreDB.collection("usuarios")
-                                .document(user.uid)
-                                .update("verificado",true)
-                                .addOnCompleteListener { onResult(true,null) }
-                        }else{
-                            //Si ya estaba verificado no hacemos nada
-                            onResult(true,null)
-                        }
-                    }
-                }else{
-                    //Si no ha aceptado el correo le echamos de la sesion
-                    auth.signOut()
-                    onResult(false, "Verifica tu email para poder loguear")
-                }
-            }else{
-                //Si falla el login
-                onResult(false, loginTask.exception?.localizedMessage ?: "Error desconocido")
-            }
-        }
-
-    }
 
     //Callback para registrar usuario
     fun registroUsuario(username: String, email: String, password: String, onResult: (Boolean,String?) -> Unit ){
@@ -90,5 +56,51 @@ class AuthRepository {
 
     }
 
+    //Callback para iniciar Sesion
+    fun loginUsuario(email: String, password: String, onResult: (Boolean, String?) -> Unit){
+
+        auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { loginTask ->
+            if(loginTask.isSuccessful){
+                val user = auth.currentUser
+
+                //Chequeamos si ha verificado el correo
+                if(user != null && user.isEmailVerified){//Cuando en el registro enviamos el email, se crea un campo en firebase llamado isEmailVerified a false que cuando verificas cambia a true
+
+                    //Chequeamos si esta ya verificado de antes
+                    firestoreDB.collection("usuarios").document(user.uid).get().addOnSuccessListener { docTask ->
+                        var isVerified: Boolean = docTask.getBoolean("verificado") ?: false
+                        if(!isVerified){
+                            //Si es su primer login recuperamos de la coleccion users el campo con uid del usuario y updateaamos el campo verificado a true
+                            firestoreDB.collection("usuarios")
+                                .document(user.uid)
+                                .update("verificado",true)
+                                .addOnCompleteListener { onResult(true,null) }
+                        }else{
+                            //Si ya estaba verificado no hacemos nada
+                            onResult(true,null)
+                        }
+                    }
+                }else{
+                    //Si no ha aceptado el correo le echamos de la sesion
+                    auth.signOut()
+                    onResult(false, "Verifica tu email para poder loguear")
+                }
+            }else{
+                //Si falla el login
+                onResult(false, loginTask.exception?.localizedMessage ?: "Error desconocido")
+            }
+        }
+
+    }
+
+    //Metodo para cerrar sesion
+    fun cerrarSesion (navController: NavHostController){
+        FirebaseAuth.getInstance().signOut()
+
+        //Navegamos al Login y BORRAMOS el historial para que no pueda volver a login
+        navController.navigate("login"){
+            popUpTo(0)
+        }
+    }
 
 }

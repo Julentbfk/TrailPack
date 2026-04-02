@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.julen.trailpack.vistas.componentes.marcogeneral.ScaffoldTrailPack
 import com.julen.trailpack.vistas.login.VistaLogin
 import com.julen.trailpack.vistas.registro.VistaRegistro
 import com.julen.trailpack.vistas.perfilusuario.VistaPerfilUsuario
@@ -20,7 +22,18 @@ fun AppNavegation() {
     val navHost: NavHostController = rememberNavController()
     val enrutador: Enrutador = remember(navHost){ Enrutador(navHost) }
 
-    NavHost(navHost, startDestination = "login"){
+    //consultamos sesion activa en firebase
+    val auth = FirebaseAuth.getInstance()
+    val usuarioActual = auth.currentUser
+
+    //Decidimos la ruta de inicio
+    val puntoDeArranque = if(usuarioActual != null && usuarioActual.isEmailVerified){
+        "scaffoldtrailpack"
+    }else{
+        "login"
+    }
+
+    NavHost(navHost, startDestination = puntoDeArranque){
 
         //Rutas lanzadas desde el login
         composable(route="login"){
@@ -28,7 +41,7 @@ fun AppNavegation() {
                 //btn ¿no tienes cuenta aun?
                 navToRegistro = { enrutador.navToRegistro() },
                 //btn Login
-                navToPerfilUsuario = {enrutador.navToPerfilUsuario()}
+                navToPerfilUsuario = {enrutador.navToScaffoldTrailPack()}
             )
         }
 
@@ -57,6 +70,10 @@ fun AppNavegation() {
                 //Btn cerrar sesion
                 navToLoginPopBack = {enrutador.navToLoginPopBack()}
             )
+        }
+
+        composable(route="scaffoldtrailpack"){
+            ScaffoldTrailPack(navHost)
         }
 
 

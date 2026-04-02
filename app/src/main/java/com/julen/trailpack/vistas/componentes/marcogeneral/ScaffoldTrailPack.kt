@@ -8,13 +8,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.julen.trailpack.data.AuthRepository
 import com.julen.trailpack.vistas.perfilusuario.VistaPerfilUsuario
 
 @Composable
-fun ScaffoldTrailPack() {
+fun ScaffoldTrailPack(navController: NavHostController) {
     // Scaffold gestiona el espacio para las barras automáticamente
     Scaffold(
-        topBar = { TopBarTrailPack(onCerrarSesion = { /* Lógica mañana */ }) },
+        topBar = { TopBarTrailPack(onCerrarSesion = {
+            AuthRepository().cerrarSesion(navController)
+        }) },
         bottomBar = { BottomBarTrailPack() },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingInterno ->
@@ -31,5 +36,5 @@ fun ScaffoldTrailPack() {
 @Preview
 @Composable
 fun ScaffoldTrailPackPreview() {
-    ScaffoldTrailPack()
+    //ScaffoldTrailPack()
 }
