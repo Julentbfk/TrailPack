@@ -28,7 +28,7 @@ import com.julen.trailpack.vistas.utiles.ValidadorCampos
 
 
 @Composable
-fun VistaLogin(navToRegistro:() -> Unit, navToPerfilUsuario:() -> Unit) {
+fun VistaLogin(navToRegistro:() -> Unit, navToScaffoldTrailPack:() -> Unit) {
 
     val viewModel: LoginViewModel = viewModel()
 
@@ -76,7 +76,7 @@ fun VistaLogin(navToRegistro:() -> Unit, navToPerfilUsuario:() -> Unit) {
 
                 if(checkemail.isEmpty() && checkpassword.isEmpty()){
                     viewModel.loginClick {
-                        navToPerfilUsuario()
+                        navToScaffoldTrailPack()
                     }
                 }
             },

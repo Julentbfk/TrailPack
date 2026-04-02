@@ -31,7 +31,6 @@ fun OutlinedTextFieldMejorado(
     OutlinedTextField(
         value = value,
         onValueChange = {
-            mensajeError = validador(it)//Validamos en tiempo real para que el error aparezca o desaparezca segun escriba
             onValueChange(it)//hace que value valga la tecla pulsada, pero no lo tendra en cuenta hasta la segunda tecla
         },
         label = {Text(label)},

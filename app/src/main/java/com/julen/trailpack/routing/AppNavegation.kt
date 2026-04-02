@@ -41,7 +41,7 @@ fun AppNavegation() {
                 //btn ¿no tienes cuenta aun?
                 navToRegistro = { enrutador.navToRegistro() },
                 //btn Login
-                navToPerfilUsuario = {enrutador.navToScaffoldTrailPack()}
+                navToScaffoldTrailPack = {enrutador.navToScaffoldTrailPack()}
             )
         }
 

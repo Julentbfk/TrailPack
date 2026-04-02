@@ -1,6 +1,5 @@
 package com.julen.trailpack.data
 
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,7 +21,7 @@ class AuthRepository {
 
                 if(uid != null) {
 
-                    user?.sendEmailVerification()?.addOnCompleteListener { emailTask ->
+                    user.sendEmailVerification().addOnCompleteListener { emailTask ->
                         if(!emailTask.isSuccessful) {
                             onResult(false, emailTask.exception?.localizedMessage ?: "Error desconocido al enviar email confimacion")
                         }
@@ -68,7 +67,7 @@ class AuthRepository {
 
                     //Chequeamos si esta ya verificado de antes
                     firestoreDB.collection("usuarios").document(user.uid).get().addOnSuccessListener { docTask ->
-                        var isVerified: Boolean = docTask.getBoolean("verificado") ?: false
+                        val isVerified: Boolean = docTask.getBoolean("verificado") ?: false
                         if(!isVerified){
                             //Si es su primer login recuperamos de la coleccion users el campo con uid del usuario y updateaamos el campo verificado a true
                             firestoreDB.collection("usuarios")

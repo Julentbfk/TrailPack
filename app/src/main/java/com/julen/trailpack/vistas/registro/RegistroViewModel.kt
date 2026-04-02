@@ -20,19 +20,19 @@ class RegistroViewModel : ViewModel() {
     var registroExitoso by mutableStateOf(false)//check para el regoistro
     fun registroClick(){
         //Checkeamos el usuario
-        var errorUsuario = ValidadorCampos.validarUsuario(username)
+        val errorUsuario = ValidadorCampos.validarUsuario(username)
         if(errorUsuario.isNotEmpty()){
             errorMessage = errorUsuario
             return
         }
         //Checkeamos el email
-        var errorEmail = ValidadorCampos.validarEmail(email)
+        val errorEmail = ValidadorCampos.validarEmail(email)
         if(errorEmail.isNotEmpty()){
             errorMessage = errorEmail
             return
         }
         //Checkeamos el passsword
-        var errorPassword = ValidadorCampos.validarPassword(password)
+        val errorPassword = ValidadorCampos.validarPassword(password)
         if(errorPassword.isNotEmpty()){
             errorMessage = errorPassword
             return

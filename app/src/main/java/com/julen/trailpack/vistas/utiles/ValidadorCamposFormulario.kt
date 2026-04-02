@@ -7,45 +7,45 @@ object ValidadorCampos{
     //--REGLAS DE VALIDACION--
     //Los metodos validaran el contenido del campo del formulario y retornaran vacio si no hay error o  el mensaje de error si la losing condition se cumple
     private fun checkVacio(texto:String) : String {
-        if(texto.isEmpty()){
-            return "El campo no puede estar vacio"
+        return if(texto.isEmpty()){
+            "El campo no puede estar vacio"
         }else{
-            return ""
+            ""
         }
     }
     private fun checkPatternEmail(texto: String) : String{
-        if(!Patterns.EMAIL_ADDRESS.matcher(texto).matches()){
-            return "email no valido: Formato aceptado xxx123.,-_@xxx.xxx"
+        return if(!Patterns.EMAIL_ADDRESS.matcher(texto).matches()){
+            "email no valido: Formato aceptado xxx123.,-_@xxx.xxx"
         }else{
-            return ""
+            ""
         }
     }
     private fun checkLongitudUsername(texto: String) : String{
-        if(texto.length < 2){
-            return "El username tiene que tener al menos 6 caracteres"
+        return if(texto.length < 2){
+            "El username tiene que tener al menos 6 caracteres"
         }else{
-            return ""
+            ""
         }
     }
     private fun checkLongitudPassword(texto : String): String{
-        if(texto.length < 3 ){
-            return "La contraseña tiene que tener al menos 8 caracteres"
+        return if(texto.length < 3 ){
+            "La contraseña tiene que tener al menos 8 caracteres"
         }else{
-            return ""
+            ""
         }
     }
     private fun checkMinusculas(texto: String) : String {
-        if(!texto.any() { it.isLowerCase() }){
-            return "La contraseña tiene que tener al menos una minuscula"
+        return if(!texto.any { it.isLowerCase() }){
+            "La contraseña tiene que tener al menos una minuscula"
         }else{
-            return ""
+            ""
         }
     }
     private fun checkMayusculas(texto: String) : String {
-        if(!texto.any() { it.isUpperCase() }){
-            return "La contraseña tiene que tener al menos una mayuscula"
+        return if(!texto.any { it.isUpperCase() }){
+            "La contraseña tiene que tener al menos una mayuscula"
         }else{
-            return ""
+            ""
         }
     }
 
@@ -102,20 +102,9 @@ object ValidadorCampos{
     }
 
     fun validarMatch(p1: String, p2: String) : Boolean {
-        if(p1 != p2){
-            return false
-        }else{
-            return true
-        }
+        return p1 == p2
     }
 
-    fun validaTodo(email:String, password:String, usuario:String) : Boolean{
-        if(validarEmail(email).isEmpty() && validarUsuario(usuario).isEmpty() && validarPassword(password).isEmpty()){
-            return true
-        }else{
-            return false
-        }
-    }
 
 
 }

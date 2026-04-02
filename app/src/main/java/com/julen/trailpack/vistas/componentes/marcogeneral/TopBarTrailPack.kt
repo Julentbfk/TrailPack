@@ -1,7 +1,7 @@
 package com.julen.trailpack.vistas.componentes.marcogeneral
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -48,7 +48,7 @@ fun TopBarTrailPack(onCerrarSesion: () -> Unit) {
             }
             //CerrarSesion
             IconButton(onClick = onCerrarSesion) {
-                Icon(Icons.Default.ExitToApp, contentDescription = "Salir", tint = Color.Red)
+                Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Salir", tint = Color.Red)
             }
         }
     )
