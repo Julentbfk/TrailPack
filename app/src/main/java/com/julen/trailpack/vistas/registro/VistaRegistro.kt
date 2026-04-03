@@ -38,7 +38,7 @@ fun VistaRegistro(navToLoginPopBack:() -> Unit, navToConfirmacionEmail:(String) 
     //VENTANA PARA INFORMAR DE VERIFICAR CORREO
     LaunchedEffect(viewModel.registroExitoso) {
         if(viewModel.registroExitoso){
-            navToConfirmacionEmail(viewModel.email)
+            navToConfirmacionEmail(viewModel.formstate.email)
         }
     }
     //-------------------------------------------------
@@ -61,8 +61,8 @@ fun VistaRegistro(navToLoginPopBack:() -> Unit, navToConfirmacionEmail:(String) 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextFieldMejorado(
-                value = viewModel.username,
-                onValueChange = { viewModel.username = it },
+                value = viewModel.formstate.username,
+                onValueChange = { viewModel.updateForm(viewModel.formstate.copy(username = it)) },
                 label = "Nombre Usuario",
                 icon = Icons.Default.AccountCircle,
                 validador = { ValidadorCampos.validarUsuario(it) }
@@ -71,8 +71,8 @@ fun VistaRegistro(navToLoginPopBack:() -> Unit, navToConfirmacionEmail:(String) 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextFieldMejorado(
-                value = viewModel.email,
-                onValueChange = { viewModel.email = it },
+                value = viewModel.formstate.email,
+                onValueChange = { viewModel.updateForm(viewModel.formstate.copy(email = it)) },
                 label = "Email",
                 icon = Icons.Default.Email,
                 validador = { ValidadorCampos.validarEmail(it) }
@@ -81,8 +81,8 @@ fun VistaRegistro(navToLoginPopBack:() -> Unit, navToConfirmacionEmail:(String) 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextFieldMejorado(
-                value = viewModel.password,
-                onValueChange = { viewModel.password = it },
+                value = viewModel.formstate.password,
+                onValueChange = { viewModel.updateForm(viewModel.formstate.copy(password = it)) },
                 label = "Contraseña ",
                 icon = Icons.Default.Lock,
                 isPassword = true,
@@ -92,13 +92,13 @@ fun VistaRegistro(navToLoginPopBack:() -> Unit, navToConfirmacionEmail:(String) 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextFieldMejorado(
-                value = viewModel.repassword,
-                onValueChange = { viewModel.repassword = it },
+                value = viewModel.formstate.repassword,
+                onValueChange = { viewModel.updateForm(viewModel.formstate.copy(repassword = it)) },
                 label = "Confirma contraseña ",
                 icon = Icons.Default.Lock,
                 isPassword = true,
                 validador = { valoractual ->
-                    if (valoractual == viewModel.password) {
+                    if (valoractual == viewModel.formstate.password) {
                         ""
                     } else {
                         "Las contraseñas no coinciden"

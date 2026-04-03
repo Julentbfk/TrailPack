@@ -9,43 +9,44 @@ import com.julen.trailpack.vistas.utiles.ValidadorCampos
 
 class RegistroViewModel : ViewModel() {
     val repository: AuthRepository = AuthRepository()
+    var formstate by mutableStateOf(RegistroFormState())
+    fun updateForm(newFormState: RegistroFormState){
+        formstate = newFormState.copy(
 
-    var username by mutableStateOf("")
-    var email by mutableStateOf("")
-    var password by mutableStateOf("")
-    var repassword by mutableStateOf("")
+        )
+    }
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
 
     var registroExitoso by mutableStateOf(false)//check para el regoistro
     fun registroClick(){
         //Checkeamos el usuario
-        val errorUsuario = ValidadorCampos.validarUsuario(username)
+        val errorUsuario = ValidadorCampos.validarUsuario(formstate.username)
         if(errorUsuario.isNotEmpty()){
             errorMessage = errorUsuario
             return
         }
         //Checkeamos el email
-        val errorEmail = ValidadorCampos.validarEmail(email)
+        val errorEmail = ValidadorCampos.validarEmail(formstate.email)
         if(errorEmail.isNotEmpty()){
             errorMessage = errorEmail
             return
         }
         //Checkeamos el passsword
-        val errorPassword = ValidadorCampos.validarPassword(password)
+        val errorPassword = ValidadorCampos.validarPassword(formstate.password)
         if(errorPassword.isNotEmpty()){
-            errorMessage = errorPassword
+            errorMessage = ValidadorCampos.validarPassword(formstate.password)
             return
         }
         //Checkeamos que las passwords sean iguales
-        if(!ValidadorCampos.validarMatch(password,repassword) ){
+        if(!ValidadorCampos.validarMatch(formstate.password,formstate.repassword) ){
             errorMessage = "Las contraseñas no coinciden"
             return
         }
 
         isLoading = true
         //Registramos en Firebase si ha pasado todas las validaciones
-        repository.registroUsuario(username,email,password){success, error ->
+        repository.registroUsuario(formstate.username,formstate.email,formstate.password){success, error ->
             isLoading = false
             if(success){
                 registroExitoso = true
@@ -53,5 +54,7 @@ class RegistroViewModel : ViewModel() {
                 errorMessage = error
             }
         }
+
     }
+
 }

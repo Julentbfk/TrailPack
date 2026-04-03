@@ -32,6 +32,9 @@ fun OutlinedTextFieldMejorado(
         value = value,
         onValueChange = {
             onValueChange(it)//hace que value valga la tecla pulsada, pero no lo tendra en cuenta hasta la segunda tecla
+            if (tocado) {
+                mensajeError = validador(it)
+            }
         },
         label = {Text(label)},
         leadingIcon = { Icon(imageVector = icon, contentDescription = null) },
