@@ -33,8 +33,6 @@ fun VistaPerfilUsuario() {
     val viewModel: PerfilUsuarioViewModel = viewModel()
     val user = viewModel.usuarioState
     //Fake variables simulacion
-    val useradress = "Alcala de Henares, Madrid, España"
-    val biografia = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsu"
 
     Column(
         modifier = Modifier
@@ -51,13 +49,13 @@ fun VistaPerfilUsuario() {
             ) {
                 FotoPerfil("https://cdn.phototourl.com/free/2026-04-02-1e7a5ce5-6e96-49bf-916e-c040d74e2a63.png")
                 Spacer(modifier = Modifier.height(24.dp))
-                NivelUsuarioPerfil(2)
+                NivelUsuarioPerfil(user.nivel)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Column(
                 modifier = Modifier.weight(1f),
             ) {
-                DatosPersonalesPerfil(user.username,useradress,biografia)
+                DatosPersonalesPerfil(user.username,user.adress,user.biografia)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(//FILA SEGUIDORES
                     modifier = Modifier
@@ -65,9 +63,9 @@ fun VistaPerfilUsuario() {
                         .padding(vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    SeguidoresUsuarioPerfil("Seguidores","23", modifier = Modifier.weight(1f))
-                    SeguidoresUsuarioPerfil("Siguiendo","190", modifier = Modifier.weight(1f))
-                    SeguidoresUsuarioPerfil("Amigos","10", modifier = Modifier.weight(1f))
+                    SeguidoresUsuarioPerfil("Seguidores",user.seguidorescount, modifier = Modifier.weight(1f))
+                    SeguidoresUsuarioPerfil("Siguiendo",user.siguiendocount, modifier = Modifier.weight(1f))
+                    SeguidoresUsuarioPerfil("Amigos",user.amigoscount, modifier = Modifier.weight(1f))
                 }
             }
 

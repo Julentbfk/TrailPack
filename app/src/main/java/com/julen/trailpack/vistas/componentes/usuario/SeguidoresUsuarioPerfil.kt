@@ -11,16 +11,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SeguidoresUsuarioPerfil(etiqueta: String, numero: String, modifier: Modifier){
+fun SeguidoresUsuarioPerfil(etiqueta: String, numero: Int, modifier: Modifier){
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = etiqueta, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-        Text(text = numero, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+        Text(text = numero.toString(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
     }
 }
 
 @Preview
 @Composable
 fun SeguidoresUsuarioPerfilPreview(){
-    SeguidoresUsuarioPerfil("", "", modifier = Modifier)
+    SeguidoresUsuarioPerfil("", 1, modifier = Modifier)
 }

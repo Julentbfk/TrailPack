@@ -27,7 +27,7 @@ fun ScaffoldTrailPack(navController: NavHostController) {
                 .fillMaxSize()
                 .padding(paddingInterno)
         ) {
-            VistaPerfilUsuario(navToLoginPopBack = { /* ... */ })
+            VistaPerfilUsuario()
         }
     }
 }

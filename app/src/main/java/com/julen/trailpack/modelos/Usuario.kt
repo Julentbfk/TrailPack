@@ -1,11 +1,15 @@
 package com.julen.trailpack.modelos
 
 data class Usuario(
+
     val uid: String = "",
+
     val username: String = "",
     val email: String = "",
     val adress: String = "",
-    val telefono: Int = 0,
+    val prefijo: String = "+34",
+    val telefono: String = "",
+
     val biografia: String = "",
     val fotoperfil: String ="",
     val nivel: Int = 0,

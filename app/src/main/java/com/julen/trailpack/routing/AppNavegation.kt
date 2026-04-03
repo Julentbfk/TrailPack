@@ -66,10 +66,7 @@ fun AppNavegation() {
 
         //Rutas lanzadas desde el perfil
         composable(route="perfilusuario"){
-            VistaPerfilUsuario(
-                //Btn cerrar sesion
-                navToLoginPopBack = {enrutador.navToLoginPopBack()}
-            )
+            VistaPerfilUsuario()
         }
 
         composable(route="scaffoldtrailpack"){

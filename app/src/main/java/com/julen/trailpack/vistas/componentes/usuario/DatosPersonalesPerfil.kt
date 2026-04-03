@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +42,7 @@ fun DatosPersonalesPerfil(nombreusuario: String,direccionusuario: String,biograf
 
 
     Text(
-        text = "Jose Luis Dominguez",
+        text = nombreusuario,
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Bold
     )
@@ -49,22 +50,26 @@ fun DatosPersonalesPerfil(nombreusuario: String,direccionusuario: String,biograf
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(vertical = 2.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.LocationOn,
-            contentDescription = null,
-            tint = Color.Gray,
-            modifier = Modifier.size(16.dp)
-        )
-        Text(
-            text = direccionusuario,
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.DarkGray
-        )
+        if(!direccionusuario.isBlank()){
+            Icon(
+                imageVector = Icons.Default.LocationOn,
+                contentDescription = null,
+                tint = Color.Gray,
+                modifier = Modifier.size(16.dp)
+            )
+            Text(
+                text = direccionusuario,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.DarkGray
+            )
+        }
+
     }
 
     Spacer(modifier = Modifier.height(8.dp))
 
     var showDialog by remember {mutableStateOf(false)}
+    var showReadMore by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,15 +79,22 @@ fun DatosPersonalesPerfil(nombreusuario: String,direccionusuario: String,biograf
             text = biografiausuario,
             style = MaterialTheme.typography.bodySmall,
             maxLines = 3,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout =  {textLayouResult ->
+                if(textLayouResult.lineCount > 3){
+                    showReadMore = true
+                }
+            }
         )
-        //Boton Leer mas que activa el dialogo
-        Text(
-            text = "Leer más",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
+        if(showReadMore){
+            Text(
+                text = "Leer más",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top=4.dp)
+            )
+        }
     }
 
     //Dialogo emergente

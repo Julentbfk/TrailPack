@@ -2,6 +2,7 @@ package com.julen.trailpack.vistas.componentes.marcogeneral
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -41,6 +42,9 @@ fun TopBarTrailPack(onCerrarSesion: () -> Unit) {
             //Search
             IconButton(onClick = {/* Buscar otros perfiles para agregar o añadir amigo */}) {
                 Icon(Icons.Default.Search, contentDescription = "Buscar")
+            }
+            IconButton(onClick = { /* EditarPerfil */ }) {
+                Icon(Icons.Default.Edit, contentDescription = "Editar")
             }
             //Ajustes
             IconButton(onClick = { /* Ajustes */ }) {
