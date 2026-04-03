@@ -6,7 +6,7 @@ data class Usuario(
 
     val username: String = "",
     val email: String = "",
-    val adress: String = "",
+    val direccion: String = "",
     val prefijo: String = "+34",
     val telefono: String = "",
 
@@ -16,12 +16,13 @@ data class Usuario(
 
     val fechacreacion: Long = System.currentTimeMillis(),
     val verificado: Boolean = false,
+    val perfilcompletado: Boolean = false,
 
     val seguidorescount: Int = 0,
     val siguiendocount: Int = 0,
     val amigoscount: Int = 0,
     val listaseguidores: List<String> = emptyList(),
     val listasiguiendo: List<String> = emptyList(),
-    val listaamigos: List<String> = emptyList()
+    val listaamigos: List<String> = emptyList(),
 
 )

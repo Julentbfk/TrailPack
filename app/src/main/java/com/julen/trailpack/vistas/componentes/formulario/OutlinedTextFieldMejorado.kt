@@ -1,6 +1,8 @@
 package com.julen.trailpack.vistas.componentes.formulario
 
+import android.R.attr.height
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -15,9 +17,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun OutlinedTextFieldMejorado(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -40,7 +44,7 @@ fun OutlinedTextFieldMejorado(
         leadingIcon = { Icon(imageVector = icon, contentDescription = null) },
         visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         isError = mensajeError.isNotEmpty(),
-        modifier = Modifier.fillMaxWidth().onFocusChanged{ focusState ->
+        modifier = modifier.fillMaxWidth().onFocusChanged{ focusState ->
             //Esta funcion la necesito para que el error de campo vacio no salte la primera vez que toco el elemento si no cuando lo abandono habiendolo tocado y dejado vacio
             if(focusState.isFocused){//Cuando toque el campo
                 tocado = true

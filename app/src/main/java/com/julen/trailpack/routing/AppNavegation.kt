@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.julen.trailpack.vistas.componentes.marcogeneral.ScaffoldTrailPack
 import com.julen.trailpack.vistas.login.VistaLogin
+import com.julen.trailpack.vistas.perfilusuario.VistaCompletarPerfil
 import com.julen.trailpack.vistas.registro.VistaRegistro
 import com.julen.trailpack.vistas.perfilusuario.VistaPerfilUsuario
 import com.julen.trailpack.vistas.registro.VistaConfirmacionEmail
@@ -65,6 +66,13 @@ fun AppNavegation() {
         }
 
         //Rutas lanzadas desde el perfil
+        composable(route="completarperfil"){
+            VistaCompletarPerfil(
+                guardarClick = {
+                    enrutador.navToScaffoldTrailPack()
+                }
+            )
+        }
         composable(route="perfilusuario"){
             VistaPerfilUsuario()
         }

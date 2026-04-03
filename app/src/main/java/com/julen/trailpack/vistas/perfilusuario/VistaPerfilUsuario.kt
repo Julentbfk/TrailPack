@@ -55,7 +55,7 @@ fun VistaPerfilUsuario() {
             Column(
                 modifier = Modifier.weight(1f),
             ) {
-                DatosPersonalesPerfil(user.username,user.adress,user.biografia)
+                DatosPersonalesPerfil(user.username,user.direccion,user.biografia)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(//FILA SEGUIDORES
                     modifier = Modifier

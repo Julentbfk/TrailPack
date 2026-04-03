@@ -1,6 +1,6 @@
 package com.julen.trailpack.vistas.registro
 
-data class RegistroFormState(
+data class RegistroFormModel(
     val username: String = "",
     val email: String = "",
     val password: String = "",

@@ -8,11 +8,11 @@ class Enrutador(private val navController: NavController) {
     fun navToRegistro(){
         navController.navigate("registro")
     }
-
     //Nav to VistaConfirmacionEmail
     fun navToConfirmacionEmail(email: String) {
         navController.navigate("confirmacionemail/$email")
     }
+
 
     //Nav to vistaLogin popBackEdition
     fun navToLoginPopBack() {
@@ -23,10 +23,18 @@ class Enrutador(private val navController: NavController) {
         navController.navigate("login")
     }
 
+
+    //Nav to VistaCompletarPerfil
+    fun navToCompletarPerfil() {
+        navController.navigate("completarperfil") {
+            popUpTo("scaffoldtrailpack") {inclusive = true}
+        }
+    }
     //Nav to VistaPerfilUsuario
     fun navToPerfilUsuario(){
         navController.navigate("perfilusuario")
     }
+
 
     //Nav to ScaffoldTrailPack
     fun navToScaffoldTrailPack() {
