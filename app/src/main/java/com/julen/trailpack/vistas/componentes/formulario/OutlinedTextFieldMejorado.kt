@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,8 +31,12 @@ fun OutlinedTextFieldMejorado(
     validador: (String) -> (String) = { "" }
 ){
     var tocado : Boolean by remember { mutableStateOf(false) }//Variable para revisar que el componente ha tenido foco
-    var mensajeError: String by remember { mutableStateOf("") }//Variable que lanzara el mensaje de error
-
+    var mensajeError: String by remember(validador,value) { mutableStateOf("") }//Variable que lanzara el mensaje de error
+    LaunchedEffect(validador) {
+        if (tocado) {
+            mensajeError = validador(value)
+        }
+    }
     OutlinedTextField(
         value = value,
         onValueChange = {

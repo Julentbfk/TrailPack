@@ -1,14 +1,20 @@
 package com.julen.trailpack.modelos
 
+import java.util.Date
+
 data class Usuario(
 
     val uid: String = "",
 
     val username: String = "",
     val email: String = "",
-    val direccion: String = "",
+    val ubicacion: String = "",
     val prefijo: String = "+34",
     val telefono: String = "",
+    val edad: String ="",
+    val genero: String="",
+    val fechanac: Date = Date(),
+    val nacionalidad: String  = "",
 
     val biografia: String = "",
     val fotoperfil: String ="",
@@ -25,4 +31,4 @@ data class Usuario(
     val listasiguiendo: List<String> = emptyList(),
     val listaamigos: List<String> = emptyList(),
 
-)
+    )

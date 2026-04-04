@@ -52,7 +52,7 @@ class PerfilUsuarioViewModel: ViewModel() {
         val actualizaciones = mapOf(
             "prefijo" to perfilFormModel.prefijo,
             "telefono" to perfilFormModel.telefono,
-            "direccion" to perfilFormModel.direccion,
+            "ubicacion" to perfilFormModel.ubicacion,
             "biografia" to perfilFormModel.biografia,
             "perfilcompletado" to true
         )

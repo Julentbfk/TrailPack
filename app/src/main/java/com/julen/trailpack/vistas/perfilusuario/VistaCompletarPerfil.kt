@@ -1,5 +1,6 @@
 package com.julen.trailpack.vistas.perfilusuario
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.julen.trailpack.modelos.Pais
 import com.julen.trailpack.vistas.componentes.formulario.OutlinedTextFieldMejorado
 import com.julen.trailpack.vistas.componentes.formulario.SelectorPrefijoPais
+import com.julen.trailpack.vistas.utiles.ValidadorCampos
 
 @Composable
 fun VistaCompletarPerfil(
@@ -36,9 +38,9 @@ fun VistaCompletarPerfil(
 
     val listaPaises = remember {
         listOf(
-            Pais("España", "+34", "ES"),
-            Pais("Francia", "+33", "FR"),
-            Pais("Portugal", "+351", "PT")
+            Pais("España", "ES", "+34"),
+            Pais("Francia", "FR", "+33"),
+            Pais("Portugal", "POR", "+351")
         )
     }
 
@@ -58,6 +60,7 @@ fun VistaCompletarPerfil(
                     paises = listaPaises,
                     paisSeleccionado = paisSeleccionado,
                     onPaisSelected = { nuevoPais ->
+                        Log.d("VALIDACION", "Validando: prefijo=${nuevoPais.prefijo}, codigo=${nuevoPais.codigo}")
                         viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(prefijo = nuevoPais.prefijo))
                     },
 
@@ -74,7 +77,10 @@ fun VistaCompletarPerfil(
                     value = viewModel.perfilFormModel.telefono,
                     onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(telefono = it)) },
                     label = "Teléfono",
-                    icon = Icons.Default.Call, // Asegúrate de importar el icono
+                    icon = Icons.Default.Call, // Asegúrate de importar el icono,
+                    validador = { valor ->
+                        ValidadorCampos.validarTelefono(valor, viewModel.perfilFormModel.prefijo)
+                    }
                 )
             }
 
@@ -86,11 +92,12 @@ fun VistaCompletarPerfil(
 
         // --- DIRECCIÓN ---
         OutlinedTextFieldMejorado(
-            value = viewModel.perfilFormModel.direccion,
-            onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(direccion = it)) },
-            label = "Dirección",
+            value = viewModel.perfilFormModel.ubicacion,
+            onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(ubicacion = it)) },
+            label = "Localidad, Ciudad",
             icon = Icons.Default.LocationOn,
-            modifier = Modifier
+            modifier = Modifier,
+            validador = { ValidadorCampos.validarUbicacion(it)}
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -100,7 +107,8 @@ fun VistaCompletarPerfil(
             onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(biografia = it)) },
             label = "Biografía",
             icon = Icons.Default.Person,
-            modifier = Modifier
+            modifier = Modifier,
+            validador = { ValidadorCampos.validarBiografia(it) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
