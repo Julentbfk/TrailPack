@@ -1,5 +1,6 @@
 package com.julen.trailpack.vistas.perfilusuario
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -62,5 +63,21 @@ class PerfilUsuarioViewModel: ViewModel() {
         }
     }
 
+    //---- PARA LA SUBIDA DE IMAGEN ----
+
+    fun subirFotoPerfil(uid: String, imageUri: Uri, onResult: (Boolean, String?) -> Unit){
+        isLoading = true
+
+        userRepository.subirFotoPerfil(uid,imageUri) {success, error ->
+            if(success){
+                //Si sube bien
+                obtenerDatosUsuario()
+                onResult(true, null)
+            }else{
+                isLoading = false
+                onResult(false,error)
+            }
+        }
+    }
 
 }

@@ -1,6 +1,11 @@
 package com.julen.trailpack.vistas.perfilusuario
 
 
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,11 +19,13 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.auth.FirebaseAuth
 
 import com.julen.trailpack.vistas.componentes.usuario.DatosPersonalesPerfil
 import com.julen.trailpack.vistas.componentes.usuario.FotoPerfil
@@ -32,7 +39,24 @@ import com.julen.trailpack.vistas.componentes.usuario.SeguidoresUsuarioPerfil
 fun VistaPerfilUsuario() {
     val viewModel: PerfilUsuarioViewModel = viewModel()
     val user = viewModel.usuarioState
-    //Fake variables simulacion
+
+    val context = LocalContext.current
+    val uid = FirebaseAuth.getInstance().currentUser?.uid
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let{
+            if(uid != null) {
+                viewModel.subirFotoPerfil(uid,it){ success , error ->
+                    if(success){
+                        Toast.makeText(context,"Foto actualizada", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context,"Error: $error",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -47,7 +71,10 @@ fun VistaPerfilUsuario() {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FotoPerfil("https://cdn.phototourl.com/free/2026-04-02-1e7a5ce5-6e96-49bf-916e-c040d74e2a63.png")
+                FotoPerfil(
+                    url = viewModel.usuarioState.fotoperfil,
+                    modifier = Modifier.clickable{launcher.launch("image/*")} //Al pulsar se abre la galeria
+                )
                 Spacer(modifier = Modifier.height(24.dp))
                 NivelUsuarioPerfil(user.nivel)
             }

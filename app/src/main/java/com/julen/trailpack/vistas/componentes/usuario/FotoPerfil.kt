@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
-fun FotoPerfil(url: String){
+fun FotoPerfil(url: String, modifier: Modifier){
 
     AsyncImage(
         model = url,
@@ -23,7 +23,7 @@ fun FotoPerfil(url: String){
         // ESTO ES LA CLAVE: Se verá en la Preview y mientras carga la real
         placeholder = painterResource(id = R.drawable.ic_menu_gallery),
         error = painterResource(id = R.drawable.stat_notify_error),
-        modifier = Modifier
+        modifier = modifier
             .size(140.dp)
             .clip(shape = RoundedCornerShape(12.dp))
             .background(Color.LightGray), // Fondo gris por si la foto falla
@@ -34,5 +34,5 @@ fun FotoPerfil(url: String){
 @Preview
 @Composable
 fun FotoPerfilPreview(){
-    FotoPerfil(url = "https://cdn.phototourl.com/free/2026-04-01-f1855b03-56db-4bf5-a551-25568c71c945.png")
+    FotoPerfil(url = "https://cdn.phototourl.com/free/2026-04-01-f1855b03-56db-4bf5-a551-25568c71c945.png", modifier = Modifier)
 }
