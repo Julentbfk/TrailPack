@@ -34,7 +34,10 @@ class Enrutador(private val navController: NavController) {
     fun navToPerfilUsuario(){
         navController.navigate("perfilusuario")
     }
-
+    //Nav to EditarPerfil
+    fun navToEditarPerfil() {
+        navController.navigate("editarperfil")
+    }
 
     //Nav to ScaffoldTrailPack
     fun navToScaffoldTrailPack() {
@@ -44,4 +47,6 @@ class Enrutador(private val navController: NavController) {
             }
         }
     }
+
+
 }

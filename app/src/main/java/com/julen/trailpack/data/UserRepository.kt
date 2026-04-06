@@ -3,7 +3,6 @@ package com.julen.trailpack.data
 import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.julen.trailpack.vistas.perfilusuario.PerfilFormModel
 
 class UserRepository {
     private val db = FirebaseFirestore.getInstance()
@@ -34,7 +33,9 @@ class UserRepository {
         }.addOnFailureListener { e ->
             onResult(false,e.localizedMessage)
         }
-
-
     }
+
+
+
+
 }

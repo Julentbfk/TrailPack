@@ -7,11 +7,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.julen.trailpack.data.AuthRepository
+import com.julen.trailpack.routing.Enrutador
 import com.julen.trailpack.vistas.perfilusuario.VistaPerfilUsuario
 
 @Composable
@@ -20,7 +22,7 @@ fun ScaffoldTrailPack(navController: NavHostController) {
     val auth = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
     val uid = auth.currentUser?.uid
-
+    val enrutador = remember(navController) { Enrutador(navController) }
     //Lanzamos el formulario una vez al entrar
     LaunchedEffect(Unit) {
         if(uid != null){
@@ -37,7 +39,8 @@ fun ScaffoldTrailPack(navController: NavHostController) {
 
     // Scaffold gestiona el espacio para las barras automáticamente
     Scaffold(
-        topBar = { TopBarTrailPack(onCerrarSesion = {
+        topBar = { TopBarTrailPack(enrutador = enrutador,
+            onCerrarSesion = {
             AuthRepository().cerrarSesion(navController)
         }) },
         bottomBar = { BottomBarTrailPack() },

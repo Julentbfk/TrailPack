@@ -1,12 +1,14 @@
 package com.julen.trailpack.vistas.componentes.formulario
 
 import android.R.attr.height
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -26,6 +29,7 @@ fun OutlinedTextFieldMejorado(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
+    readOnly: Boolean = false,
     icon: ImageVector,
     isPassword: Boolean = false,
     validador: (String) -> (String) = { "" }
@@ -40,12 +44,31 @@ fun OutlinedTextFieldMejorado(
     OutlinedTextField(
         value = value,
         onValueChange = {
+            Log.d("TECLADO", "Tecla pulsada: $it") // <--- AÑADE ESTO
             onValueChange(it)//hace que value valga la tecla pulsada, pero no lo tendra en cuenta hasta la segunda tecla
             if (tocado) {
                 mensajeError = validador(it)
             }
         },
         label = {Text(label)},
+        readOnly= readOnly,
+        enabled = !readOnly,
+        colors = if (readOnly) {
+            // Estilo para campos bloqueados
+            TextFieldDefaults.colors(
+                disabledTextColor = Color.Gray,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                disabledIndicatorColor = Color.Transparent
+            )
+        } else {
+            // Estilo para campos editables
+            TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
+            )
+        },
         leadingIcon = { Icon(imageVector = icon, contentDescription = null) },
         visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         isError = mensajeError.isNotEmpty(),

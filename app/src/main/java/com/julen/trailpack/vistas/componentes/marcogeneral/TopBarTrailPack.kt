@@ -17,15 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.julen.trailpack.routing.Enrutador
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarTrailPack(onCerrarSesion: () -> Unit) {
+fun TopBarTrailPack(enrutador: Enrutador, onCerrarSesion: () -> Unit) {
+
     val colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainer, // Mismo fondo que la Nav Bar
         titleContentColor = MaterialTheme.colorScheme.onSurface,
         actionIconContentColor = MaterialTheme.colorScheme.onSurface
     )
+
     CenterAlignedTopAppBar(
         title = {
             Text(text = "TrailPack", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
@@ -43,7 +47,9 @@ fun TopBarTrailPack(onCerrarSesion: () -> Unit) {
             IconButton(onClick = {/* Buscar otros perfiles para agregar o añadir amigo */}) {
                 Icon(Icons.Default.Search, contentDescription = "Buscar")
             }
-            IconButton(onClick = { /* EditarPerfil */ }) {
+            IconButton(onClick = {
+                    enrutador.navToEditarPerfil()
+            }) {
                 Icon(Icons.Default.Edit, contentDescription = "Editar")
             }
             //Ajustes
@@ -59,6 +65,16 @@ fun TopBarTrailPack(onCerrarSesion: () -> Unit) {
 }
 @Preview
 @Composable
-fun TopBarTrailPackPreview () {
-    TopBarTrailPack {}
+fun TopBarTrailPackPreview() {
+    // 1. Necesitas un controlador falso para el preview
+    val navController = rememberNavController()
+
+    // 2. Necesitas una instancia real del Enrutador
+    val enrutador = Enrutador(navController)
+
+    // 3. Pasas la instancia del enrutador y la lambda vacía para el logout
+    TopBarTrailPack(
+        enrutador = enrutador,
+        onCerrarSesion = {}
+    )
 }

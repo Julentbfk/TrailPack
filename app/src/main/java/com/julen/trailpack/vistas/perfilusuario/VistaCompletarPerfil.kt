@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.LocationOn
@@ -34,7 +36,7 @@ fun VistaCompletarPerfil(
     guardarClick: () -> Unit
 ) {
 
-    val viewModel: PerfilUsuarioViewModel = viewModel()
+    val viewModel : PerfilUsuarioViewModel = viewModel()
 
     val listaPaises = remember {
         listOf(
@@ -44,7 +46,7 @@ fun VistaCompletarPerfil(
         )
     }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
         Text("Completa tu perfil", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -52,48 +54,66 @@ fun VistaCompletarPerfil(
         Row(
             modifier =  Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             //Selector de prefijo
-            Box(modifier = Modifier.weight(0.35f)){
-                val paisSeleccionado = listaPaises.find { it.prefijo == viewModel.perfilFormModel.prefijo } ?: listaPaises[0]
+            Box(modifier = Modifier.weight(0.35f)) {
+                val paisSeleccionado =
+                    listaPaises.find { it.prefijo == viewModel.completarperfilFormModel.prefijo }
+                        ?: listaPaises[0]
                 SelectorPrefijoPais(
                     paises = listaPaises,
                     paisSeleccionado = paisSeleccionado,
                     onPaisSelected = { nuevoPais ->
-                        Log.d("VALIDACION", "Validando: prefijo=${nuevoPais.prefijo}, codigo=${nuevoPais.codigo}")
-                        viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(prefijo = nuevoPais.prefijo))
+                        Log.d(
+                            "VALIDACION",
+                            "Validando: prefijo=${nuevoPais.prefijo}, codigo=${nuevoPais.codigo}"
+                        )
+                        viewModel.updateCompletarPerfilFormModel(
+                            viewModel.completarperfilFormModel.copy(
+                                prefijo = nuevoPais.prefijo
+                            )
+                        )
                     },
 
-                )
+                    )
             }
 
-             Spacer(modifier = Modifier
-                 .width(8.dp)
-                 .align(Alignment.CenterVertically))
+            Spacer(
+                modifier = Modifier
+                    .width(8.dp)
+                    .align(Alignment.CenterVertically)
+            )
             //Selector de num telefono
-            Box(modifier = Modifier.weight(0.65f)){
+            Box(modifier = Modifier.weight(0.65f)) {
                 OutlinedTextFieldMejorado(
                     modifier = Modifier.padding(top = 16.dp),
-                    value = viewModel.perfilFormModel.telefono,
-                    onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(telefono = it)) },
+                    value = viewModel.completarperfilFormModel.telefono,
+                    onValueChange = {
+                        viewModel.updateCompletarPerfilFormModel(
+                            viewModel.completarperfilFormModel.copy(
+                                telefono = it
+                            )
+                        )
+                    },
                     label = "Teléfono",
                     icon = Icons.Default.Call, // Asegúrate de importar el icono,
                     validador = { valor ->
-                        ValidadorCampos.validarTelefono(valor, viewModel.perfilFormModel.prefijo)
+                        ValidadorCampos.validarTelefono(
+                            valor,
+                            viewModel.completarperfilFormModel.prefijo
+                        )
                     }
                 )
             }
-
-
-
         }
+
         Spacer(modifier = Modifier.height(16.dp))
 
 
         // --- DIRECCIÓN ---
         OutlinedTextFieldMejorado(
-            value = viewModel.perfilFormModel.ubicacion,
-            onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(ubicacion = it)) },
+            value = viewModel.completarperfilFormModel.ubicacion,
+            onValueChange = { viewModel.updateCompletarPerfilFormModel(viewModel.completarperfilFormModel.copy(ubicacion = it)) },
             label = "Localidad, Ciudad",
             icon = Icons.Default.LocationOn,
             modifier = Modifier,
@@ -103,8 +123,8 @@ fun VistaCompletarPerfil(
 
         // --- BIOGRAFÍA ---
         OutlinedTextFieldMejorado(
-            value = viewModel.perfilFormModel.biografia,
-            onValueChange = { viewModel.updatePerfilFormModel(viewModel.perfilFormModel.copy(biografia = it)) },
+            value = viewModel.completarperfilFormModel.biografia,
+            onValueChange = { viewModel.updateCompletarPerfilFormModel(viewModel.completarperfilFormModel.copy(biografia = it)) },
             label = "Biografía",
             icon = Icons.Default.Person,
             modifier = Modifier,
@@ -116,12 +136,13 @@ fun VistaCompletarPerfil(
         Button(onClick = {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if(uid != null){
-                viewModel.guardarPerfilClick(uid){success,error ->
+                viewModel.completarPerfilClick(uid){ success, error ->
                     if(success){
                         //Metodo que redireccionara a donde sea despues de guardar
                         guardarClick()
                     }else{
                         //Error
+                        Log.d("error", "Error al guardar perfil $error")
                     }
                 }
             }
