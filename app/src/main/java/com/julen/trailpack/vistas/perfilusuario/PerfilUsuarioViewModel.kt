@@ -15,7 +15,6 @@ import com.julen.trailpack.modelos.Usuario
 class PerfilUsuarioViewModel: ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
 
     //El estado que observara la Vista
     var usuarioState by mutableStateOf(Usuario())
@@ -26,24 +25,20 @@ class PerfilUsuarioViewModel: ViewModel() {
     init {
         obtenerDatosUsuario()
     }
+
     //Metodo para cargar el PerfilViewModel con los datos del Usuario en sesion
     private fun obtenerDatosUsuario() {
         val uid = auth.currentUser?.uid
-
-        if(uid != null) {
-            db.collection("usuarios").document(uid).get()
-                .addOnSuccessListener { docTask ->
-                    val user = docTask.toObject(Usuario::class.java)
-                    if (user != null) {
-                        usuarioState = user
-                    }
-                    isLoading = false
+        if (uid != null) {
+            userRepository.obtenerUsuario(uid) { user, error ->
+                if (user != null) {
+                    usuarioState = user
                 }
-                .addOnFailureListener {
-                    isLoading = false
-                }
+                isLoading = false
+            }
         }
     }
+
     fun subirFotoPerfil(uid: String, imageUri: Uri, onResult: (Boolean, String?) -> Unit){
         isLoading = true
 

@@ -3,9 +3,21 @@ package com.julen.trailpack.data
 import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.julen.trailpack.modelos.Usuario
 
 class UserRepository {
     private val db = FirebaseFirestore.getInstance()
+
+    fun obtenerUsuario(uid: String, onResult: (Usuario?, String?) -> Unit) {
+        db.collection("usuarios").document(uid).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(Usuario::class.java)
+                onResult(user, null)
+            }
+            .addOnFailureListener { e ->
+                onResult(null, e.localizedMessage)
+            }
+    }
 
     fun actualizarPerfil(uid:String, campos: Map<String,Any>, onResult: (Boolean, String?) -> Unit){
 
