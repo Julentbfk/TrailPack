@@ -7,7 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.julen.trailpack.vistas.componentes.marcogeneral.ScaffoldTrailPack
+import com.julen.trailpack.vistas.ajustes.VistaAjustes
+import com.julen.trailpack.vistas.ajustes.cambiarpassword.VistaCambiarPassword
+import com.julen.trailpack.vistas.marcogeneral.ScaffoldTrailPack
 import com.julen.trailpack.vistas.login.VistaLogin
 import com.julen.trailpack.vistas.perfilusuario.VistaCompletarPerfil
 import com.julen.trailpack.vistas.perfilusuario.VistaEditarPerfil
@@ -51,7 +53,7 @@ fun AppNavegation() {
         composable(route="registro"){
             VistaRegistro(
                 //btn ¿ya tienes cuenta? | btn Registro
-                navToLoginPopBack = {enrutador.navToLoginPopBack()},
+                navToLoginPopBack = {enrutador.popBack()},
                 //btn registro
                 navToConfirmacionEmail = {email -> enrutador.navToConfirmacionEmail(email)}
             )
@@ -77,15 +79,30 @@ fun AppNavegation() {
         composable(route="perfilusuario"){
             VistaPerfilUsuario()
         }
-        composable(route="editarperfil") {
-            VistaEditarPerfil(
-                editarPerfilClick = {enrutador.navToScaffoldTrailPack()},
-                cancelarEditClick = {enrutador.navToScaffoldTrailPack()}
-            )
-        }
 
         composable(route="scaffoldtrailpack"){
             ScaffoldTrailPack(navHost)
+        }
+
+        //Rutas lanzadas desde editarperfil
+        composable(route="editarperfil") {
+            VistaEditarPerfil(
+                editarPerfilClick = {enrutador.navToScaffoldTrailPack()},
+                cancelarEditClick = {enrutador.popBack()}
+            )
+        }
+        //rutas lanzadas desde ajustes
+        composable(route="ajustes") {
+            VistaAjustes(
+                navToPerfilUsuario = {enrutador.popBack()},
+                navToCambiarPassword = {enrutador.navToCambiarPassword()},
+                navToLoginClearStack = {enrutador.navToLoginClearStack()}
+            )
+        }
+        composable(route = "cambiarpassword"){
+            VistaCambiarPassword(
+                guardarCambioPasswordClick = {enrutador.popBack()}
+            )
         }
 
 

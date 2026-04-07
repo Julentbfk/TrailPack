@@ -97,10 +97,10 @@ fun VistaRegistro(navToLoginPopBack:() -> Unit, navToConfirmacionEmail:(String) 
                 label = "Confirma contraseña ",
                 icon = Icons.Default.Lock,
                 isPassword = true,
-                validador = { valoractual ->
-                    if (valoractual == viewModel.registroFormstate.password) {
+                validador = {
+                    if(ValidadorCampos.validarMatch(it,viewModel.registroFormstate.password) ) {
                         ""
-                    } else {
+                    }else {
                         "Las contraseñas no coinciden"
                     }
                 }

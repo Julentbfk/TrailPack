@@ -1,6 +1,7 @@
 package com.julen.trailpack.data
 
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.julen.trailpack.modelos.Usuario
@@ -12,7 +13,7 @@ class AuthRepository {
     private val firestoreDB = FirebaseFirestore.getInstance()// la base de datos de firestore
 
     //Callback para registrar usuario
-    fun registroUsuario(username: String, email: String, password: String, onResult: (Boolean,String?) -> Unit ){
+    fun authRegistroUsuario(username: String, email: String, password: String, onResult: (Boolean, String?) -> Unit ){
 
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { authTask ->
             if(authTask.isSuccessful){
@@ -56,7 +57,7 @@ class AuthRepository {
     }
 
     //Callback para iniciar Sesion
-    fun loginUsuario(email: String, password: String, onResult: (Boolean, String?) -> Unit){
+    fun authLoginUsuario(email: String, password: String, onResult: (Boolean, String?) -> Unit){
 
         auth.signInWithEmailAndPassword(email,password).addOnCompleteListener { loginTask ->
             if(loginTask.isSuccessful){
@@ -93,7 +94,7 @@ class AuthRepository {
     }
 
     //Metodo para cerrar sesion
-    fun cerrarSesion (navController: NavHostController){
+    fun authCerrarSesion (navController: NavHostController){
         FirebaseAuth.getInstance().signOut()
 
         //Navegamos al Login y BORRAMOS el historial para que no pueda volver a login
@@ -101,5 +102,69 @@ class AuthRepository {
             popUpTo(0)
         }
     }
+
+    //Metodo para cambiar las password
+    fun authCambiarPassword(passactual: String, passNueva: String, onResult: (Boolean, String?) -> Unit){
+        val user = auth.currentUser
+
+        if(user != null && user.email != null){
+
+            val credential = EmailAuthProvider.getCredential(user.email!!, passactual)
+            //Reautentificacion obligatoria
+            user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
+                if(reauthTask.isSuccessful){
+                    user.updatePassword(passNueva)
+                        .addOnCompleteListener { updateTask ->
+                            if(updateTask.isSuccessful) {
+                                onResult(true,null)
+                            }else{
+                                onResult(false, updateTask.exception?.localizedMessage ?: "Error al actualizar")
+                            }
+                        }
+                }else{
+                    onResult(false, "Contraseña actual incorrecta")
+                }
+            }
+
+        } else{
+            onResult(false, "No hay sesion activa...")
+        }
+
+    }
+
+    //Metodo para borrar cuenta
+    fun authBorrarCuenta(uid: String, passactual: String, onResult: (Boolean, String?) -> Unit){
+        val user = auth.currentUser
+        if (user != null && user.uid == uid && user.email != null) {
+            val credential = EmailAuthProvider.getCredential(user.email!!, passactual)
+
+            user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
+
+                if(reauthTask.isSuccessful){
+                    firestoreDB.collection("usuarios").document(uid).delete().addOnCompleteListener { firestoredeleteTask ->
+                        if(firestoredeleteTask.isSuccessful){
+                            user.delete().addOnCompleteListener { authdeleteTask ->
+                                if(authdeleteTask.isSuccessful){
+                                    onResult(true,null)
+                                }else{
+                                    onResult(false, "Error al borrar de auth")
+                                }
+                            }
+                        }else{
+                            onResult(false,"Error al borrar de firestore")
+                        }
+                    }
+                }else{
+                    onResult(false, "Contraseña actual incorrecta")
+                }
+            }
+
+        }else{
+            onResult(false,"No hay sesion activa")
+        }
+
+    }
+
+
 
 }

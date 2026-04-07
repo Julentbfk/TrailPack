@@ -22,7 +22,7 @@ class LoginViewModel : ViewModel() {
         isLoading = true
         errorMessage = null
 
-        repository.loginUsuario(email,password) {success, error ->
+        repository.authLoginUsuario(email,password) { success, error ->
             isLoading = false
             if(success){
                 navToPerfilUsuario()

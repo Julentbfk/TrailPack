@@ -1,4 +1,4 @@
-package com.julen.trailpack.vistas.componentes.marcogeneral
+package com.julen.trailpack.vistas.marcogeneral
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Explore

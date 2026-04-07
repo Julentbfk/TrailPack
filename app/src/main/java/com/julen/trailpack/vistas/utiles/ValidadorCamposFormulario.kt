@@ -6,7 +6,7 @@ import android.util.Log
 object ValidadorCampos{
     //--REGLAS DE VALIDACION--
     //Los metodos validaran el contenido del campo del formulario y retornaran vacio si no hay error o  el mensaje de error si la losing condition se cumple
-    private fun checkVacio(texto:String) : String {
+     fun checkVacio(texto:String) : String {
         return if(texto.isEmpty()){
             "El campo no puede estar vacio"
         }else{
@@ -198,6 +198,5 @@ object ValidadorCampos{
         }
         return ""
     }
-
 
 }

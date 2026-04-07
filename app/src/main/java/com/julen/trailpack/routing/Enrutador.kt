@@ -15,14 +15,19 @@ class Enrutador(private val navController: NavController) {
 
 
     //Nav to vistaLogin popBackEdition
-    fun navToLoginPopBack() {
+    fun popBack() {
         //Si te registras te ha popback a login evitando crear mas espacio en memoria y no permitiendote volver al registro sin pulsar el boton
         navController.popBackStack()
     }
     fun navToLogin() {
         navController.navigate("login")
     }
-
+    // Borra toda la pila y va a Login
+    fun navToLoginClearStack() {
+        navController.navigate("login") {
+            popUpTo(0) { inclusive = true }
+        }
+    }
 
     //Nav to VistaCompletarPerfil
     fun navToCompletarPerfil() {
@@ -37,6 +42,15 @@ class Enrutador(private val navController: NavController) {
     //Nav to EditarPerfil
     fun navToEditarPerfil() {
         navController.navigate("editarperfil")
+    }
+
+    //Nav to Ajustes
+    fun navToAjustes() {
+        navController.navigate("ajustes")
+    }
+    //Nav to Cambiar Password
+    fun navToCambiarPassword() {
+        navController.navigate("cambiarpassword")
     }
 
     //Nav to ScaffoldTrailPack

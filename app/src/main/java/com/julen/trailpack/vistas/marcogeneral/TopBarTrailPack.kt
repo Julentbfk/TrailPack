@@ -1,4 +1,4 @@
-package com.julen.trailpack.vistas.componentes.marcogeneral
+package com.julen.trailpack.vistas.marcogeneral
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -53,7 +53,7 @@ fun TopBarTrailPack(enrutador: Enrutador, onCerrarSesion: () -> Unit) {
                 Icon(Icons.Default.Edit, contentDescription = "Editar")
             }
             //Ajustes
-            IconButton(onClick = { /* Ajustes */ }) {
+            IconButton(onClick = { enrutador.navToAjustes() }) {
                 Icon(Icons.Default.Settings, contentDescription = "Ajustes")
             }
             //CerrarSesion

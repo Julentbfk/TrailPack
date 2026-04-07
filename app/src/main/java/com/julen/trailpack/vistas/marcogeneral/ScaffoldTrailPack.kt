@@ -1,4 +1,4 @@
-package com.julen.trailpack.vistas.componentes.marcogeneral
+package com.julen.trailpack.vistas.marcogeneral
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,7 +41,7 @@ fun ScaffoldTrailPack(navController: NavHostController) {
     Scaffold(
         topBar = { TopBarTrailPack(enrutador = enrutador,
             onCerrarSesion = {
-            AuthRepository().cerrarSesion(navController)
+            AuthRepository().authCerrarSesion(navController)
         }) },
         bottomBar = { BottomBarTrailPack() },
         containerColor = MaterialTheme.colorScheme.background

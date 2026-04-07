@@ -46,7 +46,7 @@ class RegistroViewModel : ViewModel() {
 
         isLoading = true
         //Registramos en Firebase si ha pasado todas las validaciones
-        repository.registroUsuario(registroFormstate.username,registroFormstate.email,registroFormstate.password){ success, error ->
+        repository.authRegistroUsuario(registroFormstate.username,registroFormstate.email,registroFormstate.password){ success, error ->
             isLoading = false
             if(success){
                 registroExitoso = true
