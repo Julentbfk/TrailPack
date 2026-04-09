@@ -43,10 +43,7 @@ fun TopBarTrailPack(enrutador: Enrutador, onCerrarSesion: () -> Unit) {
         },
         //Iconos de la derecha
         actions = {
-            //Search
-            IconButton(onClick = {/* Buscar otros perfiles para agregar o añadir amigo */}) {
-                Icon(Icons.Default.Search, contentDescription = "Buscar")
-            }
+
             IconButton(onClick = {
                     enrutador.navToEditarPerfil()
             }) {

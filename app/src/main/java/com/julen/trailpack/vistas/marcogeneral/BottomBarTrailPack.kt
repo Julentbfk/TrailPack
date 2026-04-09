@@ -12,27 +12,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BottomBarTrailPack() {
+fun BottomBarTrailPack(selectedTab: Int, onTabSelected: (Int) -> Unit) {
 
     NavigationBar {
 
         NavigationBarItem(
             icon = { Icon (Icons.Default.Map, null) },
             label = { Text("Mapa") },
-            selected = false,
-            onClick = {/* NAVEGAR A LA PANTALLA MAPA */}
+            selected = selectedTab == 0,
+            onClick = {onTabSelected(0)}
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Explore, null) },
             label = { Text("Rutas") },
-            selected = false,
-            onClick = { /* Navegar a Rutas */ }
+            selected = selectedTab == 1,
+            onClick = { onTabSelected(1) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Person, null) },
             label = { Text("Perfil") },
-            selected = true, // Por ahora estamos en Perfil
-            onClick = { /* Navegar al Perfil */ }
+            selected = selectedTab == 2, // Por ahora estamos en Perfil
+            onClick = { onTabSelected(2) }
         )
     }
 
@@ -40,5 +40,5 @@ fun BottomBarTrailPack() {
 @Preview
 @Composable
 fun BottomBarTrailPackPreview(){
-    BottomBarTrailPack()
+    BottomBarTrailPack(0,{})
 }
