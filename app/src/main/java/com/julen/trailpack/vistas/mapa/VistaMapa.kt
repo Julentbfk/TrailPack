@@ -33,7 +33,6 @@ import com.julen.trailpack.vistas.componentes.mapa.MapaContent
 fun VistaMapa () {
 
     val viewModel: MapaViewModel = viewModel()
-    val parqueSeleccionado = viewModel.parqueSeleccionado
 
     //Configuracion inicial de la camara en el mapa
     val camaraPositionState = rememberSaveable(saver = CameraPositionState.Saver) {

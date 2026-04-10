@@ -33,6 +33,7 @@ class MapaViewModel : ViewModel() {
 
     }
     var rutasparquenatural by mutableStateOf<List<Ruta>>(emptyList())
+    var rutaSeleccionada by mutableStateOf<Ruta?>(null)
     var parqueSeleccionado by mutableStateOf<ParqueNatural?>(null)
     var isLoadingRutas by mutableStateOf(false) // Nuevo estado
 
