@@ -17,6 +17,7 @@ import com.julen.trailpack.vistas.marcogeneral.ScaffoldTrailPack
 import com.julen.trailpack.vistas.login.VistaLogin
 import com.julen.trailpack.vistas.mapa.MapaViewModel
 import com.julen.trailpack.vistas.mapa.VistaRutaDetalladaMapa
+import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 import com.julen.trailpack.vistas.perfilusuario.VistaCompletarPerfil
 import com.julen.trailpack.vistas.perfilusuario.VistaEditarPerfil
 import com.julen.trailpack.vistas.registro.VistaRegistro
@@ -31,6 +32,7 @@ fun AppNavegation() {
 
     val navHost: NavHostController = rememberNavController()
     val enrutador: Enrutador = remember(navHost){ Enrutador(navHost) }
+    val mainViewModel: MainViewModel = viewModel()
 
     //consultamos sesion activa en firebase
     val auth = FirebaseAuth.getInstance()
@@ -87,7 +89,7 @@ fun AppNavegation() {
         }
 
         composable(route="scaffoldtrailpack"){
-            ScaffoldTrailPack(navHost)
+            ScaffoldTrailPack(navHost,mainViewModel)
         }
 
         //Rutas lanzadas desde editarperfil

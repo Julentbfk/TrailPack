@@ -12,7 +12,6 @@ import com.julen.trailpack.modelos.Ruta
 class MapaViewModel : ViewModel() {
 
     private val repository = MapsRepository()
-    var selectedTab by mutableStateOf(2) // 0: Mapa, 1: Social, 2: Perfil
 
 //region Creacion de parques naturales con sus rutas
     var parquesnaturales by mutableStateOf <List<ParqueNatural>>(emptyList())
