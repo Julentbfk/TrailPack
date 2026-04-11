@@ -63,4 +63,11 @@ class Enrutador(private val navController: NavController) {
     }
 
 
+    //Nav to ruta detallada mapa
+    fun navToRutaDetalladaMapa(rutaId: String) {
+        navController.navigate("detalleruta/$rutaId")
+
+    }
+
+
 }

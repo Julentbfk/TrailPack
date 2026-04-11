@@ -12,7 +12,9 @@ import com.julen.trailpack.modelos.Ruta
 class MapaViewModel : ViewModel() {
 
     private val repository = MapsRepository()
+    var selectedTab by mutableStateOf(2) // 0: Mapa, 1: Social, 2: Perfil
 
+//region Creacion de parques naturales con sus rutas
     var parquesnaturales by mutableStateOf <List<ParqueNatural>>(emptyList())
     var isLoading by mutableStateOf(true)
 
@@ -32,6 +34,8 @@ class MapaViewModel : ViewModel() {
         }
 
     }
+
+
     var rutasparquenatural by mutableStateOf<List<Ruta>>(emptyList())
     var rutaSeleccionada by mutableStateOf<Ruta?>(null)
     var parqueSeleccionado by mutableStateOf<ParqueNatural?>(null)
@@ -54,5 +58,29 @@ class MapaViewModel : ViewModel() {
 
         }
     }
+//endregion
+
+//region Acciones de los card ruta
+
+    fun seleccionarRutaParaDetalle(ruta: Ruta?){
+        rutaSeleccionada = ruta
+    }
+    var isPublicacionPopupVisible: Boolean by mutableStateOf(false)
+    var formPublicacion by mutableStateOf(PublicacionFormModel())
+
+    fun togglePopupPublicacion(visible: Boolean, ruta: Ruta? = null) {
+
+        isPublicacionPopupVisible = visible
+        if (visible && ruta != null) {
+            rutaSeleccionada = ruta
+        }
+
+    }
+    fun actualizarFormulario(nuevoForm: PublicacionFormModel) {
+        formPublicacion = nuevoForm
+    }
+
+//endregion
+
 
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.julen.trailpack.modelos.ParqueNatural
 import com.julen.trailpack.modelos.Ruta
+import com.julen.trailpack.routing.Enrutador
 
 
 //ESTA CLASE CONTENDRA LAS RUTA CARD Y PINTARA LO DE CADA CHINCHETA
@@ -28,7 +29,8 @@ import com.julen.trailpack.modelos.Ruta
 fun MapaParqueNaturalCard (
     parque: ParqueNatural,
     rutas: List<Ruta>,
-    onRutaClick: (Ruta) -> Unit
+    onRutaClick: (Ruta) -> Unit,
+    onPublicarClick: (Ruta) -> Unit
 ) {
 
     Column(
@@ -67,7 +69,11 @@ fun MapaParqueNaturalCard (
         )
 
         for (ruta in rutas) {
-            MapaRutaCard(ruta=ruta, onClick = {onRutaClick(ruta)})
+            MapaRutaCard(
+                ruta=ruta,
+                onRutaClick = { onRutaClick(ruta)},
+                onPublicarClick = { onPublicarClick(ruta) }
+            )
         }
 
     }

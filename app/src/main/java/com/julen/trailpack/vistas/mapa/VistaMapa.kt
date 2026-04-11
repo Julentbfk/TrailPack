@@ -1,38 +1,29 @@
 package com.julen.trailpack.vistas.mapa
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.julen.trailpack.vistas.componentes.mapa.ListaRutasParqueBottomSheet
+import com.julen.trailpack.routing.Enrutador
 import com.julen.trailpack.vistas.componentes.mapa.MapaContent
+import com.julen.trailpack.vistas.componentes.mapa.PopUpPublicarRuta
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VistaMapa () {
+fun VistaMapa (enrutador: Enrutador) {
 
     val viewModel: MapaViewModel = viewModel()
+
+    LaunchedEffect(Unit) {
+        viewModel.seleccionarRutaParaDetalle(null)
+    }
 
     //Configuracion inicial de la camara en el mapa
     val camaraPositionState = rememberSaveable(saver = CameraPositionState.Saver) {
@@ -46,15 +37,18 @@ fun VistaMapa () {
 
         //El Sheet solo se instancia cuando se necesita, pero al estar en un Box no afecta al Mapa.
         if (viewModel.parqueSeleccionado != null) {
-            ListaRutasParqueBottomSheet(viewModel)
+            ListaRutasParqueBottomSheet(
+                viewModel = viewModel,
+                navToRutaDetalladaMapa = {rutaId ->
+                    // 1. LIMPIEZA TOTAL: Cierra el BottomSheet y limpia la selección
+                    viewModel.parqueSeleccionado = null
+                    // 2. NAVEGAMOS
+                    enrutador.navToRutaDetalladaMapa(rutaId)
+                }
+            )
         }
+
+        PopUpPublicarRuta(viewModel)
     }
 
-}
-
-
-@Preview
-@Composable
-fun VistaMapaPreview (){
-    VistaMapa ()
 }
