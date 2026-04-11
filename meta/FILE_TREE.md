@@ -1,2 +1,87 @@
 # [FILE_TREE: Estructura Actual del Proyecto]
-*Se actualizará por el Agente Programador tras hitos importantes.*
+|   MainActivity.kt
+|   
++---data
+|       AuthRepository.kt
+|       MapsRepository.kt
+|       UserRepository.kt
+|       
++---modelos
+|       Actividad.kt
+|       Pais.kt
+|       ParqueNatural.kt
+|       Participante.kt
+|       Ruta.kt
+|       Usuario.kt
+|       
++---routing
+|       AppNavegation.kt
+|       Enrutador.kt
+|       
++---theme
+|       Color.kt
+|       Theme.kt
+|       Type.kt
+|       
+\---vistas
++---ajustes
+|   |   AjustesViewModel.kt
+|   |   VistaAjustes.kt
+|   |   
+|   \---cambiarpassword
+|           CambiarPasswordFormModel.kt
+|           VistaCambiarPassword.kt
+|           
++---componentes
+|   +---formulario
+|   |       OutlinedTextFieldMejorado.kt
+|   |       SelectorPrefijoPais.kt
+|   |       
+|   +---mapa
+|   |       MapaContent.kt
+|   |       MapaParqueNaturalCard.kt
+|   |       MapaRutaCard.kt
+|   |       PopUpPublicarRuta.kt
+|   |       
+|   \---usuario
+|           DatosPersonalesPerfil.kt
+|           FotoPerfil.kt
+|           NivelUsuario.kt
+|           SeguidoresUsuarioPerfil.kt
+|           
++---login
+|       LoginViewModel.kt
+|       VistaLogin.kt
+|       
++---mapa
+|       ListaRutasParqueBottomSheet.kt
+|       MapaViewModel.kt
+|       PublicacionFormModel.kt
+|       VistaMapa.kt
+|       VistaRutaDetalladaMapa.kt
+|       
++---marcogeneral
+|       BottomBarTrailPack.kt
+|       MainViewModel.kt
+|       ScaffoldTrailPack.kt
+|       TopBarTrailPack.kt
+|       
++---perfilusuario
+|       CompletarPerfilFormModel.kt
+|       EditarPerfilFormModel.kt
+|       PerfilUsuarioViewModel.kt
+|       VistaCompletarPerfil.kt
+|       VistaEditarPerfil.kt
+|       VistaPerfilUsuario.kt
+|       
++---registro
+|       RegistroFormModel.kt
+|       RegistroViewModel.kt
+|       VistaConfirmacionEmail.kt
+|       VistaRegistro.kt
+|       
++---social
+|       VistaRutasPublicadas.kt
+|       
+\---utiles
+ValidadorCamposFormulario.kt

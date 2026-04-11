@@ -1,20 +1,15 @@
 # [DIARIO DE DESARROLLO Y TAREAS]
 
-## Realizado hoy (Fase 6 - Core Mapa)
+## Realizado
 - [COMPLETADO] Configuración de navegación entre tabs.
-- [COMPLETADO] Implementación `MapsRepository` (Consulta de Parques y Rutas asociadas).
-- [COMPLETADO] UI de Mapa con `GoogleMap` y marcadores reactivos.
-- [COMPLETADO] `BottomSheet` de detalle dinámico con carga de datos desde Firebase.
-- [COMPLETADO] Optimización de rendimiento: Separación de componentes para evitar recargas del mapa.
-- [COMPLETADO] Corrección de deserialización de fechas (`Long` vs `Timestamp`).
+- [COMPLETADO] UI de Mapa, marcadores reactivos y `BottomSheet` detalle.
+- [COMPLETADO] Refactorización: Centralización de estado global en `MainViewModel`.
+- [COMPLETADO] Implementación de `VistaRutaDetalladaMapa` y navegación dinámica.
+- [COMPLETADO] Integración de `PopUpPublicarRuta` con persistencia de estado correcta.
 
 ## Pendientes Próximos (Prioridad Alta)
-1. **Diseño Visual:** Crear componentes `RutaCard` y vista de detalle de ruta.
-2. **UI Rutas:** Implementar `LazyColumn` en el `BottomSheet` para listar las rutas de forma visual.
-3. **Acción Publicar:** Implementar lógica de publicación de eventos (`Actividad`) en Firebase (accesible desde `RutaCard` y detalle).
-4. **Arquitectura:** Iniciar estructura del repositorio para la Tab 2 (Social Feed).
-
-[PENDIENTE] Diseñar `RutaCard` y `DetalleRuta`. (Prioridad: Media)
-[COMPLETADO] Implementar navegación principal. (Prioridad: Alta)
-[COMPLETADO] Integrar mapa con datos reales (Firebase). (Prioridad: Alta)
-[PENDIENTE] Integrar Geolocalización (Google Places API). (Prioridad: Baja)
+1. **Acción Publicar:** Implementar lógica de guardado de datos (`Actividad`) en Firebase desde el `PopUpPublicarRuta`.
+2. **UI Rutas:** Refinar diseño de la vista detallada (StatsGrid, Clima).
+3. **Arquitectura:** Iniciar estructura del repositorio para la Tab 2 (Social Feed).
+4. **UX:** Implementar el "Perfil Global" en `MainViewModel` para compartir datos de usuario.
+5. [PENDIENTE] Integrar Geolocalización (Google Places API). (Prioridad: Baja)
