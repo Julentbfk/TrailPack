@@ -2,13 +2,19 @@ package com.julen.trailpack.vistas.marcogeneral
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import com.julen.trailpack.data.UserRepository
 import com.julen.trailpack.modelos.Usuario
 
+// CLASE EN FABRICACION, SE OCUPARA DE GESTIONAR ESTADOS GLOBALES COMO AUTH O SESION DE USUARIO CONECTADO
+// POR EL MOMENTO SOLO GESTIONA LA NAVEGACION ENTRE PAGINAS Y REVISA SI EL USUARIO ESTA CONECTADO Y AUTENTIFICADO
 class MainViewModel : ViewModel(){
 
     //region UI GLOBAL
@@ -28,21 +34,41 @@ class MainViewModel : ViewModel(){
         val user = auth.currentUser
         isUserLoggedIn = user != null && user.isEmailVerified
         isCheckingAuth = false
-    }
-    //enregion
 
-    //region PERFIL GLOBAL
+    }
+    //endregion
+
+    //region Estado global del usuario principal conectado
+    private val userRepository = UserRepository()
     var usuarioGlobal by mutableStateOf<Usuario?>(null)
-    private val userRepository  = UserRepository()
-    fun cargaPerfilGlobal(uid:String) {
-        userRepository.obtenerUsuario(uid) {user, error ->
-            if(user != null){
+
+    fun cargarUsuarioGlobal(uid: String){
+        Log.d("DEBUG_MAIN", "Iniciando carga para uid: $uid")
+        userRepository.obtenerUsuario(uid) { user, error ->
+            if (user != null) {
+                Log.d("DEBUG_MAIN", "Usuario cargado: ${user.username}")
                 usuarioGlobal = user
-            }else{
-                Log.d("errorUsuarioGlobal", "error al cargar el usuarioGlobal desde MainViewModel $error")
+            } else {
+                Log.e("DEBUG_MAIN", "Error cargando usuario: $error")
             }
         }
     }
+    //endregion
+
+    //region FECHAS
+    fun formatearFecha(millis: Long) : String {
+        val fecha  = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+        return fecha
+    }
 
     //endregion
+
+    //region NOTIFICACIONES
+    var notificationMessage by mutableStateOf<String?>(null)
+    fun showNotification(mensaje: String) {
+        notificationMessage = mensaje
+    }
+
+    //endregion
+
 }

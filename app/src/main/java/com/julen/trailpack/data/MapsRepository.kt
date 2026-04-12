@@ -1,6 +1,7 @@
 package com.julen.trailpack.data;
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.julen.trailpack.modelos.Actividad
 import com.julen.trailpack.modelos.ParqueNatural
 import com.julen.trailpack.modelos.Ruta
 
@@ -31,5 +32,16 @@ class MapsRepository {
         .addOnFailureListener { error ->
             onResult(null,error.localizedMessage)
         }
+    }
+
+    fun repoGuardarActividad(nuevaActividad: Actividad, onResult: (Boolean, String? ) -> Unit) {
+
+        db.collection("actividades").add(nuevaActividad).addOnSuccessListener { task ->
+            task.update("idactividad",task.id)//Le da a la actividad el id que le pone firebase
+            onResult(true,null)
+        }.addOnFailureListener { error ->
+            onResult(false,error.localizedMessage)
+        }
+
     }
 }

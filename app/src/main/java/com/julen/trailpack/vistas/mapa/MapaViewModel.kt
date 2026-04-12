@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.julen.trailpack.data.MapsRepository
+import com.julen.trailpack.modelos.Actividad
 import com.julen.trailpack.modelos.ParqueNatural
 import com.julen.trailpack.modelos.Ruta
+import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 class MapaViewModel : ViewModel() {
 
@@ -64,8 +66,8 @@ class MapaViewModel : ViewModel() {
     fun seleccionarRutaParaDetalle(ruta: Ruta?){
         rutaSeleccionada = ruta
     }
+
     var isPublicacionPopupVisible: Boolean by mutableStateOf(false)
-    var formPublicacion by mutableStateOf(PublicacionFormModel())
 
     fun togglePopupPublicacion(visible: Boolean, ruta: Ruta? = null) {
 
@@ -75,8 +77,51 @@ class MapaViewModel : ViewModel() {
         }
 
     }
-    fun actualizarFormulario(nuevoForm: PublicacionFormModel) {
-        formPublicacion = nuevoForm
+
+    var formPublicacion by mutableStateOf(PublicacionFormModel())
+    fun updateFormPublicacion(newFormState: PublicacionFormModel) {
+        formPublicacion = newFormState
+    }
+
+    fun publicarRuta(mainViewModel: MainViewModel) {
+        isLoading = true
+        Log.d("DEBUG_DEBUG", "Entrando en publicarRuta")
+        Log.d("DEBUG_DEBUG", "Usuario en VM: ${mainViewModel.usuarioGlobal?.username ?: "NULO"}")
+
+        val usuarioglobal = mainViewModel.usuarioGlobal
+        if (usuarioglobal == null) {
+            Log.d("DEBUG_DEBUG", "ABORTANDO: usuarioGlobal es NULO")
+            return // <--- Aquí se está yendo
+        }
+
+        Log.d("DEBUG_DEBUG", "Usuario OK, continuando...")
+        //Mapeo a objeto Actividad
+        val nuevaActividad = Actividad(
+            idruta = rutaSeleccionada!!.idruta,
+            idcreador = usuarioglobal.uid,
+            nombrecreador = usuarioglobal.username ?: "Anonimo",
+            fotocreador = usuarioglobal.fotoperfil ?: "",
+            fechasalida = formPublicacion.fechenmillis,
+            maxparticipantes = formPublicacion.numparticipantes.toIntOrNull() ?: 10,
+            estado = "OPEN"
+        )
+        Log.d("actividad","Botonfunciona ${nuevaActividad.idruta} + ${nuevaActividad.nombrecreador} + ${nuevaActividad.maxparticipantes}")
+
+        //Guardamos en db
+        repository.repoGuardarActividad(nuevaActividad) {success, error ->
+            isLoading = false
+            if(success){
+                Log.d("repo","Guardando {${nuevaActividad.estado}")
+                isPublicacionPopupVisible = false
+                //mostramos mensaje exitoso
+                mainViewModel.showNotification("¡¡¡Ruta publicada con exito!!!")
+
+            }else{
+                mainViewModel.showNotification("¡¡¡ERROR AL PUBLICAR!!! \n $error")
+                Log.d("errorGuardarActividad", "error al guardar la actividad ene firebase $error")
+            }
+        }
+
     }
 
 //endregion

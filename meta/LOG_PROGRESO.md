@@ -8,8 +8,8 @@
         - Implementación navegación completa entre tabs (Mapa, Social, Perfil).
         - Desarrollo de `VistaMapa` y repositorio `MapsRepository`.
         - Carga dinámica de rutas asociadas a parques vía `BottomSheet` (Firebase).
-    - **Optimización & Refactorización (Actual):**
+    - **Optimización & Refactorización:**
         - Centralización de estado global (`selectedTab`, Auth) en `MainViewModel`.
-        - Implementación de navegación dinámica hacia `VistaRutaDetalladaMapa`.
-        - Integración de `PopUpPublicarRuta` en vistas de detalle.
-        - Corrección de bugs de persistencia de navegación y bloqueo de `BottomBar`.
+        - Integración de sistema de notificaciones global (Toasts centralizados).
+        - Implementación lógica persistencia Actividades (guardado en Firestore).
+        - Refactorización componentes formulario (SelectorFecha con Material3).

@@ -13,16 +13,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.julen.trailpack.routing.Enrutador
 import com.julen.trailpack.vistas.componentes.mapa.MapaContent
-import com.julen.trailpack.vistas.componentes.mapa.PopUpPublicarRuta
+import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VistaMapa (enrutador: Enrutador) {
+fun VistaMapa (enrutador: Enrutador, mainviewModel: MainViewModel) {
 
-    val viewModel: MapaViewModel = viewModel()
+    val mapaViewModel: MapaViewModel = viewModel()
 
     LaunchedEffect(Unit) {
-        viewModel.seleccionarRutaParaDetalle(null)
+        mapaViewModel.seleccionarRutaParaDetalle(null)
     }
 
     //Configuracion inicial de la camara en el mapa
@@ -33,22 +33,22 @@ fun VistaMapa (enrutador: Enrutador) {
     }
     Box(modifier = Modifier.fillMaxSize()) {
 
-        MapaContent(viewModel, camaraPositionState)
+        MapaContent(mapaViewModel, camaraPositionState)
 
         //El Sheet solo se instancia cuando se necesita, pero al estar en un Box no afecta al Mapa.
-        if (viewModel.parqueSeleccionado != null) {
+        if (mapaViewModel.parqueSeleccionado != null) {
             ListaRutasParqueBottomSheet(
-                viewModel = viewModel,
+                viewModel = mapaViewModel,
                 navToRutaDetalladaMapa = {rutaId ->
                     // 1. LIMPIEZA TOTAL: Cierra el BottomSheet y limpia la selección
-                    viewModel.parqueSeleccionado = null
+                    mapaViewModel.parqueSeleccionado = null
                     // 2. NAVEGAMOS
                     enrutador.navToRutaDetalladaMapa(rutaId)
                 }
             )
         }
 
-        PopUpPublicarRuta(viewModel)
+        PopUpPublicarRuta(mapaViewModel,mainviewModel)
     }
 
 }

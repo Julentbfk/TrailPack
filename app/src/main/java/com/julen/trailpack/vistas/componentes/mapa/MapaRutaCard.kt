@@ -39,6 +39,7 @@ import coil.compose.AsyncImage
 import com.julen.trailpack.R
 import com.julen.trailpack.modelos.Ruta
 import com.julen.trailpack.vistas.mapa.MapaViewModel
+import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -49,7 +50,8 @@ fun MapaRutaCard( ruta: Ruta, onRutaClick: () -> Unit,onPublicarClick: () -> Uni
 
     //Formateo la fecha del usuario
     val milis = ruta.fechacreacion
-    val fechaFormateada = Instant.ofEpochMilli(milis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    val mainViewModel: MainViewModel = viewModel()
+    val fechaFormateada = mainViewModel.formatearFecha(milis)
     //-----------------------------
 
     Card(

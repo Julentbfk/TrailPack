@@ -128,7 +128,6 @@ fun AppNavegation() {
                //Obtengo el viewModel desde ese entry
                val viewModel: MapaViewModel = viewModel(scaffoldEntry)
 
-
                val rutaId = backstackEntry.arguments?.getString("rutaId") ?: ""
                val rutaSeleccionada = viewModel.rutasparquenatural.find{ it.idruta == rutaId }
 
@@ -136,11 +135,17 @@ fun AppNavegation() {
                    VistaRutaDetalladaMapa(
                        ruta = rutaSeleccionada,
                        viewModel = viewModel,
-                       onPublicarClick = {viewModel.togglePopupPublicacion(true, rutaSeleccionada)},
+                       onPublicarClick = {
+                           viewModel.togglePopupPublicacion(
+                               true,
+                               rutaSeleccionada
+                           )
+                       },
                        onBack = {
                            viewModel.seleccionarRutaParaDetalle(null)
                            navHost.popBackStack()
-                       }
+                       },
+                       mainViewModel = mainViewModel
                    )
                }else{
                    // Si vemos esto en pantalla, confirmamos que el objeto no se encuentra
