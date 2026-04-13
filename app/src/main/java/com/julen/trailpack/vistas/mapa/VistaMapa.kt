@@ -48,7 +48,7 @@ fun VistaMapa (enrutador: Enrutador, mainviewModel: MainViewModel) {
             )
         }
 
-        PopUpPublicarRuta(mapaViewModel,mainviewModel)
+        PopUpPublicarRuta(mapaViewModel, mainviewModel)
     }
 
 }

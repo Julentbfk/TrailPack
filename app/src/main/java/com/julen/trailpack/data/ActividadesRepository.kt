@@ -20,5 +20,14 @@ class ActividadesRepository {
             onResult(null, error.localizedMessage)
         }
     }
-
+    fun repoObtenerActividadPorId(id: String, onResult: (Actividad?, String?) -> Unit) {
+        db.collection("actividades").document(id).get()
+            .addOnSuccessListener { documentSnapshot ->
+                val actividad = documentSnapshot.toObject(Actividad::class.java)
+                onResult(actividad, null)
+            }
+            .addOnFailureListener { error ->
+                onResult(null, error.localizedMessage)
+            }
+    }
 }

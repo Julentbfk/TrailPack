@@ -59,4 +59,15 @@ class MapsRepository {
             onResult(null,error.localizedMessage)
         }
     }
+
+    fun repoObtenerUnaRutaPorId(id: String, onResult: (Ruta?, String?) -> Unit) {
+        db.collection("rutas").document(id).get()
+            .addOnSuccessListener { documentSnapshot ->
+                val ruta = documentSnapshot.toObject(Ruta::class.java)
+                onResult(ruta, null)
+            }
+            .addOnFailureListener { error ->
+                onResult(null, error.localizedMessage)
+            }
+    }
 }

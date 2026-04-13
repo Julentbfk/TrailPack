@@ -1,7 +1,7 @@
-package com.julen.trailpack.vistas.componentes.actividadespublicadas
+package com.julen.trailpack.vistas.actividadespublicadas
 
+import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,15 +36,21 @@ import com.julen.trailpack.modelos.ActividadConRuta
 fun CardActividad(
     actividadConRuta: ActividadConRuta,
     fechaFormateada: String,
+    usuarioActualUid: String?,
     onUnirseClick: () -> Unit,
+    onAbandonarClick: () -> Unit,
     onCardClick: () -> Unit
 ) {
     val actividad = actividadConRuta.actividad
     val ruta = actividadConRuta.ruta
+
+    //Logica para saber si el usuario actual esta entre los participantes
+    val usuarioIn = usuarioActualUid != null && actividad.listaparticipantesIds.contains(usuarioActualUid)
+
     //LOG PARA DIAGNOSTICAR
-    android.util.Log.d("DEBUG_CARD", "Actividad ID: ${actividad.idactividad} | IDRuta esperado: ${actividad.idruta} | ¿Ruta encontrada?: ${ruta != null}")
+    Log.d("DEBUG_CARD", "Actividad ID: ${actividad.idactividad} | IDRuta esperado: ${actividad.idruta} | ¿Ruta encontrada?: ${ruta != null}")
     if (ruta != null) {
-        android.util.Log.d("DEBUG_CARD", "Ruta encontrada: ${ruta.nombre} con ID: ${ruta.idruta}")
+        Log.d("DEBUG_CARD", "Ruta encontrada: ${ruta.nombre} con ID: ${ruta.idruta}")
     }
 
 
@@ -123,16 +129,22 @@ fun CardActividad(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = onUnirseClick, modifier = Modifier.fillMaxWidth()) {
-                    Text("Unirse", style = MaterialTheme.typography.labelSmall)
+
+
+                if(usuarioIn) {
+                    Button(
+                        onClick = { /*SALIRSE*/},
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                    ) {
+                        Text("SALIR", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onErrorContainer)
+                    }
+                }else{
+                    Button(onClick = onUnirseClick, modifier = Modifier.fillMaxWidth()) {
+                        Text("Unirse", style = MaterialTheme.typography.labelSmall)
+                    }
                 }
-                Button(
-                    onClick = { /*SALIRSE*/},
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-                ) {
-                    Text("SALIR", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onErrorContainer)
-                }
+
             }
         }
     }

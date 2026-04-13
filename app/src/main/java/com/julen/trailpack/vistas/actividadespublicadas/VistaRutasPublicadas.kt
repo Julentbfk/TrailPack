@@ -11,11 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.julen.trailpack.vistas.componentes.actividadespublicadas.CardActividad
+import com.julen.trailpack.routing.Enrutador
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
-fun VistaRutasPublicadas (mainViewModel: MainViewModel) {
+fun VistaRutasPublicadas (mainViewModel: MainViewModel,enrutador: Enrutador) {
 
     val actividadesviewModel: ActividadesViewModel = viewModel()
 
@@ -35,13 +35,19 @@ fun VistaRutasPublicadas (mainViewModel: MainViewModel) {
             CardActividad(
                 actividadConRuta = actividadconruta,
                 fechaFormateada = mainViewModel.formatearFecha(actividadconruta.actividad.fechasalida),
+                usuarioActualUid = mainViewModel.usuarioGlobal?.uid,
                 onUnirseClick = {
                     //funcion unirse a actividad
-                    mainViewModel.showNotification("Funcionalidad de UNIRSE en desarrollo")
+                    mainViewModel.showNotification("Funcionalidad de UNIRSE a actividad")
+                },
+                onAbandonarClick = {
+                    //funcion de abandonar actividad
+                    mainViewModel.showNotification("Funcionalidad de Abandonar actividad")
                 },
                 onCardClick = {
                     //Navegacion a detalle
                     mainViewModel.showNotification("Navegando a detalle...")
+                    enrutador.navToActividadDetallada(actividadconruta.actividad.idactividad)
                 }
             )
         }

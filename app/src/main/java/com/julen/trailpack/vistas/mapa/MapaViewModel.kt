@@ -99,6 +99,7 @@ class MapaViewModel : ViewModel() {
         val nuevaActividad = Actividad(
             idruta = rutaSeleccionada!!.idruta,
             idcreador = usuarioglobal.uid,
+            listaparticipantesIds = listOf(usuarioglobal.uid),
             nombrecreador = usuarioglobal.username ?: "Anonimo",
             fotocreador = usuarioglobal.fotoperfil ?: "",
             fechasalida = formPublicacion.fechenmillis,

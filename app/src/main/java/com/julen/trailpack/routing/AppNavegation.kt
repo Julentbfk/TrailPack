@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.firebase.auth.FirebaseAuth
+import com.julen.trailpack.vistas.actividadespublicadas.VistaDetalleActividad
 import com.julen.trailpack.vistas.ajustes.VistaAjustes
 import com.julen.trailpack.vistas.ajustes.cambiarpassword.VistaCambiarPassword
 import com.julen.trailpack.vistas.marcogeneral.ScaffoldTrailPack
@@ -151,6 +150,16 @@ fun AppNavegation() {
                    // Si vemos esto en pantalla, confirmamos que el objeto no se encuentra
                    Text(text = "Error: Ruta no encontrada con ID: $rutaId")
                }
+           }
+
+           //Rutas lanzadas desde actividadesPublicadas
+           composable(
+               route = "detalleactividad/{actividadId}",
+               arguments = listOf(navArgument("actividadId") {type = NavType.StringType})
+           ){backstackEnty ->
+               val actividadId = backstackEnty.arguments?.getString("actividadId") ?: ""
+
+               VistaDetalleActividad(actividadId=actividadId,mainviewModel = mainViewModel)
            }
 
 
