@@ -22,7 +22,7 @@ import com.julen.trailpack.data.AuthRepository
 import com.julen.trailpack.routing.Enrutador
 import com.julen.trailpack.vistas.mapa.VistaMapa
 import com.julen.trailpack.vistas.perfilusuario.VistaPerfilUsuario
-import com.julen.trailpack.vistas.social.VistaRutasPublicadas
+import com.julen.trailpack.vistas.actividadespublicadas.VistaRutasPublicadas
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
