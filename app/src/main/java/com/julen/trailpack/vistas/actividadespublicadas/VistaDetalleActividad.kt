@@ -1,6 +1,5 @@
 package com.julen.trailpack.vistas.actividadespublicadas
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,14 +42,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
         detalleviewModel.cargarDetalles(actividadId)
     }
 
-    // Cargamos los mensajes que pueda haber
-    val context = LocalContext.current
-    LaunchedEffect(mainviewModel.notificationMessage) {
-        mainviewModel.notificationMessage?.let { mensaje ->
-            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
-            mainviewModel.notificationMessage = null
-        }
-    }
+    // El observador de notificaciones (Toast) se ha movido a AppNavegation para ser global.
 
     if (detalleviewModel.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -84,7 +75,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
 
             Column(modifier = Modifier.padding(16.dp)) {
 
-                // Título: Nombre de la Actividad (o de la ruta si la actividad no tiene)
+                // Título: Nombre de la Actividad
                 Text(
                     text = if (actividad.nombre.isNotEmpty()) actividad.nombre.uppercase() else ruta?.nombre?.uppercase() ?: "SIN NOMBRE",
                     style = MaterialTheme.typography.headlineMedium,
@@ -105,7 +96,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Stats GRID (Datos de la Ruta)
+                // Stats GRID
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     StatItem("Distancia", "${ruta?.distancia ?: "--"} km")
                     StatItem("Dificultad", ruta?.dificultad ?: "--")
@@ -143,7 +134,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Descripción de la ruta
+                // Descripción
                 Text(text = "Sobre esta ruta", style = MaterialTheme.typography.titleMedium)
                 Text(
                     text = ruta?.descripcion ?: "Sin descripción disponible para esta ruta.",
@@ -166,7 +157,6 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
                     }
 
                     if (!estaUnido) {
-                        // Botón UNIRSE
                         Button(
                             onClick = { mainviewModel.showNotification("Te has unido a la actividad") },
                             modifier = Modifier.weight(1f),
@@ -176,7 +166,6 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
                             Text("UNIRSE")
                         }
                     } else {
-                        // Botón SALIRSE
                         Button(
                             onClick = { mainviewModel.showNotification("Has abandonado la actividad") },
                             modifier = Modifier.weight(1f),
@@ -195,9 +184,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
                         modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
                     )
                 }
-
             }
-
         }
     }
 }

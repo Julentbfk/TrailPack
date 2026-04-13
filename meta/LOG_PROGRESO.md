@@ -16,18 +16,13 @@
 
 ### Fase 7: Feed Social y Actividades (En curso - Hoy)
 - **Estructura Social:** Creación del paquete `vistas/actividadespublicadas` para gestionar el feed de la comunidad.
-- **Repositorio de Actividades:** Implementación de `ActividadesRepository` con soporte para recuperación de colecciones y documentos individuales.
 - **Lógica de Negocio (ViewModel):** 
-    - `ActividadesViewModel`: Implementación de una operación de "Join" en memoria que combina datos de `Actividad` (Firestore) con datos de `Ruta` (MapsRepository) para mostrar información completa.
-    - Manejo de estados de carga (`isLoading`) y reactividad en el feed.
-- **UI Social:**
-    - `VistaRutasPublicadas`: Implementación de `LazyColumn` con recarga automática vía `LaunchedEffect`.
-    - `CardActividad`: Diseño de tarjeta para mostrar el resumen de la actividad, incluyendo vinculación con el autor y la ruta.
-    - `VistaDetalleActividad`: Creación de la vista profunda para explorar una actividad específica.
-- **Refactorización y Fixes de UI (Sesión Actual):**
-    - **Corrección en MapsRepository:** Se ha ajustado la recuperación de rutas individuales para que use el campo `idruta` como clave de búsqueda, asegurando la consistencia entre colecciones.
-    - **Mejora en VistaDetalleActividad:** Sincronización completa de datos de ruta y actividad. Se ha implementado la lógica condicional para los botones de acción (Unirse/Salir) basada en el estado real de la lista de participantes.
+    - `ActividadesViewModel`: Implementación de "Join" en memoria (Actividad + Ruta).
+- **Refactorización y Arquitectura de UI (Sesión Actual):**
+    - **Globalización de Notificaciones (Toasts):** Se ha movido el observador de `notificationMessage` a `AppNavegation.kt`. Esto garantiza que los mensajes de feedback sean visibles desde cualquier profundidad de la pila de navegación (como las vistas de detalle).
+    - **Estandarización de PopUps:** Se ha refactorizado `PopUpPublicarRuta` para que sea un componente `Dialog` de Compose. Esto soluciona los problemas de superposición (Z-index) y permite que el diálogo sea visible tanto en el `Scaffold` principal como en las vistas detalladas.
+    - **Fixes de Datos:** Corregida la recuperación de rutas individuales en `MapsRepository` para usar el campo `idruta` como clave.
+    - **Sincronización de UI:** Unificada la lógica de los botones "Unirse/Salir" en `VistaDetalleActividad` para ser coherente con el estado de Firebase.
 - **Globalización de Estado:**
-    - Integración de `usuarioGlobal` en `MainViewModel` para evitar consultas redundantes a Firebase.
-    - Sistema de notificaciones `showNotification` centralizado en el `MainViewModel`.
-    - Utilidades de formateo de fecha (`formatearFecha`) integradas en el core para consistencia visual.
+    - Integración de `usuarioGlobal` en `MainViewModel`.
+    - Centralización de utilidades core (fechas, notificaciones).

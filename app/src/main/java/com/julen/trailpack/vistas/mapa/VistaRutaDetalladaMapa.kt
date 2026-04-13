@@ -1,9 +1,13 @@
 package com.julen.trailpack.vistas.mapa
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,7 +17,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -33,33 +39,48 @@ fun VistaRutaDetalladaMapa(
         onBack()
     }
 
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
-        AsyncImage(
-            model = ruta.fotosRuta.firstOrNull(),
-            contentDescription = "mapa de la ruta",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp),
-            contentScale = ContentScale.Crop
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
+            AsyncImage(
+                model = ruta.fotosRuta.firstOrNull(),
+                contentDescription = "mapa de la ruta",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp),
+                contentScale = ContentScale.Crop
+            )
 
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = ruta.nombre, style = MaterialTheme.typography.headlineMedium)
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = ruta.nombre, style = MaterialTheme.typography.headlineMedium)
 
-            Text(text = "Descripción", style = MaterialTheme.typography.titleLarge)
-            Text(text = ruta.descripcion, style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Descripción", style = MaterialTheme.typography.titleLarge)
+                Text(text = ruta.descripcion, style = MaterialTheme.typography.bodyMedium)
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = { /* Favoritos */ }) { Text("Guardar") }
+                Button(onClick = { onPublicarClick() }) { Text("Publicar") }
+            }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(onClick = { /* Favoritos */ }) { Text("Guardar") }
-            Button(onClick = { onPublicarClick() }) { Text("Publicar") }
+        // CAPA DE POPUP (Igual que en ScaffoldTrailPack para consistencia)
+        if (viewModel.isPublicacionPopupVisible) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable { viewModel.togglePopupPublicacion(false) },
+                contentAlignment = Alignment.Center
+            ) {
+                PopUpPublicarRuta(viewModel, mainViewModel)
+            }
         }
     }
 }

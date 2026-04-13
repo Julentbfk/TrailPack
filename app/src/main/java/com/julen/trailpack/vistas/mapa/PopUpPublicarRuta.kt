@@ -1,6 +1,5 @@
 package com.julen.trailpack.vistas.mapa
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,84 +9,100 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.julen.trailpack.vistas.componentes.formulario.OutlinedTextFieldMejorado
 import com.julen.trailpack.vistas.componentes.formulario.SelectorFechaMejorado
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel) {
-    // Surface actúa como el contenedor blanco (o del color de tu tema) del popup
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 8.dp
+    
+    // Si no debe ser visible, no renderizamos nada
+    if (!viewModel.isPublicacionPopupVisible) return
+
+    // Utilizamos Dialog para que se pinte en una capa superior a cualquier vista/scaffold
+    Dialog(
+        onDismissRequest = { viewModel.togglePopupPublicacion(false) },
+        properties = DialogProperties(usePlatformDefaultWidth = false) // Permite controlar el ancho
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Opciones de publicación",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.9f) // Ocupa el 90% del ancho de la pantalla
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 8.dp
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Opciones de publicación",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
-            // Fecha de salida
-            SelectorFechaMejorado(
-                fechaTexto = viewModel.formPublicacion.fecha,
-                onFechaSeleccionada = { millis ->
-                    val fechaFormateada = mainviewModel.formatearFecha(millis)
-                    viewModel.updateFormPublicacion(
-                        viewModel.formPublicacion.copy(
-                            fecha = fechaFormateada,
-                            fechenmillis = millis
+                // Fecha de salida
+                SelectorFechaMejorado(
+                    fechaTexto = viewModel.formPublicacion.fecha,
+                    onFechaSeleccionada = { millis ->
+                        val fechaFormateada = mainviewModel.formatearFecha(millis)
+                        viewModel.updateFormPublicacion(
+                            viewModel.formPublicacion.copy(
+                                fecha = fechaFormateada,
+                                fechenmillis = millis
+                            )
                         )
-                    )
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Hora de salida
+                OutlinedTextFieldMejorado(
+                    value = viewModel.formPublicacion.hora,
+                    onValueChange = { nuevoValor ->
+                        viewModel.updateFormPublicacion(viewModel.formPublicacion.copy(hora = nuevoValor))
+                    },
+                    label = "Hora de salida",
+                    icon = Icons.Default.Info
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Campo de Participantes
+                OutlinedTextFieldMejorado(
+                    value = viewModel.formPublicacion.numparticipantes,
+                    onValueChange = { participantes ->
+                        viewModel.updateFormPublicacion(viewModel.formPublicacion.copy(numparticipantes = participantes))
+                    },
+                    label = "Máximo de participantes",
+                    icon = Icons.Default.Person
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Botón Publicar
+                Button(
+                    onClick = {
+                        viewModel.publicarRuta(mainviewModel)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Publicar Actividad")
                 }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Hora de salida
-            OutlinedTextFieldMejorado(
-                value = viewModel.formPublicacion.hora,
-                onValueChange = { nuevoValor ->
-                    viewModel.updateFormPublicacion(viewModel.formPublicacion.copy(hora = nuevoValor))
-                },
-                label = "Hora de salida",
-                icon = Icons.Default.Info
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Campo de Participantes
-            OutlinedTextFieldMejorado(
-                value = viewModel.formPublicacion.numparticipantes,
-                onValueChange = { participantes ->
-                    viewModel.updateFormPublicacion(viewModel.formPublicacion.copy(numparticipantes = participantes))
-                },
-                label = "Número de participantes máximo",
-                icon = Icons.Default.Person
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Botón Publicar
-            Button(
-                onClick = {
-                    viewModel.publicarRuta(mainviewModel)
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Publicar")
+                
+                // Botón Cancelar (Opcional pero recomendado en Diálogos)
+                androidx.compose.material3.TextButton(
+                    onClick = { viewModel.togglePopupPublicacion(false) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancelar", color = MaterialTheme.colorScheme.error)
+                }
             }
         }
     }
