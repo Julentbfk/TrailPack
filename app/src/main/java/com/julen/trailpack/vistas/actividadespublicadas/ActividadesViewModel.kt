@@ -6,13 +6,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.julen.trailpack.data.ActividadesRepository
+import com.julen.trailpack.data.MapsRepository
 import com.julen.trailpack.modelos.Actividad
+import com.julen.trailpack.modelos.ActividadConRuta
 
 class ActividadesViewModel: ViewModel() {
 
-    private val repository = ActividadesRepository()
+    private val actividadesrepository = ActividadesRepository()
+    private val mapasRepository = MapsRepository()
+
 
     //Estados observables para la UI
+    var actividadesconruta by mutableStateOf<List<ActividadConRuta>>(emptyList())
     var actividades by mutableStateOf<List<Actividad>>(emptyList())
     var isLoading by mutableStateOf(true)
 
@@ -25,19 +30,30 @@ class ActividadesViewModel: ViewModel() {
     fun cargarActividades() {
         isLoading = true
 
-        repository.repoObtenerActividades { listaActividades, error ->
-            isLoading = false
+        actividadesrepository.repoObtenerActividades { listaActividades, errorActividades ->
+            if(listaActividades!=null){
+                //Extraemos los id ruta por actividad
+                val idsRuta  = listaActividades.map{it.idruta}.distinct()
 
-            if(listaActividades!=null) {
-                actividades = listaActividades
-                Log.d("ACT_VM", "Actividades cargadas: ${actividades.size}")
-            }else{
-                Log.d("ACT_VM", "Error al cargar Actividades $error")
+                mapasRepository.repoObtenerRutasPorId(idsRuta) {listaRutas,errorRutas ->
+                    isLoading = false
+                    if(listaRutas!= null) {
+                        //Join de actividades y rutas
+                        actividadesconruta = listaActividades.map { actividad ->
+                            ActividadConRuta(
+                                actividad = actividad,
+                                ruta = listaRutas.find { it.idruta == actividad.idruta }
+                            )
+                        }
+
+                    }
+
+                }//Cierra la callback de maprepository
+
             }
-        }
-    }
 
+        }//Cierra la callback de actividadesrepository
 
-
+    }//Cierra la funcion cargarActividades
 
 }

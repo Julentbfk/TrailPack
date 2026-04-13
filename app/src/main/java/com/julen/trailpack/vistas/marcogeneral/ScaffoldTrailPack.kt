@@ -91,7 +91,7 @@ fun ScaffoldTrailPack(navController: NavHostController, mainviewModel: MainViewM
                     )
                 }
                 Box(modifier = Modifier.matchParentSize().alpha(if (mainviewModel.selectedTab == 1) 1f else 0f)) {
-                    VistaRutasPublicadas()
+                    VistaRutasPublicadas(mainviewModel)
                 }
                 Box(modifier = Modifier.alpha(if (mainviewModel.selectedTab == 2) 1f else 0f)) {
                     VistaPerfilUsuario()

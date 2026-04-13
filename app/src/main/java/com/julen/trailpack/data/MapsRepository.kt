@@ -44,4 +44,19 @@ class MapsRepository {
         }
 
     }
+
+    fun repoObtenerRutasPorId(idsRuta: List<String>, onResult: (List<Ruta>?, String?) -> Unit){
+        if(idsRuta.isEmpty()){
+            onResult(emptyList(),null)
+            return
+        }
+
+        db.collection("rutas").whereIn("idruta",idsRuta).get().addOnSuccessListener { querySnap ->
+            val rutas = querySnap.documents.mapNotNull { it.toObject(Ruta::class.java) }
+            onResult(rutas,null)
+        }
+        .addOnFailureListener { error ->
+            onResult(null,error.localizedMessage)
+        }
+    }
 }
