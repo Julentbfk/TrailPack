@@ -39,94 +39,121 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
 
     val detalleviewModel: DetalleActividadViewModel = viewModel()
 
-    //Cargamos los datos al iniciar
+    // Cargamos los datos al iniciar
     LaunchedEffect(actividadId) {
         detalleviewModel.cargarDetalles(actividadId)
     }
 
-    //Cargamos los mensajes que pueda haber
+    // Cargamos los mensajes que pueda haber
     val context = LocalContext.current
     LaunchedEffect(mainviewModel.notificationMessage) {
         mainviewModel.notificationMessage?.let { mensaje ->
-            Toast.makeText(context,mensaje,Toast.LENGTH_SHORT).show()
-            //Limpiamos el mensaje para que no se repita
+            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
             mainviewModel.notificationMessage = null
         }
     }
 
-
-    if(detalleviewModel.isLoading){
+    if (detalleviewModel.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
-    }else{
+    } else {
         val datos = detalleviewModel.actividadconruta ?: return
         val ruta = datos.ruta
         val actividad = datos.actividad
+        
+        // Comprobamos si el usuario actual ya está unido
+        val usuarioActualUid = mainviewModel.usuarioGlobal?.uid
+        val estaUnido = usuarioActualUid != null && actividad.listaparticipantesIds.contains(usuarioActualUid)
 
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).background(MaterialTheme.colorScheme.background)
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .background(MaterialTheme.colorScheme.background)
         ) {
-            //Imagen
+            // Imagen de cabecera (de la ruta)
             AsyncImage(
                 model = ruta?.fotosRuta?.firstOrNull(),
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth().height(250.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp),
                 contentScale = ContentScale.Crop
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
 
-                //Nombre de la ruta
+                // Título: Nombre de la Actividad (o de la ruta si la actividad no tiene)
                 Text(
-                    text = ruta?.nombre?.uppercase() ?: "nameless",
+                    text = if (actividad.nombre.isNotEmpty()) actividad.nombre.uppercase() else ruta?.nombre?.uppercase() ?: "SIN NOMBRE",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
+                
+                if (actividad.nombre.isNotEmpty() && ruta != null) {
+                    Text(
+                        text = "Ruta: ${ruta.nombre}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                //Stats GRID
+                // Stats GRID (Datos de la Ruta)
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    StatItem("Distancia", "${ruta?.distancia ?: 0} km")
-                    StatItem("Dificultad", ruta?.dificultad ?: "none")
+                    StatItem("Distancia", "${ruta?.distancia ?: "--"} km")
+                    StatItem("Dificultad", ruta?.dificultad ?: "--")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    StatItem("Desnivel +", "${ruta?.desnivel ?: 0} m")
-                    StatItem("Duración", ruta?.duracion ?: "none")
+                    StatItem("Desnivel +", "${ruta?.desnivel ?: "--"} m")
+                    StatItem("Duración", ruta?.duracion ?: "--")
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                //Participantes
-                Text(text = "Participantes", style = MaterialTheme.typography.titleMedium)
+                // Información de la Actividad
+                Text(text = "Punto de encuentro", style = MaterialTheme.typography.titleSmall, color = Color.Gray)
+                Text(text = actividad.puntoencuentro.ifEmpty { "No especificado" }, style = MaterialTheme.typography.bodyLarge)
+                
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Participantes
+                Text(text = "Participantes (${actividad.participantes}/${actividad.maxparticipantes})", style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    detalleviewModel.participantes.forEach { usuario ->
-                        UserAvatar(usuario)
+                    if (detalleviewModel.participantes.isEmpty()) {
+                        Text("Cargando participantes...", style = MaterialTheme.typography.bodySmall)
+                    } else {
+                        detalleviewModel.participantes.forEach { usuario ->
+                            UserAvatar(usuario)
+                        }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                //Descripcion
-                Text(text = "Descripcion de la ruta", style = MaterialTheme.typography.titleMedium)
+                // Descripción de la ruta
+                Text(text = "Sobre esta ruta", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = ruta?.descripcion ?: "Sin descripcion disponible",
+                    text = ruta?.descripcion ?: "Sin descripción disponible para esta ruta.",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                //Botones
+                // Botones de Acción
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -135,31 +162,42 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
                         onClick = { mainviewModel.showNotification("Guardado en favoritos") },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Guardar fav")
+                        Text("Favorito")
                     }
 
-                    Button(
-                        onClick = { mainviewModel.showNotification("Te has unido") },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
-                    ) {
-                        Text("UNIRSE")
+                    if (!estaUnido) {
+                        // Botón UNIRSE
+                        Button(
+                            onClick = { mainviewModel.showNotification("Te has unido a la actividad") },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                            enabled = actividad.participantes < actividad.maxparticipantes
+                        ) {
+                            Text("UNIRSE")
+                        }
+                    } else {
+                        // Botón SALIRSE
+                        Button(
+                            onClick = { mainviewModel.showNotification("Has abandonado la actividad") },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828))
+                        ) {
+                            Text("SALIR")
+                        }
                     }
                 }
-                Button(
-                    onClick = { mainviewModel.showNotification("Te has salido") },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828))
-                ) {
-                    Text("SALIRSE")
+                
+                if (estaUnido) {
+                    Text(
+                        text = "Ya formas parte de esta actividad",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFF2E7D32),
+                        modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
+                    )
                 }
 
             }
 
-        }//Cierra column principal
-
-
-    }//Cierra el condicion loading
-
-
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.julen.trailpack.vistas.actividadespublicadas
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,17 +22,27 @@ class DetalleActividadViewModel: ViewModel() {
 
     fun cargarDetalles(actividadId: String) {
         isLoading = true
+        Log.d("DEBUG_DETALLE", "Iniciando carga para actividad ID: $actividadId")
 
-        actividadesRepository.repoObtenerActividadPorId(actividadId) {actividad, error ->
-            if(actividad != null ){
-                //Obtengo la ruta asociada
-                mapasRepository.repoObtenerUnaRutaPorId(actividad.idruta){ruta, error ->
-                    actividadconruta = ActividadConRuta(actividad,ruta)
+        actividadesRepository.repoObtenerActividadPorId(actividadId) { actividad, error ->
+            if (actividad != null) {
+                Log.d("DEBUG_DETALLE", "Actividad encontrada: ${actividad.nombre}. ID Ruta: ${actividad.idruta}")
+                
+                // Obtengo la ruta asociada
+                mapasRepository.repoObtenerUnaRutaPorId(actividad.idruta) { ruta, errorRuta ->
+                    if (ruta != null) {
+                        Log.d("DEBUG_DETALLE", "Ruta vinculada encontrada: ${ruta.nombre}")
+                    } else {
+                        Log.e("DEBUG_DETALLE", "Ruta NO encontrada para ID: ${actividad.idruta}. Error: $errorRuta")
+                    }
+                    
+                    actividadconruta = ActividadConRuta(actividad, ruta)
 
-                    //obtengo los datos de los participantes
+                    // Obtengo los datos de los participantes
                     cargarParticipantes(actividad.listaparticipantesIds)
                 }
-            }else{
+            } else {
+                Log.e("DEBUG_DETALLE", "Error al cargar la actividad: $error")
                 isLoading = false
             }
         }

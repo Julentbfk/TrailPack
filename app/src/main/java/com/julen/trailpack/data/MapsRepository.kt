@@ -56,14 +56,15 @@ class MapsRepository {
             onResult(rutas,null)
         }
         .addOnFailureListener { error ->
-            onResult(null,error.localizedMessage)
+            onResult(null, error.localizedMessage)
         }
     }
 
     fun repoObtenerUnaRutaPorId(id: String, onResult: (Ruta?, String?) -> Unit) {
-        db.collection("rutas").document(id).get()
-            .addOnSuccessListener { documentSnapshot ->
-                val ruta = documentSnapshot.toObject(Ruta::class.java)
+        // Buscamos por el campo "idruta" para ser consistentes con repoObtenerRutasPorId
+        db.collection("rutas").whereEqualTo("idruta", id).limit(1).get()
+            .addOnSuccessListener { querySnapshot ->
+                val ruta = querySnapshot.documents.firstOrNull()?.toObject(Ruta::class.java)
                 onResult(ruta, null)
             }
             .addOnFailureListener { error ->
