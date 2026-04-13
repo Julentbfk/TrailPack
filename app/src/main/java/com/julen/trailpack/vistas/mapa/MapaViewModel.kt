@@ -15,67 +15,57 @@ class MapaViewModel : ViewModel() {
 
     private val repository = MapsRepository()
 
-//region Creacion de parques naturales con sus rutas
-    var parquesnaturales by mutableStateOf <List<ParqueNatural>>(emptyList())
+    var parquesnaturales by mutableStateOf<List<ParqueNatural>>(emptyList())
     var isLoading by mutableStateOf(true)
 
     init {
         obtenerParquesNaturales()
     }
 
-    private fun obtenerParquesNaturales(){
+    private fun obtenerParquesNaturales() {
         isLoading = true
         repository.repoObtenerParquesNaturales { listaParques, error ->
             isLoading = false
-            if(listaParques != null){
+            if (listaParques != null) {
                 parquesnaturales = listaParques
-            }else{
+            } else {
                 Log.d("errorObtencionParques", "Error al obtener los parques naturales \n $error")
             }
         }
-
     }
-
 
     var rutasparquenatural by mutableStateOf<List<Ruta>>(emptyList())
     var rutaSeleccionada by mutableStateOf<Ruta?>(null)
     var parqueSeleccionado by mutableStateOf<ParqueNatural?>(null)
-    var isLoadingRutas by mutableStateOf(false) // Nuevo estado
+    var isLoadingRutas by mutableStateOf(false)
 
     fun seleccionarParque(parque: ParqueNatural) {
         isLoadingRutas = true
         parqueSeleccionado = parque
         rutasparquenatural = emptyList()
 
-        repository.repoObtenerRutasParqueNatural(parque.idparquenatural ) { rutas, error ->
-
+        repository.repoObtenerRutasParqueNatural(parque.idparquenatural) { rutas, error ->
             isLoadingRutas = false
-            if(rutas != null ){
+            if (rutas != null) {
                 rutasparquenatural = rutas
-            }else{
-                Log.d("Error rutas", "Error al cargar las rutas  $error")
+            } else {
+                Log.d("Error rutas", "Error al cargar las rutas $error")
                 rutasparquenatural = emptyList()
             }
-
         }
     }
-//endregion
 
-//region Acciones de los card ruta
-
-    fun seleccionarRutaParaDetalle(ruta: Ruta?){
+    fun seleccionarRutaParaDetalle(ruta: Ruta?) {
         rutaSeleccionada = ruta
     }
 
     var isPublicacionPopupVisible: Boolean by mutableStateOf(false)
 
     fun togglePopupPublicacion(visible: Boolean, ruta: Ruta? = null) {
-
         isPublicacionPopupVisible = visible
         if (visible && ruta != null) {
             rutaSeleccionada = ruta
         }
-
     }
 
     var formPublicacion by mutableStateOf(PublicacionFormModel())
@@ -84,48 +74,38 @@ class MapaViewModel : ViewModel() {
     }
 
     fun publicarRuta(mainViewModel: MainViewModel) {
-        isLoading = true
-        Log.d("DEBUG_DEBUG", "Entrando en publicarRuta")
-        Log.d("DEBUG_DEBUG", "Usuario en VM: ${mainViewModel.usuarioGlobal?.username ?: "NULO"}")
-
         val usuarioglobal = mainViewModel.usuarioGlobal
-        if (usuarioglobal == null) {
-            Log.d("DEBUG_DEBUG", "ABORTANDO: usuarioGlobal es NULO")
-            return // <--- Aquí se está yendo
+        val ruta = rutaSeleccionada
+
+        if (usuarioglobal == null || ruta == null) {
+            mainViewModel.showNotification("Error: Datos incompletos")
+            return
         }
 
-        Log.d("DEBUG_DEBUG", "Usuario OK, continuando...")
-        //Mapeo a objeto Actividad
+        isLoading = true
+
         val nuevaActividad = Actividad(
-            idruta = rutaSeleccionada!!.idruta,
+            idruta = ruta.idruta,
             idcreador = usuarioglobal.uid,
             listaparticipantesIds = listOf(usuarioglobal.uid),
-            nombrecreador = usuarioglobal.username ?: "Anonimo",
+            nombrecreador = usuarioglobal.username ?: "Anónimo",
             fotocreador = usuarioglobal.fotoperfil ?: "",
             fechasalida = formPublicacion.fechenmillis,
-            maxparticipantes = formPublicacion.numparticipantes.toIntOrNull() ?: 10,
-            estado = "OPEN"
+            maxparticipantes = formPublicacion.numparticipantes.toIntOrNull() ?: 10
         )
-        Log.d("actividad","Botonfunciona ${nuevaActividad.idruta} + ${nuevaActividad.nombrecreador} + ${nuevaActividad.maxparticipantes}")
 
-        //Guardamos en db
-        repository.repoGuardarActividad(nuevaActividad) {success, error ->
+        repository.repoGuardarActividad(nuevaActividad) { success, error ->
             isLoading = false
-            if(success){
-                Log.d("repo","Guardando {${nuevaActividad.estado}")
+            if (success) {
                 isPublicacionPopupVisible = false
-                //mostramos mensaje exitoso
-                mainViewModel.showNotification("¡¡¡Ruta publicada con exito!!!")
-
-            }else{
-                mainViewModel.showNotification("¡¡¡ERROR AL PUBLICAR!!! \n $error")
-                Log.d("errorGuardarActividad", "error al guardar la actividad ene firebase $error")
+                rutaSeleccionada = null // <--- IMPORTANTE: Limpiamos la selección
+                mainViewModel.showNotification("¡Ruta publicada con éxito!")
+                
+                // Forzamos la actualización de la lista de rutas
+                parqueSeleccionado?.let { seleccionarParque(it) }
+            } else {
+                mainViewModel.showNotification("Error al publicar: $error")
             }
         }
-
     }
-
-//endregion
-
-
 }

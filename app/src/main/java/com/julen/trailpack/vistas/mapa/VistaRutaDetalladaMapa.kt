@@ -21,7 +21,13 @@ import com.julen.trailpack.modelos.Ruta
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
-fun VistaRutaDetalladaMapa(ruta: Ruta, viewModel: MapaViewModel ,mainViewModel: MainViewModel,onPublicarClick:() -> Unit, onBack:() -> Unit) {
+fun VistaRutaDetalladaMapa(
+    ruta: Ruta,
+    viewModel: MapaViewModel,
+    mainViewModel: MainViewModel,
+    onPublicarClick: () -> Unit,
+    onBack: () -> Unit
+) {
     BackHandler {
         viewModel.seleccionarRutaParaDetalle(null)
         onBack()
@@ -33,36 +39,27 @@ fun VistaRutaDetalladaMapa(ruta: Ruta, viewModel: MapaViewModel ,mainViewModel: 
         AsyncImage(
             model = ruta.fotosRuta.firstOrNull(),
             contentDescription = "mapa de la ruta",
-            modifier = Modifier.fillMaxWidth().height(250.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
             contentScale = ContentScale.Crop
         )
-
 
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = ruta.nombre, style = MaterialTheme.typography.headlineMedium)
 
-            //Estadisticas
-            //StatsGrid(ruta)
-
-            //Descripcion
-            Text(text = "Descripcion", style = MaterialTheme.typography.titleLarge)
+            Text(text = "Descripción", style = MaterialTheme.typography.titleLarge)
             Text(text = ruta.descripcion, style = MaterialTheme.typography.bodyMedium)
-
-            //Clima
-            //ClimaSection(ruta)
-
-
-            PopUpPublicarRuta(viewModel, mainViewModel)
         }
 
-        //Botones
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(onClick = {/*Funcion guardar en favoritos*/}){ Text("Guardar en favoritos") }
-            Button(onClick = { onPublicarClick() }) { Text("Publicar")}
+            Button(onClick = { /* Favoritos */ }) { Text("Guardar") }
+            Button(onClick = { onPublicarClick() }) { Text("Publicar") }
         }
-
     }
 }
