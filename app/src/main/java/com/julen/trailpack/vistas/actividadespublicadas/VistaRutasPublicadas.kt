@@ -30,15 +30,24 @@ fun VistaRutasPublicadas(
             .padding(8.dp)
     ) {
         items(actividadesviewModel.actividadesconruta) { actividadconruta ->
+            val idAct = actividadconruta.actividad.idactividad
+            val uid = mainViewModel.usuarioGlobal?.uid ?: ""
             CardActividad(
                 actividadConRuta = actividadconruta,
                 fechaFormateada = mainViewModel.formatearFecha(actividadconruta.actividad.fechasalida),
-                usuarioActualUid = mainViewModel.usuarioGlobal?.uid,
+                usuarioActualUid = uid,
                 onUnirseClick = {
-                    mainViewModel.showNotification("Funcionalidad de UNIRSE a actividad")
+                    if(uid.isNotEmpty()){
+                        actividadesviewModel.gestionarParticipacionCard(idAct, uid, true)
+                        mainViewModel.showNotification("¡Te has unido a ${actividadconruta.ruta?.nombre}!")
+                    }
                 },
                 onAbandonarClick = {
-                    mainViewModel.showNotification("Funcionalidad de Abandonar actividad")
+                    if (uid.isNotEmpty()) {
+                        // Llamamos al VM: idActividad, idUsuario, unirse = false
+                        actividadesviewModel.gestionarParticipacionCard(idAct, uid, false)
+                        mainViewModel.showNotification("Has abandonado la actividad")
+                    }
                 },
                 onCardClick = {
                     enrutador.navToActividadDetallada(actividadconruta.actividad.idactividad)

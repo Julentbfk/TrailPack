@@ -133,14 +133,19 @@ fun CardActividad(
 
                 if(usuarioIn) {
                     Button(
-                        onClick = { /*SALIRSE*/},
+                        onClick = { onAbandonarClick()},
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                     ) {
                         Text("SALIR", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onErrorContainer)
                     }
                 }else{
-                    Button(onClick = onUnirseClick, modifier = Modifier.fillMaxWidth()) {
+                    Button(
+                        onClick = { onUnirseClick() },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = actividad.participantes < actividad.maxparticipantes
+                    )
+                    {
                         Text("Unirse", style = MaterialTheme.typography.labelSmall)
                     }
                 }

@@ -30,4 +30,40 @@ class ActividadesRepository {
                 onResult(null, error.localizedMessage)
             }
     }
+
+    fun repoGestionarParticipacion(
+        idActividad:String,
+        uidUsuario: String,
+        unirse: Boolean,
+        onResult: (Boolean,String?) -> Unit
+    ){
+        val docRef = db.collection("actividades").document(idActividad)
+
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+            val participantesActuales = snapshot.getLong("participantes") ?: 0
+            val listaIds = snapshot.get("listaparticipantesIds") as? List<String> ?: emptyList()
+            val nuevaLista = listaIds.toMutableList()
+
+            if(unirse) {
+                if(!nuevaLista.contains(uidUsuario)){
+                    nuevaLista.add(uidUsuario)
+                    transaction.update(docRef,"listaparticipantesIds",nuevaLista)
+                    transaction.update(docRef,"participantes",participantesActuales+1)
+                }
+            }else{
+                if (nuevaLista.contains(uidUsuario)) {
+                    nuevaLista.remove(uidUsuario)
+                    transaction.update(docRef, "listaparticipantesIds", nuevaLista)
+                    transaction.update(docRef, "participantes", (participantesActuales - 1).coerceAtLeast(0))
+                }
+            }
+            null //La transaccion debe devolver algo
+        }.addOnSuccessListener {
+            onResult(true,null)
+        }.addOnFailureListener {
+            onResult(false, it.localizedMessage)
+        }
+
+    }
 }

@@ -56,4 +56,19 @@ class ActividadesViewModel: ViewModel() {
 
     }//Cierra la funcion cargarActividades
 
+    //Funcion para unirte a actividad desde la card
+    fun gestionarParticipacionCard(actividadId: String, usuarioId: String, unirse: Boolean) {
+
+        actividadesrepository.repoGestionarParticipacion(actividadId,usuarioId,unirse){success, error ->
+            if(success) {
+                //Refrescamos toda la lista para que se actualicen contadores y botones
+                cargarActividades()
+            }else{
+                Log.e("DEBUG_LISTA", "Error al participar desde la card: $error")
+            }
+        }
+    }
+
+
+
 }

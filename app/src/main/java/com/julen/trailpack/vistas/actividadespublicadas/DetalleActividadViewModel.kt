@@ -72,5 +72,22 @@ class DetalleActividadViewModel: ViewModel() {
 
     }
 
+    //Funcion para unirte a actividad
+    fun gestionarParticipacion(actividadId: String, usuarioId: String, unirse: Boolean){
+        isLoading = true
+
+        actividadesRepository.repoGestionarParticipacion(actividadId,usuarioId,unirse){success, error ->
+
+            if(success){
+                //si sale OK volvemos a cargar los detalles para refrescar la lista de participantes y el contador
+                cargarDetalles(actividadId)
+            }else {
+                isLoading = false
+                Log.e("DEBUG_PARTICIPATION", "Error al gestionar la participacion $error")
+            }
+        }
+
+    }
+
 
 }

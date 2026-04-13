@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -158,20 +159,39 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
 
                     if (!estaUnido) {
                         Button(
-                            onClick = { mainviewModel.showNotification("Te has unido a la actividad") },
+                            onClick = {
+                                if (usuarioActualUid != null) {
+                                    detalleviewModel.gestionarParticipacion(actividad.idactividad, usuarioActualUid, true)
+                                    mainviewModel.showNotification("Te has unido a la actividad")
+                                }
+                            },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                             enabled = actividad.participantes < actividad.maxparticipantes
                         ) {
-                            Text("UNIRSE")
+                            if (detalleviewModel.isLoading) {
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                            } else {
+                                Text("UNIRSE")
+                            }
                         }
                     } else {
                         Button(
-                            onClick = { mainviewModel.showNotification("Has abandonado la actividad") },
+                            onClick = {
+                                if (usuarioActualUid != null) {
+                                    detalleviewModel.gestionarParticipacion(actividad.idactividad, usuarioActualUid, false)
+                                    mainviewModel.showNotification("Te has unido a la actividad")
+                                }
+                            },
                             modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828))
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828)),
+                            enabled = !detalleviewModel.isLoading
                         ) {
-                            Text("SALIR")
+                            if (detalleviewModel.isLoading) {
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                            } else {
+                                Text("SALIR")
+                            }
                         }
                     }
                 }
