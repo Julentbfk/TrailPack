@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +20,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.julen.trailpack.vistas.componentes.formulario.OutlinedTextFieldMejorado
 import com.julen.trailpack.vistas.componentes.formulario.SelectorFechaMejorado
+import com.julen.trailpack.vistas.componentes.formulario.SelectorHoraMejorado
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
@@ -56,7 +57,7 @@ fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel) {
                         viewModel.updateFormPublicacion(
                             viewModel.formPublicacion.copy(
                                 fecha = fechaFormateada,
-                                fechenmillis = millis
+                                fechaenmillis = millis
                             )
                         )
                     }
@@ -64,13 +65,23 @@ fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Hora de salida
-                OutlinedTextFieldMejorado(
-                    value = viewModel.formPublicacion.hora,
-                    onValueChange = { nuevoValor ->
-                        viewModel.updateFormPublicacion(viewModel.formPublicacion.copy(hora = nuevoValor))
-                    },
-                    label = "Hora de salida",
-                    icon = Icons.Default.Info
+                SelectorHoraMejorado(
+                    horaTexto = viewModel.formPublicacion.horasalida,
+                    onHoraSeleccionada = { h, m ->
+                        //Formateamos para la UI (HH:mm)
+                        val horaFormateada = String.format("%02d:%02d", h, m)
+
+                        val millisTotales = mainviewModel.combinarFechaYHora(
+                            viewModel.formPublicacion.fechaenmillis, h, m
+                        )
+
+                        viewModel.updateFormPublicacion(
+                            viewModel.formPublicacion.copy(
+                                horasalida = horaFormateada,
+                                horasalidaenmillis = millisTotales
+                            )
+                        )
+                    }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -82,6 +93,17 @@ fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel) {
                     },
                     label = "Máximo de participantes",
                     icon = Icons.Default.Person
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Punto de encuentro
+                OutlinedTextFieldMejorado(
+                    value = viewModel.formPublicacion.puntoencuentro,
+                    onValueChange = { punto ->
+                        viewModel.updateFormPublicacion(viewModel.formPublicacion.copy(puntoencuentro = punto))
+                    },
+                    label = "Punto de encuentro",
+                    icon = Icons.Default.LocationOn
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))

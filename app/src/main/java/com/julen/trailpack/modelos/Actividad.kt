@@ -11,6 +11,7 @@ data class Actividad(
     val fotocreador: String ="",
     val puntoencuentro: String="",
     val fechasalida: Long = 0L, //Usamos long para operaciones con fechas en milisegundos mas sencillas
+    val horasalida: Long = 0L,
     val maxparticipantes: Int = 10,
     val participantes: Int = 1,
     val espublica: Boolean = true,

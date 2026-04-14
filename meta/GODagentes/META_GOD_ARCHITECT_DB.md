@@ -50,6 +50,7 @@ data class Actividad(
     val fotocreador: String ="",
     val puntoencuentro: String="",
     val fechasalida: Long = 0L,
+    val horasalida: Long = 0L,
     val maxparticipantes: Int = 10,
     val participantes: Int = 1,
     val espublica: Boolean = true,

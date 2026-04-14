@@ -90,7 +90,9 @@ class MapaViewModel : ViewModel() {
             listaparticipantesIds = listOf(usuarioglobal.uid),
             nombrecreador = usuarioglobal.username ?: "Anónimo",
             fotocreador = usuarioglobal.fotoperfil ?: "",
-            fechasalida = formPublicacion.fechenmillis,
+            fechasalida = formPublicacion.fechaenmillis,
+            horasalida = formPublicacion.horasalidaenmillis,
+            puntoencuentro = formPublicacion.puntoencuentro,
             maxparticipantes = formPublicacion.numparticipantes.toIntOrNull() ?: 10
         )
 

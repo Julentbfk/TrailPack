@@ -66,4 +66,24 @@ class ActividadesRepository {
         }
 
     }
+
+    //Funcion que elimina la actividad
+    fun repoEliminarActividad (idActividad: String, onResult: (Boolean, String?) -> Unit) {
+        db.collection("actividades").document(idActividad).delete()
+        .addOnSuccessListener { onResult(true,null) }
+        .addOnFailureListener { onResult(false,it.localizedMessage) }
+    }
+
+    //Funcion para actualizar los campos de usuario, usamos map para que puedas editar 1 o varias cosas dependiendo de la UI (Lapices o popup de edicion)
+    fun repoActualizarActividad(
+        idActividad: String,
+        campos: Map<String, Any>, // Ej: mapOf("fechasalida" to 12345L, "puntoencuentro" to "Plaza")
+        onResult: (Boolean, String?) -> Unit
+    ) {
+        db.collection("actividades").document(idActividad)
+            .update(campos)
+            .addOnSuccessListener { onResult(true, null) }
+            .addOnFailureListener { onResult(false, it.localizedMessage) }
+    }
+
 }

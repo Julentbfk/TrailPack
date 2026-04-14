@@ -3,6 +3,8 @@ package com.julen.trailpack.vistas.mapa
 data class PublicacionFormModel(
     val numparticipantes: String = "",
     val fecha: String = "",
-    val hora: String = "",
-    val fechenmillis: Long = 0
+    val horasalida: String = "",
+    val puntoencuentro: String = "",
+    val fechaenmillis: Long = 0,
+    val horasalidaenmillis: Long = 0
 )

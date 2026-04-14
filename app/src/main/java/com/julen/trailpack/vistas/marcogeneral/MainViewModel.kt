@@ -55,10 +55,24 @@ class MainViewModel : ViewModel(){
     }
     //endregion
 
-    //region FECHAS
+    //region FORMATTER
     fun formatearFecha(millis: Long) : String {
         val fecha  = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         return fecha
+    }
+
+    fun formatearHora(millis: Long) : String {
+        val hora = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm"))
+        return hora
+    }
+
+    fun combinarFechaYHora(fechaMillis: Long, hora: Int, minutos: Int): Long {
+        val zonedDateTime = Instant.ofEpochMilli(fechaMillis)
+            .atZone(ZoneId.systemDefault())
+            .withHour(hora)
+            .withMinute(minutos)
+            .withSecond(0)
+        return zonedDateTime.toInstant().toEpochMilli()
     }
 
     //endregion

@@ -34,7 +34,7 @@ import com.julen.trailpack.vistas.componentes.actividades.UserAvatar
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
-fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
+fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onBack:()-> Unit) {
 
     val detalleviewModel: DetalleActividadViewModel = viewModel()
 
@@ -50,13 +50,27 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
             CircularProgressIndicator()
         }
     } else {
+
         val datos = detalleviewModel.actividadconruta ?: return
         val ruta = datos.ruta
         val actividad = datos.actividad
-        
+
+        //POPUP DE EDICION
+        PopUpEditarActividad(
+            viewModel = detalleviewModel,
+            mainviewModel = mainviewModel,
+            actividadId = actividad.idactividad
+        )
+        //-----------------
+
+
         // Comprobamos si el usuario actual ya está unido
         val usuarioActualUid = mainviewModel.usuarioGlobal?.uid
         val estaUnido = usuarioActualUid != null && actividad.listaparticipantesIds.contains(usuarioActualUid)
+
+        //Comprobamos si el usuario actual es el creador
+        val esCreador  = usuarioActualUid != null && actividad.idcreador == usuarioActualUid
+
 
         Column(
             modifier = Modifier
@@ -110,7 +124,19 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+
+
                 // Información de la Actividad
+                Text(text = "Informacion de la salida", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top=4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
+                ){
+                    StatItem("Fecha", mainviewModel.formatearFecha(actividad.fechasalida))
+                    StatItem("Hora", mainviewModel.formatearHora(actividad.horasalida))
+                }
+
+
                 Text(text = "Punto de encuentro", style = MaterialTheme.typography.titleSmall, color = Color.Gray)
                 Text(text = actividad.puntoencuentro.ifEmpty { "No especificado" }, style = MaterialTheme.typography.bodyLarge)
                 
@@ -203,6 +229,49 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel) {
                         color = Color(0xFF2E7D32),
                         modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
                     )
+                }
+
+                if(esCreador){
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "Gestión de la Actividad",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // BOTÓN EDITAR
+                        Button(
+                            onClick = {
+                                // Preparamos los datos para el popup
+                                val fechaStr = mainviewModel.formatearFecha(actividad.fechasalida)
+                                val horaStr = mainviewModel.formatearHora(actividad.horasalida)
+                                detalleviewModel.abrirPopUpEdicion(actividad, fechaStr, horaStr)
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                        ) {
+                            Text("EDITAR")
+                        }
+
+                        // BOTÓN ELIMINAR
+                        Button(
+                            onClick = {
+                                detalleviewModel.eliminarActividad(actividad.idactividad) {
+                                    mainviewModel.showNotification("Actividad eliminada")
+                                    onBack()
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828))
+                        ) {
+                            Text("ELIMINAR")
+                        }
+                    }
                 }
             }
         }

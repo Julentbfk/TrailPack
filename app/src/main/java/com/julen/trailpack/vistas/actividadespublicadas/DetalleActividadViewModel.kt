@@ -8,13 +8,15 @@ import androidx.lifecycle.ViewModel
 import com.julen.trailpack.data.ActividadesRepository
 import com.julen.trailpack.data.MapsRepository
 import com.julen.trailpack.data.UserRepository
+import com.julen.trailpack.modelos.Actividad
 import com.julen.trailpack.modelos.ActividadConRuta
 import com.julen.trailpack.modelos.Usuario
+import com.julen.trailpack.vistas.mapa.PublicacionFormModel
 
 class DetalleActividadViewModel: ViewModel() {
-    private val actividadesRepository = ActividadesRepository()
-    private val mapasRepository = MapsRepository()
-    private val userRepository = UserRepository()
+    private val actividadesrepository = ActividadesRepository()
+    private val mapasrepository = MapsRepository()
+    private val userrepository = UserRepository()
 
     var actividadconruta by mutableStateOf<ActividadConRuta?>(null)
     var participantes by mutableStateOf<List<Usuario>>(emptyList())
@@ -24,12 +26,12 @@ class DetalleActividadViewModel: ViewModel() {
         isLoading = true
         Log.d("DEBUG_DETALLE", "Iniciando carga para actividad ID: $actividadId")
 
-        actividadesRepository.repoObtenerActividadPorId(actividadId) { actividad, error ->
+        actividadesrepository.repoObtenerActividadPorId(actividadId) { actividad, error ->
             if (actividad != null) {
                 Log.d("DEBUG_DETALLE", "Actividad encontrada: ${actividad.nombre}. ID Ruta: ${actividad.idruta}")
                 
                 // Obtengo la ruta asociada
-                mapasRepository.repoObtenerUnaRutaPorId(actividad.idruta) { ruta, errorRuta ->
+                mapasrepository.repoObtenerUnaRutaPorId(actividad.idruta) { ruta, errorRuta ->
                     if (ruta != null) {
                         Log.d("DEBUG_DETALLE", "Ruta vinculada encontrada: ${ruta.nombre}")
                     } else {
@@ -59,7 +61,7 @@ class DetalleActividadViewModel: ViewModel() {
         }
 
         ids.forEach { uid ->
-            userRepository.obtenerUsuario(uid) {user, _ ->
+            userrepository.obtenerUsuario(uid) { user, _ ->
                 if(user != null)
                     usuariosCargados.add(user)
                 pendientes--
@@ -76,7 +78,7 @@ class DetalleActividadViewModel: ViewModel() {
     fun gestionarParticipacion(actividadId: String, usuarioId: String, unirse: Boolean){
         isLoading = true
 
-        actividadesRepository.repoGestionarParticipacion(actividadId,usuarioId,unirse){success, error ->
+        actividadesrepository.repoGestionarParticipacion(actividadId,usuarioId,unirse){ success, error ->
 
             if(success){
                 //si sale OK volvemos a cargar los detalles para refrescar la lista de participantes y el contador
@@ -87,6 +89,56 @@ class DetalleActividadViewModel: ViewModel() {
             }
         }
 
+    }
+
+    //Funcion para eliminar actividad
+    fun eliminarActividad(actividadId: String, onSuccess:() -> Unit) {
+        isLoading = true
+        actividadesrepository.repoEliminarActividad(actividadId) { success, error ->
+            isLoading = false
+            if(success) {
+                onSuccess()
+            }else{
+                Log.e("DEBUG_DELETE","Error al borrar: $error")
+            }
+        }
+    }
+
+    //POPUP DE EDICION
+    var isEditPopUpVisible by mutableStateOf(false)
+    var editForm by mutableStateOf(PublicacionFormModel()) //Cargamos el form model con los datos del form model del popupPublicarRuta ya que seran los mismos cambios
+
+    fun abrirPopUpEdicion(actividad: Actividad,fechaStr: String, horaStr: String) {
+        editForm = PublicacionFormModel(
+            numparticipantes = actividad.maxparticipantes.toString(),
+            fecha = fechaStr,
+            horasalida = horaStr,
+            puntoencuentro = actividad.puntoencuentro,
+            fechaenmillis = actividad.fechasalida,
+            horasalidaenmillis = actividad.horasalida
+        )
+        isEditPopUpVisible = true
+    }
+
+    //Actualizar campos
+    fun actualizarActividad(idActividad: String) {
+        isLoading = true
+        val campos = mapOf(
+            "fechasalida" to editForm.fechaenmillis,
+            "horasalida" to editForm.horasalidaenmillis,
+            "puntoencuentro" to editForm.puntoencuentro,
+            "maxparticipantes" to (editForm.numparticipantes.toIntOrNull() ?: 10)
+        )
+
+        actividadesrepository.repoActualizarActividad(idActividad,campos) {success, error ->
+            if(success) {
+                isEditPopUpVisible = false
+                cargarDetalles(idActividad)
+            }else{
+                isLoading=false
+                Log.e("DEBUG_EDIT", "Error al actualizar ruta: $error")
+            }
+        }
     }
 
 

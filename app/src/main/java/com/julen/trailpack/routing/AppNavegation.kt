@@ -141,7 +141,7 @@ fun AppNavegation() {
                        },
                        onBack = {
                            viewModel.seleccionarRutaParaDetalle(null)
-                           navHost.popBackStack()
+                           enrutador.popBack()
                        },
                        mainViewModel = mainViewModel
                    )
@@ -155,7 +155,7 @@ fun AppNavegation() {
                arguments = listOf(navArgument("actividadId") {type = NavType.StringType})
            ){ backstackEnty ->
                val actividadId = backstackEnty.arguments?.getString("actividadId") ?: ""
-               VistaDetalleActividad(actividadId=actividadId, mainviewModel = mainViewModel)
+               VistaDetalleActividad(actividadId=actividadId, mainviewModel = mainViewModel, onBack = { enrutador.popBack()})
            }
        }
    }
