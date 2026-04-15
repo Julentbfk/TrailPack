@@ -114,11 +114,11 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
             Spacer(modifier = Modifier.height(16.dp))
 
             var categoriaSeleccionada by remember { mutableStateOf("Creadas") }
-            val categorias = listOf("Creadas", "Participadas", "Favoritas")
+            val categorias = listOf("Creadas", "Realizadas", "Favoritas")
 
             val listaActiva = when (categoriaSeleccionada) {
                 "Creadas"     -> actividadesviewModel.getActividadesCreadas(uid)
-                "Participadas" -> actividadesviewModel.getActividadesUnido(uid)
+                "Realizadas" -> actividadesviewModel.getActividadesUnido(uid)
                 "Favoritas" -> emptyList()
                 else          -> emptyList()
             }
