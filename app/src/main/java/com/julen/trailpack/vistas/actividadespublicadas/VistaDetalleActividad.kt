@@ -177,12 +177,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        OutlinedButton(
-                            onClick = { mainviewModel.showNotification("Guardado en favoritos") },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Favorito")
-                        }
+
 
                         if (!estaUnido) {
                             Button(
