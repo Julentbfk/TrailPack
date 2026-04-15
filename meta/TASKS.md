@@ -10,9 +10,9 @@ _(ninguna)_
 
 ## Pendientes — Prioridad Alta (Fase 9)
 
-- [ ] **Perfil social:** Mostrar lista de actividades creadas y actividades en las que el usuario participa en `VistaPerfilUsuario`.
 - [ ] **Caché local de rutas:** Implementar caché en memoria en `MapsRepository` para evitar llamadas repetidas a Firestore al navegar entre tabs.
 - [ ] **FILE_TREE actualizado:** `VistaRutasPublicadas.kt` está siendo renombrado a `VistaActividades.kt` — actualizar `FILE_TREE.md` al confirmar el rename.
+- [ ] **Favoritas:** Implementar lógica de actividades favoritas (modelo, repositorio, filtro en ViewModel) para completar la tercera categoría del perfil.
 
 ---
 
@@ -45,3 +45,7 @@ _(ninguna)_
 - [x] Eliminación de actividades con retorno seguro via `Enrutador`.
 - [x] Migración del sistema de agentes: archivado GOD files, creación de `CLAUDE.md`, redefinición de `AGENTES.md` y `PROYECTO_MASTER.md`.
 - [x] Creación de skills `/empezamos` y `/cerramos` en `.claude/skills/`. Activos tras reinicio de Claude Code.
+- [x] **Tab de actividades con 4 secciones desplegables:** `SeccionDesplegableActividades`, filtros en `ActividadesViewModel`, paginación de 10 en 10, `CardActividad` con estado `caducada`.
+- [x] **Perfil social (Fase 9):** `VistaPerfilUsuario` con tabs Creadas/Participadas/Favoritas, cards de actividades, navegación al detalle con `mostrarAcciones`.
+- [x] **Bug fix:** Botón SALIR oculto para el creador en `VistaDetalleActividad`.
+- [x] **Bug fix:** Actividades caducadas excluidas de "Creadas por ti" en el feed.

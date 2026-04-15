@@ -9,50 +9,61 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.julen.trailpack.routing.Enrutador
+import com.julen.trailpack.vistas.actividadespublicadas.ActividadesViewModel
+import com.julen.trailpack.vistas.actividadespublicadas.CardActividad
 
 import com.julen.trailpack.vistas.componentes.usuario.DatosPersonalesPerfil
 import com.julen.trailpack.vistas.componentes.usuario.FotoPerfil
 import com.julen.trailpack.vistas.componentes.usuario.NivelUsuarioPerfil
 import com.julen.trailpack.vistas.componentes.usuario.SeguidoresUsuarioPerfil
-
+import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 
 //COMPOSABLE MARCO DONDE IRAN TODAS LAS PIEZAS
 @Composable
-fun VistaPerfilUsuario() {
-    val viewModel: PerfilUsuarioViewModel = viewModel()
-    val user = viewModel.usuarioState
+fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: ActividadesViewModel,enrutador: Enrutador) {
+    val perfilviewModel: PerfilUsuarioViewModel = viewModel()
+    val user = mainviewModel.usuarioGlobal ?: return
+    val uid = user.uid
 
     val context = LocalContext.current
-    val uid = FirebaseAuth.getInstance().currentUser?.uid
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let{
-            if(uid != null) {
-                viewModel.subirFotoPerfil(uid,it){ success , error ->
-                    if(success){
-                        Toast.makeText(context,"Foto actualizada", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(context,"Error: $error",Toast.LENGTH_SHORT).show()
-                    }
+            uri?.let {
+            perfilviewModel.subirFotoPerfil(uid, it) { success, error ->
+                if (success) {
+                    mainviewModel.showNotification("Foto actualizada")
+                } else {
+                    mainviewModel.showNotification("Error: $error")
                 }
             }
         }
@@ -72,7 +83,7 @@ fun VistaPerfilUsuario() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 FotoPerfil(
-                    url = viewModel.usuarioState.fotoperfil,
+                    url = user.fotoperfil,
                     modifier = Modifier.clickable{launcher.launch("image/*")} //Al pulsar se abre la galeria
                 )
                 Spacer(modifier = Modifier.height(24.dp))
@@ -96,13 +107,51 @@ fun VistaPerfilUsuario() {
                 }
             }
 
-        }
+        }//Cierra row de los datos
+        Spacer(modifier = Modifier.height(16.dp))
 
-    }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            var categoriaSeleccionada by remember { mutableStateOf("Creadas") }
+            val categorias = listOf("Creadas", "Participadas", "Favoritas")
+
+            val listaActiva = when (categoriaSeleccionada) {
+                "Creadas"     -> actividadesviewModel.getActividadesCreadas(uid)
+                "Participadas" -> actividadesviewModel.getActividadesUnido(uid)
+                "Favoritas" -> emptyList()
+                else          -> emptyList()
+            }
+
+            ScrollableTabRow(
+                selectedTabIndex = categorias.indexOf(categoriaSeleccionada),
+                edgePadding = 0.dp
+            ) {
+                categorias.forEach { categoria ->
+                    Tab(
+                        selected = categoriaSeleccionada == categoria,
+                        onClick = { categoriaSeleccionada = categoria },
+                        text = { Text(categoria) }
+                    )
+                }
+            }
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(listaActiva) { acr ->
+                    CardActividad(
+                        actividadConRuta = acr,
+                        fechaFormateada = mainviewModel.formatearFecha(acr.actividad.fechasalida),
+                        usuarioActualUid = uid,
+                        caducada = actividadesviewModel.actividadCaducada(acr.actividad),
+                        mostrarBoton = false,
+                        onUnirseClick = {},
+                        onAbandonarClick = {},
+                        onCardClick = {enrutador.navToActividadDetallada(acr.actividad.idactividad, false)}
+                    )
+                }
+            }
+
+    }//Cierra el main container
 
 }
-@Preview
-@Composable
-fun VistaPerfilUsuarioPreview(){
-    VistaPerfilUsuario()
-}
+

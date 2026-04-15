@@ -88,7 +88,7 @@ fun ScaffoldTrailPack(navController: NavHostController, mainviewModel: MainViewM
                             VistaRutasPublicadas(mainviewModel, enrutador,actividadesviewModel)
                         }
                         2 -> {
-                            VistaPerfilUsuario()
+                            VistaPerfilUsuario(mainviewModel,actividadesviewModel,enrutador)
                         }
                     }
                 }

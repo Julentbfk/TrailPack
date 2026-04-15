@@ -22,3 +22,11 @@
 7. **Recarga Reactiva de Feed (Hoy):**
     - **Decisión:** Uso de `LaunchedEffect(Unit)` en la raíz de las vistas de pestañas para forzar la actualización de datos frescos al navegar entre ellas.
     - **Razón:** Asegura que el usuario vea siempre la información más reciente sin necesidad de un gesto "Pull-to-refresh" explícito en esta fase inicial.
+
+8. **Parámetro booleano en ruta de navegación (2026-04-15):**
+    - **Decisión:** `mostrarAcciones: Boolean` se pasa como segmento de path en la URL de navegación (`detalleactividad/{actividadId}/{mostrarAcciones}`) en lugar de como estado global o parámetro de ViewModel.
+    - **Razón:** Mantiene el desacoplamiento entre pantallas. `VistaDetalleActividad` no necesita saber desde dónde viene — solo recibe si debe mostrar o no los botones de acción.
+
+9. **Clasificación de actividades como funciones, no propiedades (2026-04-15):**
+    - **Decisión:** Los 4 filtros de actividades en `ActividadesViewModel` son funciones que reciben `uid: String`, no propiedades computadas.
+    - **Razón:** El `uid` vive en `MainViewModel`, no en `ActividadesViewModel`. Las funciones evitan el acoplamiento entre ViewModels manteniendo la lógica de clasificación en el lugar correcto (ViewModel de negocio).

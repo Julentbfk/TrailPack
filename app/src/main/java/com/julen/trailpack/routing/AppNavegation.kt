@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.julen.trailpack.vistas.actividadespublicadas.ActividadesViewModel
 import com.julen.trailpack.vistas.actividadespublicadas.VistaDetalleActividad
 import com.julen.trailpack.vistas.ajustes.VistaAjustes
 import com.julen.trailpack.vistas.ajustes.cambiarpassword.VistaCambiarPassword
@@ -89,19 +90,21 @@ fun AppNavegation() {
                    }
                )
            }
-           
+
            composable(route="perfilusuario"){
-               VistaPerfilUsuario()
+               val actividadesViewModel: ActividadesViewModel = viewModel()
+               VistaPerfilUsuario(mainViewModel, actividadesViewModel,enrutador)
            }
 
            composable(route="scaffoldtrailpack"){
                ScaffoldTrailPack(navHost,mainViewModel)
            }
 
-           composable(route="editarperfil") {
+           composable(route = "editarperfil") {
                VistaEditarPerfil(
-                   editarPerfilClick = {enrutador.navToScaffoldTrailPack()},
-                   cancelarEditClick = {enrutador.popBack()}
+                   mainViewModel = mainViewModel,
+                   editarPerfilClick = { enrutador.navToScaffoldTrailPack() },
+                   cancelarEditClick = { enrutador.popBack() }
                )
            }
            
@@ -151,11 +154,20 @@ fun AppNavegation() {
            }
 
            composable(
-               route = "detalleactividad/{actividadId}",
-               arguments = listOf(navArgument("actividadId") {type = NavType.StringType})
+               route = "detalleactividad/{actividadId}/{mostrarAcciones}",
+               arguments = listOf(
+                   navArgument("actividadId") {type = NavType.StringType},
+                   navArgument("mostrarAcciones") {type = NavType.BoolType}
+               )
            ){ backstackEnty ->
                val actividadId = backstackEnty.arguments?.getString("actividadId") ?: ""
-               VistaDetalleActividad(actividadId=actividadId, mainviewModel = mainViewModel, onBack = { enrutador.popBack()})
+               val mostrarAcciones = backstackEnty.arguments?.getBoolean("mostrarAcciones") ?: true
+               VistaDetalleActividad(
+                   actividadId=actividadId,
+                   mainviewModel = mainViewModel,
+                   mostrarAcciones = mostrarAcciones,
+                   onBack = { enrutador.popBack()},
+               )
            }
        }
    }

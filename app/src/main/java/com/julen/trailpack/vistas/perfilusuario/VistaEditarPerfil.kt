@@ -42,10 +42,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.julen.trailpack.modelos.Pais
 import com.julen.trailpack.vistas.componentes.formulario.OutlinedTextFieldMejorado
 import com.julen.trailpack.vistas.componentes.formulario.SelectorPrefijoPais
+import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 import com.julen.trailpack.vistas.utiles.ValidadorCampos
 
 @Composable
 fun VistaEditarPerfil (
+    mainViewModel: MainViewModel,
     editarPerfilClick: () -> Unit,
     cancelarEditClick: () -> Unit
 ) {
@@ -62,11 +64,13 @@ fun VistaEditarPerfil (
     val viewModel: PerfilUsuarioViewModel = viewModel()
     val formModel = viewModel.editarperfilFormModel
 
-    LaunchedEffect(viewModel.usuarioState) {
-        if(viewModel.usuarioState.uid.isNotEmpty()){
-            viewModel.cargarDatosEnEditarPerfilForm(viewModel.usuarioState)
+    LaunchedEffect(mainViewModel.usuarioGlobal) {
+        val usuario = mainViewModel.usuarioGlobal
+        if (usuario != null && usuario.uid.isNotEmpty()) {
+            viewModel.cargarDatosEnEditarPerfilForm(usuario)
         }
     }
+
     //Este launched effect se lanza cuando se le da a guardar y hace que el ussuario pueda ver el num cambios y despues le mande a la pantalla de perfil
     LaunchedEffect(guardarConExito) {
         if (guardarConExito) {
@@ -245,10 +249,4 @@ fun VistaEditarPerfil (
         }//Cierra Column principal del formulatio
     }//Cierra Scaffold
 
-}
-
-@Preview
-@Composable
-fun VistaEditarPerfilPreview(){
-    VistaEditarPerfil ({}, {})
 }

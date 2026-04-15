@@ -34,7 +34,7 @@ import com.julen.trailpack.vistas.componentes.actividades.UserAvatar
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
-fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onBack:()-> Unit) {
+fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mostrarAcciones: Boolean=true, onBack:()-> Unit) {
 
     val detalleviewModel: DetalleActividadViewModel = viewModel()
 
@@ -172,7 +172,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onB
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Botones de Gestion
-                if(!esCreador){
+                if(!esCreador && mostrarAcciones){
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -235,7 +235,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onB
                     }
                 }
 
-                if(esCreador){
+                if(esCreador && mostrarAcciones){
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         text = "Gestión de la Actividad",

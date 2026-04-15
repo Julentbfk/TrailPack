@@ -71,7 +71,7 @@ class Enrutador(private val navController: NavController) {
 
 
     //Nav to actividad detallada
-    fun navToActividadDetallada(actividadId: String) {
-        navController.navigate("detalleactividad/$actividadId")
+    fun navToActividadDetallada(actividadId: String,mostrarAcciones: Boolean = true) {
+        navController.navigate("detalleactividad/$actividadId/$mostrarAcciones")
     }
 }

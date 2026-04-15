@@ -38,6 +38,7 @@ fun CardActividad(
     fechaFormateada: String,
     usuarioActualUid: String?,
     caducada: Boolean = false,
+    mostrarBoton: Boolean = true,
     onUnirseClick: () -> Unit,
     onAbandonarClick: () -> Unit,
     onCardClick: () -> Unit,
@@ -137,6 +138,9 @@ fun CardActividad(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 when{
+                    !mostrarBoton -> {
+                            /*SIN BOTON*/
+                    }
                     caducada -> {
                         Text(
                             text = "TERMINADA",
