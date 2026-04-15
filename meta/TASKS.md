@@ -12,7 +12,17 @@ _(ninguna)_
 
 - [ ] **Caché local de rutas:** Implementar caché en memoria en `MapsRepository` para evitar llamadas repetidas a Firestore al navegar entre tabs.
 - [ ] **FILE_TREE actualizado:** `VistaRutasPublicadas.kt` está siendo renombrado a `VistaActividades.kt` — actualizar `FILE_TREE.md` al confirmar el rename.
-- [ ] **Favoritas:** Implementar lógica de actividades favoritas (modelo, repositorio, filtro en ViewModel) para completar la tercera categoría del perfil.
+- [x] **Favoritas:** Implementar lógica de rutas favoritas (modelo, repositorio, filtro en ViewModel) para completar la tercera categoría del perfil.
+
+---
+
+## Pendientes — Fase 10 (Mapa Real)
+
+- [ ] **Hito 1 — Parques Naturales de España:** Ingesta de todos los parques nacionales y naturales desde fuente oficial (IGN) a Firestore. `MapaParqueNaturalCard` muestra datos reales.
+- [ ] **Hito 2 — Rutas default por parque:** Ingesta única desde OpenStreetMap/Overpass a Firestore. Distintivo visual "Ruta oficial" en la card.
+- [ ] **Hito 3 — Trazado en mapa:** Pintar `Polyline` de coordenadas de la ruta sobre Google Maps en `VistaRutaDetalladaMapa`. Prerequisito técnico para la creación.
+- [ ] **Hito 4 — Creación de rutas por usuarios:** Botón "Crear ruta" en card del parque. Formulario + mapa interactivo con waypoints ilimitados. Cálculo automático de distancia desde `List<GeoPoint>`.
+- [ ] **Hito 5 — Filtrado del listado:** Secciones desplegables "Rutas oficiales" y "Creadas por la comunidad" con paginación, al estilo del feed de actividades.
 
 ---
 
@@ -49,3 +59,4 @@ _(ninguna)_
 - [x] **Perfil social (Fase 9):** `VistaPerfilUsuario` con tabs Creadas/Participadas/Favoritas, cards de actividades, navegación al detalle con `mostrarAcciones`.
 - [x] **Bug fix:** Botón SALIR oculto para el creador en `VistaDetalleActividad`.
 - [x] **Bug fix:** Actividades caducadas excluidas de "Creadas por ti" en el feed.
+- [x] **Favoritas de rutas (Fase 9):** `rutasFavoritas: List<String>` en `Usuario`. Toggle en `MainViewModel`. Botón con corazón animado en `VistaRutaDetalladaMapa`. Tab Favoritas en perfil con `MapaRutaCard`. Navegación al detalle con fallback de carga desde Firestore cuando la ruta no está en caché.

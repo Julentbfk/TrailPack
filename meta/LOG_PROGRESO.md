@@ -47,6 +47,18 @@
 - **Debug caducada:** Actividades no aparecían en Caducadas por zona horaria incorrecta en emulador. Fix: comparación directa `horasalida < System.currentTimeMillis()`.
 - **Refactor `PerfilUsuarioViewModel`:** Eliminados `usuarioState`, `obtenerDatosUsuario()`, `auth` e `init`. El ViewModel ahora solo gestiona foto de perfil y formularios. `VistaEditarPerfil` y `VistaPerfilUsuario` usan `mainViewModel.usuarioGlobal` como fuente de verdad del usuario.
 
+### Sesión 2026-04-15 — Favoritas de rutas y cierre de Fase 9
+
+- **Decisión de dominio:** Favoritas almacena rutas (`rutasFavoritas: List<String>` en `Usuario`), no actividades. Las actividades son eventos efímeros; las rutas son contenido permanente del catálogo.
+- **Modelo:** `Usuario.rutasFavoritas` añadido como `List<String>` con default `emptyList()`. Compatible con documentos Firestore existentes sin migración.
+- **`MainViewModel.toggleRutaFavorita(idRuta)`:** Toggle en Firestore vía `UserRepository.actualizarPerfil` (reutilizando función existente con `Map<String,Any>`). Actualización en memoria con `.copy()` — sin recarga de red.
+- **`VistaRutaDetalladaMapa`:** Botón "Guardar" conectado. Estado visual: `OutlinedButton` con `Icons.Default.FavoriteBorder` cuando no guardada → `Button` con `errorContainer` color y `Icons.Default.Favorite` cuando guardada. Reactivo a `usuarioGlobal`.
+- **`PerfilUsuarioViewModel.cargarRutasFavoritas(ids)`:** Carga objetos `Ruta` desde `MapsRepository.repoObtenerRutasPorId`. Disparado por `LaunchedEffect(user.rutasFavoritas)` en la vista — se actualiza solo al guardar/quitar.
+- **`MapaRutaCard`:** `onPublicarClick` convertido a `(() -> Unit)? = null`. El botón "Publicar" solo se renderiza cuando se pasa el callback — no aparece en el perfil.
+- **`VistaPerfilUsuario`:** Tab "Favoritas" separada del `when` de actividades — usa `List<Ruta>` con `MapaRutaCard`. Las tabs Creadas/Realizadas mantienen `CardActividad` sin cambios.
+- **Navegación al detalle desde Favoritas:** `AppNavegation.detalleruta` ampliado con fallback: si la ruta no está en `rutasparquenatural` (caché del parque abierto), llama a `MapaViewModel.cargarRutaPorId` y muestra `CircularProgressIndicator` mientras carga.
+- **Planificación Fase 10:** Definidos 5 hitos para el mapa real — parques desde IGN, rutas default desde OpenStreetMap (ingesta a Firestore), trazado de polyline, creación de rutas con waypoints, filtrado oficial/comunidad.
+
 ### Fase 8: Gestión de Actividades y Refinamiento
 - **Modelo de Datos:** Ampliación de `Actividad` con campos específicos para `horasalida` y `puntoencuentro`.
 - **UI de Entrada:** Implementación de `SelectorHoraMejorado` con `TimePicker` nativo de Compose.

@@ -27,6 +27,14 @@
     - **Decisión:** `mostrarAcciones: Boolean` se pasa como segmento de path en la URL de navegación (`detalleactividad/{actividadId}/{mostrarAcciones}`) en lugar de como estado global o parámetro de ViewModel.
     - **Razón:** Mantiene el desacoplamiento entre pantallas. `VistaDetalleActividad` no necesita saber desde dónde viene — solo recibe si debe mostrar o no los botones de acción.
 
+10. **Favoritas como propiedad del Usuario, no de la Actividad/Ruta (2026-04-15):**
+    - **Decisión:** `rutasFavoritas: List<String>` vive en el documento `Usuario` en Firestore, no en `Ruta`.
+    - **Razón:** Favoritar es una preferencia personal del usuario. Guardarlo en `Ruta` mezclaría datos de contenido con datos sociales y haría crecer el documento de la ruta con IDs de usuarios. Sigue el mismo patrón que `listaseguidores`, `listasiguiendo`, `listaamigos`.
+
+11. **Parques y rutas default: ingesta a Firestore, no llamadas en runtime (2026-04-15):**
+    - **Decisión:** Los parques naturales y rutas default de OpenStreetMap se ingestarán a Firestore mediante scripts de carga única. La app siempre lee de Firestore, nunca de APIs externas en tiempo de ejecución.
+    - **Razón:** Las APIs externas (Overpass, IGN) tienen latencia variable y pueden no estar disponibles. Firestore garantiza velocidad y disponibilidad. La API externa es solo la fuente de datos de ingesta, no una dependencia en producción.
+
 9. **Clasificación de actividades como funciones, no propiedades (2026-04-15):**
     - **Decisión:** Los 4 filtros de actividades en `ActividadesViewModel` son funciones que reciben `uid: String`, no propiedades computadas.
     - **Razón:** El `uid` vive en `MainViewModel`, no en `ActividadesViewModel`. Las funciones evitan el acoplamiento entre ViewModels manteniendo la lógica de clasificación en el lugar correcto (ViewModel de negocio).
