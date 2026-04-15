@@ -53,6 +53,17 @@ class MainViewModel : ViewModel(){
             }
         }
     }
+
+    //metodo para añadir o quitar ruta de favoritos
+    fun toggleRutaFavorita(idRuta: String) {
+        val user = usuarioGlobal ?: return
+        val listaActual = user.rutasfavoritas.toMutableList()
+
+        if(idRuta in listaActual) listaActual.remove(idRuta) else listaActual.add(idRuta)
+        userRepository.actualizarPerfil(user.uid, mapOf("rutasfavoritas" to listaActual)){success, error ->
+            if(success) usuarioGlobal = user.copy(rutasfavoritas = listaActual)
+        }
+    }
     //endregion
 
     //region FORMATTER
@@ -84,5 +95,6 @@ class MainViewModel : ViewModel(){
     }
 
     //endregion
+
 
 }

@@ -23,6 +23,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.julen.trailpack.routing.Enrutador
 import com.julen.trailpack.vistas.actividadespublicadas.ActividadesViewModel
 import com.julen.trailpack.vistas.actividadespublicadas.CardActividad
+import com.julen.trailpack.vistas.componentes.mapa.MapaRutaCard
 
 import com.julen.trailpack.vistas.componentes.usuario.DatosPersonalesPerfil
 import com.julen.trailpack.vistas.componentes.usuario.FotoPerfil
@@ -53,8 +55,11 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
     val perfilviewModel: PerfilUsuarioViewModel = viewModel()
     val user = mainviewModel.usuarioGlobal ?: return
     val uid = user.uid
+    LaunchedEffect(user.rutasfavoritas) {
+        perfilviewModel.cargarRutasFavoritas(user.rutasfavoritas)
+    }
 
-    val context = LocalContext.current
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -113,13 +118,12 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            var categoriaSeleccionada by remember { mutableStateOf("Creadas") }
-            val categorias = listOf("Creadas", "Realizadas", "Favoritas")
+            var categoriaSeleccionada by remember { mutableStateOf("Act.Creadas") }
+            val categorias = listOf("Act.Creadas", "Act.Realizadas", "Rutas.Favoritas")
 
             val listaActiva = when (categoriaSeleccionada) {
-                "Creadas"     -> actividadesviewModel.getActividadesCreadas(uid)
-                "Realizadas" -> actividadesviewModel.getActividadesUnido(uid)
-                "Favoritas" -> emptyList()
+                "Act.Creadas"     -> actividadesviewModel.getActividadesCreadas(uid)
+                "Act.Realizadas" -> actividadesviewModel.getActividadesUnido(uid)
                 else          -> emptyList()
             }
 
@@ -136,19 +140,33 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
                 }
             }
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(listaActiva) { acr ->
-                    CardActividad(
-                        actividadConRuta = acr,
-                        fechaFormateada = mainviewModel.formatearFecha(acr.actividad.fechasalida),
-                        usuarioActualUid = uid,
-                        caducada = actividadesviewModel.actividadCaducada(acr.actividad),
-                        mostrarBoton = false,
-                        onUnirseClick = {},
-                        onAbandonarClick = {},
-                        onCardClick = {enrutador.navToActividadDetallada(acr.actividad.idactividad, false)}
-                    )
+            if(categoriaSeleccionada == "Rutas.Favoritas"){
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(perfilviewModel.rutasfavoritas) { ruta ->
+                        MapaRutaCard(
+                            ruta = ruta,
+                            onRutaClick = {
+                                enrutador.navToRutaDetalladaMapa(ruta.idruta)
+                            }
+                        )
+                    }
                 }
+            }else{
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(listaActiva) { acr ->
+                        CardActividad(
+                            actividadConRuta = acr,
+                            fechaFormateada = mainviewModel.formatearFecha(acr.actividad.fechasalida),
+                            usuarioActualUid = uid,
+                            caducada = actividadesviewModel.actividadCaducada(acr.actividad),
+                            mostrarBoton = false,
+                            onUnirseClick = {},
+                            onAbandonarClick = {},
+                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad, false) }
+                        )
+                    }
+                }
+
             }
 
     }//Cierra el main container

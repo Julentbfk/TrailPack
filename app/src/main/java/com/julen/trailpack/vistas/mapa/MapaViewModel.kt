@@ -110,4 +110,14 @@ class MapaViewModel : ViewModel() {
             }
         }
     }
+
+    //Funcion para cargar una ruta
+    var rutaCargadaPorId by mutableStateOf<Ruta?>(null)
+
+    fun cargarRutaPorID(id: String) {
+        repository.repoObtenerUnaRutaPorId(id) {ruta, _ ->
+            rutaCargadaPorId = ruta
+        }
+    }
+
 }

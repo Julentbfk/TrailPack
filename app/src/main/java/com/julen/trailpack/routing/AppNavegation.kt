@@ -130,26 +130,36 @@ fun AppNavegation() {
                val scaffoldEntry = remember(navHost.currentBackStackEntry){
                    navHost.getBackStackEntry("scaffoldtrailpack")
                }
-               val viewModel: MapaViewModel = viewModel(scaffoldEntry)
+               val mapaviewModel: MapaViewModel = viewModel(scaffoldEntry)
 
                val rutaId = backstackEntry.arguments?.getString("rutaId") ?: ""
-               val rutaSeleccionada = viewModel.rutasparquenatural.find{ it.idruta == rutaId }
 
-               if(rutaSeleccionada != null ){
+               val rutaSeleccionada = mapaviewModel.rutasparquenatural.find { it.idruta == rutaId }
+                                    ?: mapaviewModel.rutaCargadaPorId?.takeIf { it.idruta == rutaId }
+
+               LaunchedEffect(rutaId) {
+                   if (rutaSeleccionada == null) {
+                       mapaviewModel.cargarRutaPorID(rutaId)
+                   }
+               }
+
+               if (rutaSeleccionada != null) {
                    VistaRutaDetalladaMapa(
                        ruta = rutaSeleccionada,
-                       viewModel = viewModel,
+                       mapaviewModel = mapaviewModel,
                        onPublicarClick = {
-                           viewModel.togglePopupPublicacion(true, rutaSeleccionada)
+                           mapaviewModel.togglePopupPublicacion(true, rutaSeleccionada)
                        },
                        onBack = {
-                           viewModel.seleccionarRutaParaDetalle(null)
+                           mapaviewModel.seleccionarRutaParaDetalle(null)
                            enrutador.popBack()
                        },
-                       mainViewModel = mainViewModel
+                       mainviewModel = mainViewModel
                    )
-               }else{
-                   Text(text = "Error: Ruta no encontrada")
+               } else {
+                   Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                       CircularProgressIndicator()
+                   }
                }
            }
 

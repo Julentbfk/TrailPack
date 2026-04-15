@@ -46,7 +46,7 @@ import java.time.format.DateTimeFormatter
 
 //Card basada en el img FeedRutaParquenaturalMapa (Solo se usara en el mapa no en el feed social)
 @Composable
-fun MapaRutaCard( ruta: Ruta, onRutaClick: () -> Unit,onPublicarClick: () -> Unit) {
+fun MapaRutaCard( ruta: Ruta, onRutaClick: () -> Unit,onPublicarClick: (() -> Unit)? = null) {
 
     //Formateo la fecha del usuario
     val milis = ruta.fechacreacion
@@ -76,12 +76,12 @@ fun MapaRutaCard( ruta: Ruta, onRutaClick: () -> Unit,onPublicarClick: () -> Uni
                 //creador
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(top  = 4.dp), horizontalArrangement = Arrangement.SpaceBetween ) {
                     Text(text = "Creado por ${ruta.nombreCreador}\nCreada el $fechaFormateada",style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
-                    TextButton(
-                        onClick = {
-                            onPublicarClick()
+                    if (onPublicarClick != null) {
+                        TextButton(
+                            onClick = { onPublicarClick() }
+                        ) {
+                            Text("Publicar", color = Color.Magenta, fontWeight = FontWeight.Bold)
                         }
-                    ) {
-                        Text("Publicar", color = Color.Magenta, fontWeight = FontWeight.Bold)
                     }
                 }
 

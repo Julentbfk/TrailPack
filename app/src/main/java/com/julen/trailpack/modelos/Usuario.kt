@@ -39,4 +39,6 @@ data class Usuario(
     val listaseguidores: List<String> = emptyList(),
     val listasiguiendo: List<String> = emptyList(),
     val listaamigos: List<String> = emptyList(),
+    val rutasfavoritas: List<String> = emptyList(),
+
 )

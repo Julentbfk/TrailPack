@@ -7,12 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.julen.trailpack.data.MapsRepository
 import com.julen.trailpack.data.UserRepository
+import com.julen.trailpack.modelos.Ruta
 import com.julen.trailpack.modelos.Usuario
 
 class PerfilUsuarioViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
+
+
     var isLoading by mutableStateOf(false)
 
     fun subirFotoPerfil(uid: String, imageUri: Uri, onResult: (Boolean, String?) -> Unit) {
@@ -106,4 +110,17 @@ class PerfilUsuarioViewModel : ViewModel() {
         }
     }
     //endregion
+
+    //region CARGAR RUTAS FAVORITAS
+    private val mapsRepository = MapsRepository()
+    var rutasfavoritas by mutableStateOf<List<Ruta>>(emptyList())
+
+    fun cargarRutasFavoritas(ids: List<String>) {
+        mapsRepository.repoObtenerRutasPorId(ids){rutas, _ ->
+            rutasfavoritas = rutas ?: emptyList()
+        }
+    }
+
+
+    //enderegion
 }
