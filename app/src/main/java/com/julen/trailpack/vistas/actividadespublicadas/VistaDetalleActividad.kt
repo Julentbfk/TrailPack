@@ -171,64 +171,68 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onB
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botones de Acción
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = { mainviewModel.showNotification("Guardado en favoritos") },
-                        modifier = Modifier.weight(1f)
+                // Botones de Gestion
+                if(!esCreador){
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Text("Favorito")
+                        OutlinedButton(
+                            onClick = { mainviewModel.showNotification("Guardado en favoritos") },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Favorito")
+                        }
+
+                        if (!estaUnido) {
+                            Button(
+                                onClick = {
+                                    if (usuarioActualUid != null) {
+                                        detalleviewModel.gestionarParticipacion(actividad.idactividad, usuarioActualUid, true)
+                                        mainviewModel.showNotification("Te has unido a la actividad")
+                                    }
+                                },
+                                modifier = Modifier.weight(1f),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                                enabled = actividad.participantes < actividad.maxparticipantes
+                            ) {
+                                if (detalleviewModel.isLoading) {
+                                    CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                                } else {
+                                    Text("UNIRSE")
+                                }
+                            }
+                        } else {
+                            Button(
+                                onClick = {
+                                    if (usuarioActualUid != null) {
+                                        detalleviewModel.gestionarParticipacion(actividad.idactividad, usuarioActualUid, false)
+                                        mainviewModel.showNotification("Has abandonado la actividad")
+                                    }
+                                },
+                                modifier = Modifier.weight(1f),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828)),
+                                enabled = !detalleviewModel.isLoading
+                            ) {
+                                if (detalleviewModel.isLoading) {
+                                    CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                                } else {
+                                    Text("SALIR")
+                                }
+                            }
+                        }
                     }
 
-                    if (!estaUnido) {
-                        Button(
-                            onClick = {
-                                if (usuarioActualUid != null) {
-                                    detalleviewModel.gestionarParticipacion(actividad.idactividad, usuarioActualUid, true)
-                                    mainviewModel.showNotification("Te has unido a la actividad")
-                                }
-                            },
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
-                            enabled = actividad.participantes < actividad.maxparticipantes
-                        ) {
-                            if (detalleviewModel.isLoading) {
-                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
-                            } else {
-                                Text("UNIRSE")
-                            }
-                        }
-                    } else {
-                        Button(
-                            onClick = {
-                                if (usuarioActualUid != null) {
-                                    detalleviewModel.gestionarParticipacion(actividad.idactividad, usuarioActualUid, false)
-                                    mainviewModel.showNotification("Te has unido a la actividad")
-                                }
-                            },
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828)),
-                            enabled = !detalleviewModel.isLoading
-                        ) {
-                            if (detalleviewModel.isLoading) {
-                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
-                            } else {
-                                Text("SALIR")
-                            }
-                        }
+                    if (estaUnido) {
+                        Text(
+                            text = "Ya formas parte de esta actividad",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF2E7D32),
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
                     }
-                }
-                
-                if (estaUnido) {
-                    Text(
-                        text = "Ya formas parte de esta actividad",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFF2E7D32),
-                        modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
-                    )
                 }
 
                 if(esCreador){
@@ -244,10 +248,8 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onB
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // BOTÓN EDITAR
                         Button(
                             onClick = {
-                                // Preparamos los datos para el popup
                                 val fechaStr = mainviewModel.formatearFecha(actividad.fechasalida)
                                 val horaStr = mainviewModel.formatearHora(actividad.horasalida)
                                 detalleviewModel.abrirPopUpEdicion(actividad, fechaStr, horaStr)
@@ -258,7 +260,6 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, onB
                             Text("EDITAR")
                         }
 
-                        // BOTÓN ELIMINAR
                         Button(
                             onClick = {
                                 detalleviewModel.eliminarActividad(actividad.idactividad) {

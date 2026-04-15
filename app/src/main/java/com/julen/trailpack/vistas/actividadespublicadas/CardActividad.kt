@@ -37,14 +37,15 @@ fun CardActividad(
     actividadConRuta: ActividadConRuta,
     fechaFormateada: String,
     usuarioActualUid: String?,
+    caducada: Boolean = false,
     onUnirseClick: () -> Unit,
     onAbandonarClick: () -> Unit,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
 ) {
     val actividad = actividadConRuta.actividad
     val ruta = actividadConRuta.ruta
 
-    //Logica para saber si el usuario actual esta entre los participantes
+    //Logica para saber si el usuario actual esta entre los participantes o si la actividad esta caducada
     val usuarioIn = usuarioActualUid != null && actividad.listaparticipantesIds.contains(usuarioActualUid)
 
     //LOG PARA DIAGNOSTICAR
@@ -59,7 +60,12 @@ fun CardActividad(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { onCardClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = if(caducada) {
+                    CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                }else{
+                    CardDefaults.cardColors()
+                }
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -130,25 +136,34 @@ fun CardActividad(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
-
-                if(usuarioIn) {
-                    Button(
-                        onClick = { onAbandonarClick()},
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-                    ) {
-                        Text("SALIR", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onErrorContainer)
+                when{
+                    caducada -> {
+                        Text(
+                            text = "TERMINADA",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        )
                     }
-                }else{
-                    Button(
-                        onClick = { onUnirseClick() },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = actividad.participantes < actividad.maxparticipantes
-                    )
-                    {
-                        Text("Unirse", style = MaterialTheme.typography.labelSmall)
+                    usuarioIn -> {
+                        Button(
+                            onClick = { onAbandonarClick()},
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                        ) {
+                            Text("SALIR", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onErrorContainer)
+                        }
                     }
-                }
+                    else -> {
+                        Button(
+                            onClick = { onUnirseClick() },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = actividad.participantes < actividad.maxparticipantes
+                        )
+                        {
+                            Text("Unirse", style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                }//Cierra la condicion de boton
 
             }
         }

@@ -1,46 +1,59 @@
-# [PROYECTO_MASTER: TrailPack - Arquitectura y Metodología]
+# [PROYECTO_MASTER: TrailPack — Arquitectura y Metodología]
 
-Este archivo es la fuente de verdad del proyecto. Cualquier cambio en la arquitectura o metodología debe actualizar este archivo obligatoriamente.
-
-## 0. INICIALIZACIÓN Y MANTENIMIENTO DEL CONTEXTO (BOOSTRAP)
-**AL INICIAR CUALQUIER SESIÓN, EL ORQUESTADOR DEBE:**
-1. Leer: `meta/AGENTES.md`, `meta/PROYECTO_MASTER.md`, `meta/TASKS.md`.
-2. Analizar el contexto del proyecto mediante `meta/FILE_TREE.md`.
-3. Esperar al comando "Empezamos".
-
-**DURANTE SESIONES LARGAS:**
-- Si la sesión supera los 50 mensajes, el Orquestador deberá realizar un "autochequeo" re-leyendo los archivos en `meta/` para garantizar que no ha habido deriva de instrucciones.
+> Fuente de verdad del proyecto. Cualquier cambio en la arquitectura debe reflejarse aquí.
 
 ---
 
-Este archivo es la fuente de verdad del proyecto. Cualquier cambio en la arquitectura o metodología debe actualizar este archivo obligatoriamente.
-
 ## 1. Stack Tecnológico
-- **UI:** Jetpack Compose (Material3).
-- **Arquitectura:** MVVM (Model-View-ViewModel).
-- **Backend:** Firebase (Auth, Firestore, Storage).
-- **Gestión de Datos:** Repositorios independientes (`MapsRepository`, `UserRepository`, `AuthRepository`).
-- **Gestión de Estado Global:** `MainViewModel` centraliza la navegación, estado de sesión, loader global y pestaña activa.
+
+| Capa | Tecnología |
+|---|---|
+| **UI** | Jetpack Compose (Material3) |
+| **Arquitectura** | MVVM |
+| **Backend** | Firebase (Auth, Firestore, Storage) |
+| **Mapas** | Google Maps + maps-compose |
+| **Navegación** | NavHost centralizado + Scaffold con BottomBar |
+| **Gestión de Estado** | `mutableStateOf` en ViewModels · `MainViewModel` para estado global |
+
+---
 
 ## 2. Metodología de Desarrollo
-- **Interacción:** El usuario se comunica exclusivamente con el **Orquestador** (Programador Senior).
-- **Protocolo de Edición (Inviolable):**
-  - Agentes: **PROHIBIDO** editar archivos del proyecto. Solo proporcionan código de guía en texto plano.
-  - Usuario: **ÚNICO** autorizado para editar código fuente.
-- **Protocolo de Memoria Continua:**
-  - **Logging Atómico:** Cada tarea finalizada implica una actualización inmediata de `TASKS.md` y `DECISION_LOG.md`.
-  - **Disparadores de Sesión:**
-    - **"Empezamos":** Lectura obligatoria de logs y petición de tarea prioritaria.
-    - **"Cerramos por hoy":** Resumen final, consolidación de archivos y marcado de tareas pendientes.
-- **Gestión de Logs:** `LOG_PROGRESO.md`, `DECISION_LOG.md`, `TASKS.md`.
 
-## 3. Patrones de Diseño & Estándares
-- **Formularios:** `FormModel` (inmutable) + `mutableStateOf` en ViewModel.
-- **Mapas:** `GoogleMaps` + `maps-compose`.
-- **Navegación:** `NavHost` centralizado + `Scaffold` con `BottomBar` gestionada por `MainViewModel.selectedTab`.
-- **Seguridad:** Re-autenticación en operaciones críticas.
+- **Interacción:** El usuario se comunica exclusivamente con el Orquestador.
+- **Protocolo de edición (inviolable):** El Orquestador propone código en texto. El usuario es el único que aplica cambios al código fuente.
+- **Fuente de verdad del código:** Los archivos `.kt` del proyecto. No documentos de contexto.
+- **Protocolo de sesión:** Ver `CLAUDE.md` (raíz del proyecto).
+- **Definición de agentes:** Ver `meta/AGENTES.md`.
 
-## 4. Evolución del Proyecto (Fases)
-- **Fases 1-5:** Auth, Perfil, Seguridad base.
-- **Fase 6:** Core Funcional (Mapa y Rutas).
-- **Fase 7:** Social Feed y Eventos (En curso).
+---
+
+## 3. Estructura de Datos (Firestore)
+
+- Colecciones planas: `actividades`, `rutas`, `parques`, `usuarios`.
+- Sin anidamiento entre colecciones para permitir búsquedas globales.
+- Los "joins" entre colecciones se realizan en el cliente, en el ViewModel, usando `whereIn` por IDs.
+
+---
+
+## 4. Patrones de Diseño Estándar
+
+| Patrón | Implementación |
+|---|---|
+| **Formularios** | `FormModel` inmutable + `mutableStateOf` en ViewModel |
+| **Notificaciones** | `mainViewModel.showNotification(msg)` observado en `AppNavegation` |
+| **Repositorios** | Prefijo `repo` en funciones públicas. Sin lógica de negocio. |
+| **Diálogos/Popups** | Componentes `Dialog` de Compose, no `AlertDialog` básico para layouts custom |
+| **Callbacks de nav** | Inyectados desde `AppNavegation`, no creados dentro de Composables |
+
+---
+
+## 5. Evolución del Proyecto (Fases)
+
+| Fase | Descripción | Estado |
+|---|---|---|
+| 1–5 | Auth, Perfil, Seguridad base, Cambio de contraseña | Completado |
+| 6 | Mapas reactivos, rutas por parque, publicación de actividades | Completado |
+| 7 | Feed social, CardActividad, DetalleActividad, lógica Unirse/Salir | Completado |
+| 8 | Gestión de actividades: edición, borrado, selector de hora, permisos por creador | Completado |
+| 9 | Perfil social: actividades creadas/unidas. Caché local de rutas. | Pendiente |
+| 10 | Notificaciones push (FCM). Google Places API. | Pendiente |

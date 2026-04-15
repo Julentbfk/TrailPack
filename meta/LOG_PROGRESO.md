@@ -24,7 +24,18 @@
     - **Fixes de Datos:** Corregida la recuperación de rutas individuales en `MapsRepository`.
     - **Sincronización de UI:** Unificada la lógica de los botones "Unirse/Salir" en `VistaDetalleActividad`.
 
-### Fase 8: Gestión de Actividades y Refinamiento (Hoy)
+### Sesión 2026-04-15 — Migración del sistema de agentes y aprendizaje sobre IA
+
+- **Diagnóstico del sistema anterior:** Identificados GOD files desincronizados (campos faltantes en modelos, renombres no reflejados). El sistema era RAG manual con riesgo alto de deriva de contexto.
+- **Archivado:** 12 GOD files movidos a `meta/GODagentes/ARCHIVO/`. La carpeta `meta/` queda limpia.
+- **CLAUDE.md:** Creado en la raíz del proyecto. Bootstrap automático de sesión con stack, protocolos, secuencia de inicio/cierre y mapa de agentes.
+- **AGENTES.md:** Redefinido con 4 agentes por capas MVVM (Arquitecto, Artesano UI, Lógico, Guardián de Flujo). Nuevo protocolo de activación: rol interno para tareas ≤3 archivos, sub-agente real (`Explore`/`Plan`) para tareas más amplias. Plantilla de briefing para sub-agentes (arrancan en frío).
+- **PROYECTO_MASTER.md:** Limpiado de referencias a GOD files. Tabla de fases actualizada hasta Fase 10.
+- **TASKS.md:** Sincronizado con la realidad (tarea unirse/salir marcada completada).
+- **Skills:** Creados `/empezamos` y `/cerramos` en `.claude/skills/`. Activos tras reinicio de Claude Code.
+- **Aprendizaje del usuario:** Tokens y ventana de contexto, diferencia entre roles internos y sub-agentes reales, Skills vs MCP, criterio para no usar skill de diseño ahora y reservarlo para fase de refactoring.
+
+### Fase 8: Gestión de Actividades y Refinamiento
 - **Modelo de Datos:** Ampliación de `Actividad` con campos específicos para `horasalida` y `puntoencuentro`.
 - **UI de Entrada:** Implementación de `SelectorHoraMejorado` con `TimePicker` nativo de Compose.
 - **Gestión de Autoría:** Implementación de permisos basados en `idcreador` para habilitar funciones de edición y borrado.

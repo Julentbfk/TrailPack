@@ -9,6 +9,8 @@ import com.julen.trailpack.data.ActividadesRepository
 import com.julen.trailpack.data.MapsRepository
 import com.julen.trailpack.modelos.Actividad
 import com.julen.trailpack.modelos.ActividadConRuta
+import java.time.Instant
+import java.time.ZoneId
 
 class ActividadesViewModel: ViewModel() {
 
@@ -68,5 +70,38 @@ class ActividadesViewModel: ViewModel() {
             }
         }
     }
+
+
+    //region Filtros de actividades
+
+    //Funcion para ver si la actividad esta caducada
+    fun actividadCaducada(actividad: Actividad): Boolean {
+        Log.d("DEBUG_CADUCADA", "ID: ${actividad.idactividad} | fechasalida: ${actividad.fechasalida} | horasalida: ${actividad.horasalida}")
+        return actividad.horasalida > 0L && actividad.horasalida < System.currentTimeMillis()
+    }
+    //Funcion para ver actividades publicadas
+    fun getActividadesPublicadas(uid: String): List<ActividadConRuta> =
+        actividadesconruta.filter { act ->
+            act.actividad.idcreador != uid && uid !in act.actividad.listaparticipantesIds && !actividadCaducada(act.actividad)
+        }
+
+    //Funcion para ver actividades creadas por ti
+    fun getActividadesCreadas(uid: String): List<ActividadConRuta> =
+        actividadesconruta.filter { act ->
+            act.actividad.idcreador == uid && !actividadCaducada(act.actividad)
+        }
+    //Funcion para ver actividades en las que estas unido
+    fun getActividadesUnido(uid: String): List<ActividadConRuta> =
+        actividadesconruta.filter { act->
+            uid in act.actividad.listaparticipantesIds && act.actividad.idcreador != uid
+        }
+
+    //Funcion para ver actividades caducadas
+    fun getActividadesCaducadas(uid: String): List<ActividadConRuta> =
+        actividadesconruta.filter { act->
+            actividadCaducada(act.actividad)
+        }
+    //endregion
+
 
 }
