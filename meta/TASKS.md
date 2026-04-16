@@ -10,7 +10,7 @@ _(ninguna)_
 
 ## Pendientes — Prioridad Alta (Fase 9)
 
-- [ ] **Caché local de rutas:** Implementar caché en memoria en `MapsRepository` para evitar llamadas repetidas a Firestore al navegar entre tabs.
+- [x] **Caché local de rutas:** Implementar caché en memoria en `MapsRepository` para evitar llamadas repetidas a Firestore al navegar entre tabs. `companion object` con `HashMap` para rutas por parque, rutas por IDs y ruta individual. Caché de parques con `List?`. Métodos de invalidación `limpiarCacheParques`, `limpiarCacheRutasParque`, `limpiarCacheRutas` y `limpiarCacheCompleta` preparados para Fase 10.
 - [ ] **FILE_TREE actualizado:** `VistaRutasPublicadas.kt` está siendo renombrado a `VistaActividades.kt` — actualizar `FILE_TREE.md` al confirmar el rename.
 - [x] **Favoritas:** Implementar lógica de rutas favoritas (modelo, repositorio, filtro en ViewModel) para completar la tercera categoría del perfil.
 
