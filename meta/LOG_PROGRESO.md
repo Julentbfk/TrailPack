@@ -72,6 +72,12 @@
 - **HTTP 403 Coil fix:** Wikimedia bloquea el User-Agent por defecto de OkHttp. Fix: `ImageLoader` personalizado en `MapaParqueNaturalCard` con interceptor OkHttp que añade `User-Agent: TrailPack/1.0 (Android; julen.tabuyo@gmail.com)`. Cambiado `AsyncImage` → `rememberAsyncImagePainter` para mejor control de estados.
 - **Cleanup:** Eliminado `LaunchedEffect` de logging de errores Coil. Imports huérfanos eliminados.
 
+### Sesión 2026-04-17 — Ingesta rutas OSM + Trazado Polyline (Fase 10, Hitos 2 y 3)
+
+- **`scripts/ingesta_rutas.py`:** Lee parques de Firestore, consulta Overpass API (`relation[route=hiking]` en radio 15km). Reintentos con backoff exponencial (10/30/60s) ante 429/504. Filtro ≤40km (rutas más largas son grandes recorridos o etapas). Sleep 8s entre parques. Guarda en colección `rutas` con `esOficial: true`, `nombreCreador: "TrailPack"`, `coordenadas: List<{lat,lng,altitud}>`. ~34 rutas cargadas en primera ejecución real.
+- **`MapaRutaCard` — thumbnail de trazado:** Nuevo composable privado `ThumbnailRuta` con lógica de tres casos: foto real → `AsyncImage`; sin foto + coordenadas → `GoogleMap` lite mode con `Polyline` verde; sin nada → `Box` neutro. `remember(ruta.idruta)` para evitar recálculo de bounds en recomposiciones. Overlay `Box` transparente para bloquear apertura de Google Maps al tocar el thumbnail en lite mode.
+- **`VistaRutaDetalladaMapa` — mapa interactivo en detalle:** `AsyncImage` del header reemplazado por `when` de tres casos idéntico al thumbnail pero a tamaño completo (250dp, sin lite mode). `scrollGesturesEnabled = false` para compatibilidad con `Column` scrolleable. `onMapLoaded` con `newLatLngBounds(bounds, 32)` para encuadre automático del trazado.
+
 ### Fase 8: Gestión de Actividades y Refinamiento
 - **Modelo de Datos:** Ampliación de `Actividad` con campos específicos para `horasalida` y `puntoencuentro`.
 - **UI de Entrada:** Implementación de `SelectorHoraMejorado` con `TimePicker` nativo de Compose.

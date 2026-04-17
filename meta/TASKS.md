@@ -19,8 +19,8 @@ _(ninguna)_
 ## Pendientes — Fase 10 (Mapa Real)
 
 - [x] **Hito 1 — Parques Nacionales de España:** 16 parques nacionales ingestados desde Wikidata via `scripts/ingesta_parques.py`. IDs legibles normalizados (`teide`, `donana`…), `region` con comunidad autónoma, foto Wikimedia (thumburl via Commons API), coordenadas y superficie. Fotos cargan con `ImageLoader` personalizado (User-Agent Wikimedia). `contorno` pendiente de enriquecimiento con OSM.
-- [ ] **Hito 2 — Rutas default por parque:** Ingesta única desde OpenStreetMap/Overpass a Firestore. Distintivo visual "Ruta oficial" en la card.
-- [ ] **Hito 3 — Trazado en mapa:** Pintar `Polyline` de coordenadas de la ruta sobre Google Maps en `VistaRutaDetalladaMapa`. Prerequisito técnico para la creación.
+- [x] **Hito 2 — Rutas default por parque:** `scripts/ingesta_rutas.py` con Overpass API. Reintentos con backoff (10/30/60s), filtro ≤40km, sleep 8s entre parques. `nombreCreador: "TrailPack"`. Thumbnail en `MapaRutaCard` con `GoogleMap` lite mode + `Polyline` cuando `fotosRuta` está vacío. Overlay transparente para bloquear apertura de Google Maps al tocar.
+- [x] **Hito 3 — Trazado en mapa:** `GoogleMap` interactivo (250dp) en `VistaRutaDetalladaMapa` reemplaza `AsyncImage` cuando no hay foto. `Polyline` verde, bounds automáticos con padding 32, scroll gestures desactivados para compatibilidad con `Column`.
 - [ ] **Hito 4 — Creación de rutas por usuarios:** Botón "Crear ruta" en card del parque. Formulario + mapa interactivo con waypoints ilimitados. Cálculo automático de distancia desde `List<GeoPoint>`.
 - [ ] **Hito 5 — Filtrado del listado:** Secciones desplegables "Rutas oficiales" y "Creadas por la comunidad" con paginación, al estilo del feed de actividades.
 
@@ -29,6 +29,8 @@ _(ninguna)_
 ## Pendientes — Prioridad Baja (Futuro)
 
 - [ ] **Skill `/refactor-ui`:** Crear skill de auditoría Jetpack Compose con mejores prácticas (recomposiciones, hoist de estado, keys en LazyColumn, tema). Activar solo cuando el proyecto esté estable y haya una fase de refactoring dedicada.
+- [ ] **Perfil de elevación:** Gráfica de altitud vs distancia bajo el mapa en `VistaRutaDetalladaMapa`. Usa `altitud` de `List<Coordenada>`. Post-MVP.
+- [ ] **Mapa 3D:** Migración de Google Maps a Mapbox o equivalente para terreno tridimensional con polyline siguiendo el relieve. Post-MVP.
 
 ---
 

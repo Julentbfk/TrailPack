@@ -34,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.julen.trailpack.modelos.Ruta
+import com.julen.trailpack.vistas.componentes.mapa.MapaRutaDetallada
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
@@ -53,14 +54,8 @@ fun VistaRutaDetalladaMapa(
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            AsyncImage(
-                model = ruta.fotosRuta.firstOrNull(),
-                contentDescription = "mapa de la ruta",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp),
-                contentScale = ContentScale.Crop
-            )
+            //Espacio para la foto, mapa de la ruta o nada a traves de componente MapaRutaDetallada
+            MapaRutaDetallada(ruta)
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = ruta.nombre, style = MaterialTheme.typography.headlineMedium)

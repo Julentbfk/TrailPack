@@ -44,12 +44,7 @@ fun MapaRutaCard( ruta: Ruta, onRutaClick: () -> Unit,onPublicarClick: (() -> Un
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
 
-            AsyncImage(
-                model = ruta.fotosRuta.firstOrNull(),
-                contentDescription = null,
-                modifier = Modifier.size(100.dp).clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+            ThumbnailRuta(ruta = ruta)
 
             Column(modifier = Modifier.padding(start = 16.dp)) {
                 Text(text = "${ruta.nombre}",style = MaterialTheme.typography.titleMedium)

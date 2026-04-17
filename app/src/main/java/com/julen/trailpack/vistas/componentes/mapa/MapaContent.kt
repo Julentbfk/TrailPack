@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.julen.trailpack.vistas.mapa.MapaViewModel
@@ -19,7 +21,8 @@ fun MapaContent(viewModel: MapaViewModel,camaraPositionState: CameraPositionStat
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
-        cameraPositionState = camaraPositionState
+        cameraPositionState = camaraPositionState,
+        properties = MapProperties(mapType = MapType.TERRAIN)
     ) {
 
         viewModel.parquesnaturales.forEach { parqueNatural ->
