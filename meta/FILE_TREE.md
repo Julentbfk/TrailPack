@@ -11,6 +11,8 @@
 +---modelos
 |       Actividad.kt
 |       ActividadConRuta.kt
+|       Coordenada.kt
+|       FaunaFlora.kt
 |       Pais.kt
 |       ParqueNatural.kt
 |       Participante.kt
@@ -31,8 +33,10 @@
     |       ActividadesViewModel.kt
     |       CardActividad.kt
     |       DetalleActividadViewModel.kt
+    |       PopUpEditarActividad.kt
+    |       SeccionDesplegableActividades.kt
+    |       VistaActividades.kt
     |       VistaDetalleActividad.kt
-    |       VistaRutasPublicadas.kt
     |       
     +---ajustes
     |   |   AjustesViewModel.kt

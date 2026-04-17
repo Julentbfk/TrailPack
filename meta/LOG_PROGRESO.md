@@ -59,6 +59,19 @@
 - **Navegación al detalle desde Favoritas:** `AppNavegation.detalleruta` ampliado con fallback: si la ruta no está en `rutasparquenatural` (caché del parque abierto), llama a `MapaViewModel.cargarRutaPorId` y muestra `CircularProgressIndicator` mientras carga.
 - **Planificación Fase 10:** Definidos 5 hitos para el mapa real — parques desde IGN, rutas default desde OpenStreetMap (ingesta a Firestore), trazado de polyline, creación de rutas con waypoints, filtrado oficial/comunidad.
 
+### Sesión 2026-04-16 — Caché de MapsRepository + Modelos escalables + Ingesta Parques (Fase 10, Hito 1)
+
+- **Caché `MapsRepository`:** `companion object` (equivalente a `static` en JVM) con `HashMap` para rutas por parque, rutas por IDs y ruta individual. Caché de parques como `List?`. Patrón `cache[key]?.let { onResult(it, null); return }` en todos los métodos de lectura. Métodos de invalidación `limpiarCacheParques`, `limpiarCacheRutasParque`, `limpiarCacheRutas`, `limpiarCacheCompleta` preparados para Fase 10.
+- **Modelo `ParqueNatural` ampliado:** Nuevos campos `pais`, `tipo`, `superficie: Double`, `contorno: List<GeoPoint>`. Compatible con documentos existentes (default values). Preparado para parques de todo el mundo.
+- **Modelo `Ruta` ampliado:** Renombrado `desnivel` → `desnivelTotal`. Añadidos `pais`, `region`, `desnivelPositivo`, `desnivelNegativo`, `altitudMaxima`, `altitudMinima`, `esOficial`. Tipo `coordenadas` cambiado de `List<GeoPoint>` a `List<Coordenada>`. Usos actualizados en `CardActividad`, `MapaRutaCard`, `VistaDetalleActividad`.
+- **Modelo `Coordenada` (nuevo):** `lat`, `lng`, `altitud: Double`. Permite perfiles de elevación y cálculo de D+/D-.
+- **Modelo `FaunaFlora` (nuevo, desconectado):** Preparado para Fase 11. `tipo`, `nombre`, `nombreCientifico`, `descripcion`, `foto`, `enPeligroExtincion`.
+- **Crash fix:** Documentos Firestore existentes tenían `coordenadas` como `List<GeoPoint>` — incompatible con `Coordenada`. Eliminados datos de prueba en colecciones `rutas` y `actividades`.
+- **`scripts/ingesta_parques.py`:** Consulta SPARQL Wikidata con `wdt:P31/wdt:P279* wd:Q46169` (jerarquía de subclases) y `wdt:P131+ ?region . ?region wdt:P31 wd:Q10742` (comunidad autónoma). Deduplicación por Q-ID. `limpiar_nombre()` elimina prefijos "Parque nacional de". `normalizar_nombre()` genera IDs legibles (`teide`, `donana`). Borra colección antes de reingestar. 16 parques únicos cargados.
+- **Fotos Wikimedia:** URL oficial vía `w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=800` (descartada construcción manual de URL MD5 — Wikimedia la bloquea). Nombre de fichero con `unquote()` para manejar `%20`.
+- **HTTP 403 Coil fix:** Wikimedia bloquea el User-Agent por defecto de OkHttp. Fix: `ImageLoader` personalizado en `MapaParqueNaturalCard` con interceptor OkHttp que añade `User-Agent: TrailPack/1.0 (Android; julen.tabuyo@gmail.com)`. Cambiado `AsyncImage` → `rememberAsyncImagePainter` para mejor control de estados.
+- **Cleanup:** Eliminado `LaunchedEffect` de logging de errores Coil. Imports huérfanos eliminados.
+
 ### Fase 8: Gestión de Actividades y Refinamiento
 - **Modelo de Datos:** Ampliación de `Actividad` con campos específicos para `horasalida` y `puntoencuentro`.
 - **UI de Entrada:** Implementación de `SelectorHoraMejorado` con `TimePicker` nativo de Compose.

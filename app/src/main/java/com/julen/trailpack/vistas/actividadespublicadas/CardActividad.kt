@@ -94,7 +94,7 @@ fun CardActividad(
                     color = MaterialTheme.colorScheme.primary // Forzamos color primario
                 )
                 Text(
-                    text = "${ruta?.distancia ?: "0"}km - ${ruta?.desnivel ?: "0"}m",
+                    text = "${ruta?.distancia ?: "0"}km - ${ruta?.desnivelacumulado ?: "0"}m",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )

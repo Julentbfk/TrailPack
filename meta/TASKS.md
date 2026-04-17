@@ -10,15 +10,15 @@ _(ninguna)_
 
 ## Pendientes — Prioridad Alta (Fase 9)
 
-- [x] **Caché local de rutas:** Implementar caché en memoria en `MapsRepository` para evitar llamadas repetidas a Firestore al navegar entre tabs. `companion object` con `HashMap` para rutas por parque, rutas por IDs y ruta individual. Caché de parques con `List?`. Métodos de invalidación `limpiarCacheParques`, `limpiarCacheRutasParque`, `limpiarCacheRutas` y `limpiarCacheCompleta` preparados para Fase 10.
-- [ ] **FILE_TREE actualizado:** `VistaRutasPublicadas.kt` está siendo renombrado a `VistaActividades.kt` — actualizar `FILE_TREE.md` al confirmar el rename.
+- [x] **Caché local de rutas:** `companion object` con `HashMap` para rutas por parque, rutas por IDs y ruta individual. Caché de parques con `List?`. Métodos `limpiarCacheParques`, `limpiarCacheRutasParque`, `limpiarCacheRutas` y `limpiarCacheCompleta`.
+- [x] **FILE_TREE actualizado:** `VistaRutasPublicadas.kt` renombrado a `VistaActividades.kt`. Añadidos `Coordenada.kt`, `FaunaFlora.kt`, `PopUpEditarActividad.kt`, `SeccionDesplegableActividades.kt`.
 - [x] **Favoritas:** Implementar lógica de rutas favoritas (modelo, repositorio, filtro en ViewModel) para completar la tercera categoría del perfil.
 
 ---
 
 ## Pendientes — Fase 10 (Mapa Real)
 
-- [ ] **Hito 1 — Parques Naturales de España:** Ingesta de todos los parques nacionales y naturales desde fuente oficial (IGN) a Firestore. `MapaParqueNaturalCard` muestra datos reales.
+- [x] **Hito 1 — Parques Nacionales de España:** 16 parques nacionales ingestados desde Wikidata via `scripts/ingesta_parques.py`. IDs legibles normalizados (`teide`, `donana`…), `region` con comunidad autónoma, foto Wikimedia (thumburl via Commons API), coordenadas y superficie. Fotos cargan con `ImageLoader` personalizado (User-Agent Wikimedia). `contorno` pendiente de enriquecimiento con OSM.
 - [ ] **Hito 2 — Rutas default por parque:** Ingesta única desde OpenStreetMap/Overpass a Firestore. Distintivo visual "Ruta oficial" en la card.
 - [ ] **Hito 3 — Trazado en mapa:** Pintar `Polyline` de coordenadas de la ruta sobre Google Maps en `VistaRutaDetalladaMapa`. Prerequisito técnico para la creación.
 - [ ] **Hito 4 — Creación de rutas por usuarios:** Botón "Crear ruta" en card del parque. Formulario + mapa interactivo con waypoints ilimitados. Cálculo automático de distancia desde `List<GeoPoint>`.

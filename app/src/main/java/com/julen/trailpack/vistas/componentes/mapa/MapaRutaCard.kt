@@ -1,6 +1,5 @@
 package com.julen.trailpack.vistas.componentes.mapa
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,16 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person2
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,20 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.julen.trailpack.R
 import com.julen.trailpack.modelos.Ruta
-import com.julen.trailpack.vistas.mapa.MapaViewModel
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 //Card basada en el img FeedRutaParquenaturalMapa (Solo se usara en el mapa no en el feed social)
 @Composable
@@ -71,7 +55,7 @@ fun MapaRutaCard( ruta: Ruta, onRutaClick: () -> Unit,onPublicarClick: (() -> Un
                 Text(text = "${ruta.nombre}",style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Dificultad: ${ruta.dificultad}",style = MaterialTheme.typography.labelMedium)
-                Text(text = "${ruta.distancia}km - ${ruta.desnivel}m - ${ruta.duracion}",style = MaterialTheme.typography.labelMedium)
+                Text(text = "${ruta.distancia}km - ${ruta.desnivelacumulado}m - ${ruta.duracion}",style = MaterialTheme.typography.labelMedium)
 
                 //creador
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(top  = 4.dp), horizontalArrangement = Arrangement.SpaceBetween ) {

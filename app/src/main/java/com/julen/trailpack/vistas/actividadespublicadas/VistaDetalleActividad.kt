@@ -17,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -118,7 +117,7 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    StatItem("Desnivel +", "${ruta?.desnivel ?: "--"} m")
+                    StatItem("Desnivel Acumulado ", "${ruta?.desnivelacumulado ?: "--"} m")
                     StatItem("Duración", ruta?.duracion ?: "--")
                 }
 

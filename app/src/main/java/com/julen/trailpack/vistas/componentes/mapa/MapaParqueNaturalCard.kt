@@ -1,5 +1,6 @@
 package com.julen.trailpack.vistas.componentes.mapa
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +14,18 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
 import com.julen.trailpack.modelos.ParqueNatural
 import com.julen.trailpack.modelos.Ruta
 import com.julen.trailpack.routing.Enrutador
+import okhttp3.OkHttpClient
 
 
 //ESTA CLASE CONTENDRA LAS RUTA CARD Y PINTARA LO DE CADA CHINCHETA
@@ -43,15 +48,38 @@ fun MapaParqueNaturalCard (
         Text(text = parque.nombre, style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(24.dp))
         //Imagen del parque
-        AsyncImage(
+        val context = LocalContext.current
+        //Necistamos un user agetn personalizado pues wikimedia rechaza el por defecto
+        val imageLoader = remember(context) {
+            ImageLoader.Builder(context)
+                .okHttpClient {
+                    OkHttpClient.Builder()
+                        .addInterceptor { chain ->
+                            chain.proceed(
+                                chain.request().newBuilder()
+                                    .header("User-Agent", "TrailPack/1.0 (Android; julen.tabuyo@gmail.com)")
+                                    .build()
+                            )
+                        }
+                        .build()
+                }
+                .build()
+        }
+
+        val painter = rememberAsyncImagePainter(
             model = parque.fotosparque.firstOrNull(),
+            imageLoader = imageLoader
+        )
+        Image(
+            painter = painter,
             contentDescription = "imagen de ${parque.nombre}",
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .height(200.dp)
                 .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop
         )
+
 
         Text(
             text = parque.descripcion,

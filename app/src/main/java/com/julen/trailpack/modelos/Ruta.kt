@@ -1,19 +1,23 @@
 package com.julen.trailpack.modelos
 
-import com.google.firebase.firestore.GeoPoint
 
 data class Ruta(
     val idruta: String = "",
     val idparquenatural: String = "", //Referenciara al Id del parque al que pertenece la ruta
+    val pais: String = "",
+    val region: String ="",
     val nombre: String = "",
     val dificultad: String = "",
     val distancia: Double = 0.0,
     val duracion: String = "",
-    val desnivel: Int = 0,
+    val desnivelacumulado: Int = 0,
+    val desnivelpositivo: Int = 0,
+    val desnivelnegativo: Int = 0,
+    val esOficial: Boolean = false,
     val creadorId: String = "",
     val nombreCreador: String = "",
     val descripcion: String = "",// Solo se ve en el detalle
     val fotosRuta: List<String> = emptyList(),
-    val coordenadas: List<GeoPoint> = emptyList(),// Para el mapa del detalle
+    val coordenadas: List<Coordenada> = emptyList(),// Para el mapa del detalle
     val fechacreacion: Long = System.currentTimeMillis()
 )
