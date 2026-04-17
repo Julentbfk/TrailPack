@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.julen.trailpack.vistas.componentes.actividades.StatItem
 import com.julen.trailpack.vistas.componentes.actividades.UserAvatar
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
@@ -78,14 +88,51 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                 .background(MaterialTheme.colorScheme.background)
         ) {
             // Imagen de cabecera (de la ruta)
-            AsyncImage(
-                model = ruta?.fotosRuta?.firstOrNull(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp),
-                contentScale = ContentScale.Crop
-            )
+            when {
+                ruta?.fotosRuta?.isNotEmpty() == true -> {
+                    AsyncImage(
+                        model = ruta.fotosRuta.first(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth().height(250.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                ruta?.coordenadas?.isNotEmpty() == true -> {
+                    val latLngs = remember(ruta.idruta) {
+                        ruta.coordenadas.map { LatLng(it.lat, it.lng) }
+                    }
+                    val bounds = remember(ruta.idruta) {
+                        LatLngBounds.Builder().apply { latLngs.forEach { include(it) } }.build()
+                    }
+                    val cameraPositionState = rememberCameraPositionState()
+
+                    GoogleMap(
+                        modifier = Modifier.fillMaxWidth().height(250.dp),
+                        cameraPositionState = cameraPositionState,
+                        properties = MapProperties(mapType = MapType.TERRAIN),
+                        uiSettings = MapUiSettings(
+                            scrollGesturesEnabled = false,
+                            zoomControlsEnabled = false,
+                            mapToolbarEnabled = false,
+                            compassEnabled = false,
+                            myLocationButtonEnabled = false
+                        ),
+                        onMapLoaded = {
+                            cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(bounds, 32))
+                        }
+                    ) {
+                        Polyline(points = latLngs, color = Color(0xFF4CAF50), width = 8f)
+                    }
+                }
+                else -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                    )
+                }
+            }
 
             Column(modifier = Modifier.padding(16.dp)) {
 

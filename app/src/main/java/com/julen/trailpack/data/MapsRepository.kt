@@ -52,7 +52,7 @@ class MapsRepository {
     }
 
     fun repoGuardarRuta(ruta: Ruta, onResult: (Boolean, String?) -> Unit) {
-        db.collection("ruta").document(ruta.idruta).set(ruta)
+        db.collection("rutas").document(ruta.idruta).set(ruta)
             .addOnSuccessListener {
                 limpiarCacheRutas()
                 onResult(true,null)

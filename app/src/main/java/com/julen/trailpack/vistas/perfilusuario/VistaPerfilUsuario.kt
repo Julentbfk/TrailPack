@@ -66,6 +66,7 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
             uri?.let {
             perfilviewModel.subirFotoPerfil(uid, it) { success, error ->
                 if (success) {
+                    mainviewModel.cargarUsuarioGlobal(uid)
                     mainviewModel.showNotification("Foto actualizada")
                 } else {
                     mainviewModel.showNotification("Error: $error")

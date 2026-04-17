@@ -78,6 +78,25 @@
 - **`MapaRutaCard` — thumbnail de trazado:** Nuevo composable privado `ThumbnailRuta` con lógica de tres casos: foto real → `AsyncImage`; sin foto + coordenadas → `GoogleMap` lite mode con `Polyline` verde; sin nada → `Box` neutro. `remember(ruta.idruta)` para evitar recálculo de bounds en recomposiciones. Overlay `Box` transparente para bloquear apertura de Google Maps al tocar el thumbnail en lite mode.
 - **`VistaRutaDetalladaMapa` — mapa interactivo en detalle:** `AsyncImage` del header reemplazado por `when` de tres casos idéntico al thumbnail pero a tamaño completo (250dp, sin lite mode). `scrollGesturesEnabled = false` para compatibilidad con `Column` scrolleable. `onMapLoaded` con `newLatLngBounds(bounds, 32)` para encuadre automático del trazado.
 
+### Sesión 2026-04-17 — Hito 5 + Restauración flujo MVP (Fase 10 completada, Fase 11 iniciada)
+
+- **Hito 5 — Filtrado listado:** `MapaParqueNaturalCard` con dos `SeccionDesplegableActividades`: "Rutas oficiales" (expandida) y "Creadas por la comunidad" (colapsada). FAB `+` fixed en `ListaRutasParqueBottomSheet` con `Box` overlay. `ThumbnailRuta` convertida a pública y reutilizada en `CardActividad` y `VistaDetalleActividad`.
+- **Bug: no navega atrás al publicar:** `publicarRuta` recibe callback `onPublicado`. `PopUpPublicarRuta` expone el parámetro. `VistaRutaDetalladaMapa` pasa `onBack`. `ScaffoldTrailPack` pasa `{}`.
+- **Bug: form popup no reseteaba:** `togglePopupPublicacion(false)` limpia `formPublicacion = PublicacionFormModel()`.
+- **Bug: foto card/detalle actividad vacía:** `AsyncImage` reemplazado por `ThumbnailRuta` en `CardActividad` y por bloque `when` con mapa polyline en `VistaDetalleActividad`.
+- **Bug: foto perfil no se actualizaba:** `cargarUsuarioGlobal(uid)` llamado tras éxito de `subirFotoPerfil` en `VistaPerfilUsuario`.
+- **Fase 10 completada.** Hitos 1-5 cerrados. Hito 6 (estilo mapa) pendiente para el final del bloque.
+
+### Sesión 2026-04-17 — Creación de rutas por usuarios (Fase 10, Hito 4)
+
+- **`CrearRutaFormModel`:** Modelo inmutable con `nombre`, `dificultad` (default "Moderada"), `descripcion`.
+- **`MapaViewModel` ampliado:** `mutableStateListOf<LatLng>` para waypoints reactivos. `agregarWaypoint`, `deshacerUltimoWaypoint`, `limpiarCreacionRuta`, `updateFormCrearRuta`. Haversine + `calcularDistancia` para distancia acumulada en tiempo real. `guardarRuta` genera `idruta` como `{idParque}_{uid}_{timestamp}`, construye `Ruta` con `esOficial: false` y delega a `repoGuardarRuta`.
+- **`repoGuardarRuta`:** `document(ruta.idruta).set(ruta)` + `limpiarCacheRutas()` al guardar. Bug fix: colección `ruta` → `rutas`.
+- **`VistaCrearRuta`:** `GoogleMap` TERRAIN interactivo (60%) con marcadores y `Polyline` en vivo. Formulario scrollable (40%) con `OutlinedTextFieldMejorado` para nombre y descripción, `ExposedDropdownMenuBox` para dificultad. Botón "Deshacer" elimina último waypoint. "Guardar ruta" desactivado hasta nombre no vacío y ≥2 waypoints.
+- **Navegación:** `navToCrearRuta()` en `Enrutador`. Composable `crearruta` en `AppNavegation` reutilizando `MapaViewModel` del `scaffoldtrailpack`. `onCrearRutaClick` en `ListaRutasParqueBottomSheet` → `VistaMapa`.
+- **`isBottomSheetVisible`:** Desacoplado de `parqueSeleccionado` para poder cerrar el sheet sin perder el contexto del parque durante la creación.
+- **Reglas Firestore:** Actualizadas a `allow read, write: if request.auth != null` para desarrollo. Pendiente de afinar en Fase 12.
+
 ### Fase 8: Gestión de Actividades y Refinamiento
 - **Modelo de Datos:** Ampliación de `Actividad` con campos específicos para `horasalida` y `puntoencuentro`.
 - **UI de Entrada:** Implementación de `SelectorHoraMejorado` con `TimePicker` nativo de Compose.

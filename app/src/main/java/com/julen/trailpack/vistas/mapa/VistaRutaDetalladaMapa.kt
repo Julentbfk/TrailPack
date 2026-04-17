@@ -110,7 +110,7 @@ fun VistaRutaDetalladaMapa(
                     .clickable { mapaviewModel.togglePopupPublicacion(false) },
                 contentAlignment = Alignment.Center
             ) {
-                PopUpPublicarRuta(mapaviewModel, mainviewModel)
+                PopUpPublicarRuta(mapaviewModel, mainviewModel, onPublicado = onBack)
             }
         }
     }

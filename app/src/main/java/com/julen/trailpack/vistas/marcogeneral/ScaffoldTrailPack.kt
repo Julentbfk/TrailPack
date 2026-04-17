@@ -96,6 +96,6 @@ fun ScaffoldTrailPack(navController: NavHostController, mainviewModel: MainViewM
         }
         
         // Diálogo global de publicación (se muestra solo cuando su estado interno es visible)
-        PopUpPublicarRuta(mapaviewModel, mainviewModel)
+        PopUpPublicarRuta(mapaviewModel, mainviewModel, onPublicado = {})
     }
 }

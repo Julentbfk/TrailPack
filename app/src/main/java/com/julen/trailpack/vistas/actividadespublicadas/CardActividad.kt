@@ -29,6 +29,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.julen.trailpack.modelos.ActividadConRuta
+import com.julen.trailpack.modelos.Ruta
+import com.julen.trailpack.vistas.componentes.mapa.ThumbnailRuta
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,14 +75,8 @@ fun CardActividad(
             verticalAlignment = Alignment.CenterVertically // Alineación centrada
         ) {
             // 1. IMAGEN (Cargando la primera foto de la lista)
-            AsyncImage(
-                model = ruta?.fotosRuta?.firstOrNull(),
-                contentDescription = "Mapa ruta",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+            ThumbnailRuta(ruta = ruta ?: Ruta())
+
 
             // 2. DATOS CENTRALES (Sustituimos weight por un modificador más simple)
             Column(

@@ -43,10 +43,12 @@ class MapaViewModel : ViewModel() {
     var rutaSeleccionada by mutableStateOf<Ruta?>(null)
     var parqueSeleccionado by mutableStateOf<ParqueNatural?>(null)
     var isLoadingRutas by mutableStateOf(false)
+    var isBottomSheetVisible by mutableStateOf(false)
 
     fun seleccionarParque(parque: ParqueNatural) {
         isLoadingRutas = true
         parqueSeleccionado = parque
+        isBottomSheetVisible = true
         rutasparquenatural = emptyList()
 
         repository.repoObtenerRutasParqueNatural(parque.idparquenatural) { rutas, error ->
@@ -183,6 +185,9 @@ class MapaViewModel : ViewModel() {
         if (visible && ruta != null) {
             rutaSeleccionada = ruta
         }
+        if (!visible) {
+            formPublicacion = PublicarRutaFormModel()  // <- añade esto
+        }
     }
 
     var formPublicacion by mutableStateOf(PublicarRutaFormModel())
@@ -190,7 +195,7 @@ class MapaViewModel : ViewModel() {
         formPublicacion = newFormState
     }
 
-    fun publicarRuta(mainViewModel: MainViewModel) {
+    fun publicarRuta(mainViewModel: MainViewModel, onPublicado: () -> Unit) {
         val usuarioglobal = mainViewModel.usuarioGlobal
         val ruta = rutaSeleccionada
 
@@ -219,9 +224,10 @@ class MapaViewModel : ViewModel() {
                 isPublicacionPopupVisible = false
                 rutaSeleccionada = null // <--- IMPORTANTE: Limpiamos la selección
                 mainViewModel.showNotification("¡Ruta publicada con éxito!")
-                
                 // Forzamos la actualización de la lista de rutas
                 parqueSeleccionado?.let { seleccionarParque(it) }
+                //salimos
+                onPublicado()
             } else {
                 mainViewModel.showNotification("Error al publicar: $error")
             }

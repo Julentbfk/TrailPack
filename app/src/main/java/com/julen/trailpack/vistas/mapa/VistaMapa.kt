@@ -38,7 +38,7 @@ fun VistaMapa (enrutador: Enrutador, mainviewModel: MainViewModel, mapaviewModel
         MapaContent(mapaviewModel, camaraPositionState)
 
         //El Sheet solo se instancia cuando se necesita, pero al estar en un Box no afecta al Mapa.
-        if (mapaviewModel.parqueSeleccionado != null) {
+        if (mapaviewModel.isBottomSheetVisible) {
             ListaRutasParqueBottomSheet(
                 viewModel = mapaviewModel,
                 navToRutaDetalladaMapa = {rutaId ->

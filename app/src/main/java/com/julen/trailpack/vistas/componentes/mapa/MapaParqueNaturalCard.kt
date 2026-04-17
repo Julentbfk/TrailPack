@@ -3,14 +3,12 @@ package com.julen.trailpack.vistas.componentes.mapa
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +23,7 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.julen.trailpack.modelos.ParqueNatural
 import com.julen.trailpack.modelos.Ruta
-import com.julen.trailpack.routing.Enrutador
+import com.julen.trailpack.vistas.actividadespublicadas.SeccionDesplegableActividades
 import okhttp3.OkHttpClient
 
 
@@ -36,8 +34,7 @@ fun MapaParqueNaturalCard (
     parque: ParqueNatural,
     rutas: List<Ruta>,
     onRutaClick: (Ruta) -> Unit,
-    onPublicarClick: (Ruta) -> Unit,
-    onCrearRutaClick: () -> Unit
+    onPublicarClick: (Ruta) -> Unit
 ) {
 
     Column(
@@ -92,28 +89,41 @@ fun MapaParqueNaturalCard (
         HorizontalDivider()
 
         //Rutas del parque
-        Text(
-            text = "Rutas del parque",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-
-        for (ruta in rutas) {
-            MapaRutaCard(
-                ruta=ruta,
-                onRutaClick = { onRutaClick(ruta)},
-                onPublicarClick = { onPublicarClick(ruta) }
-            )
+        val rutasOficiales = rutas.filter {
+            it.esOficial
+        }
+        val rutasComunidad = rutas.filter {
+            !it.esOficial
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = { onCrearRutaClick() },
-            modifier = Modifier.fillMaxWidth()
+        SeccionDesplegableActividades(
+            titulo = "Rutas de la APP",
+            cantidad = rutasOficiales.size,
+            expandido = true
         ) {
-            Text("+ Crear ruta en este parque")
+            for (ruta in rutasOficiales) {
+                MapaRutaCard(
+                    ruta=ruta,
+                    onRutaClick = { onRutaClick(ruta)},
+                    onPublicarClick = { onPublicarClick(ruta) }
+                )
+            }
         }
+
+        SeccionDesplegableActividades(
+            titulo = "Rutas de la Comunidad",
+            cantidad = rutasComunidad.size,
+            expandido = false
+        ) {
+            for (ruta in rutasComunidad) {
+                MapaRutaCard(
+                    ruta=ruta,
+                    onRutaClick = { onRutaClick(ruta)},
+                    onPublicarClick = { onPublicarClick(ruta) }
+                )
+            }
+        }
+
 
     }
 }

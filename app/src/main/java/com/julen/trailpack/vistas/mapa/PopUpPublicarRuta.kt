@@ -24,7 +24,7 @@ import com.julen.trailpack.vistas.componentes.formulario.SelectorHoraMejorado
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
-fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel) {
+fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel, onPublicado: () -> Unit) {
     
     // Si no debe ser visible, no renderizamos nada
     if (!viewModel.isPublicacionPopupVisible) return
@@ -111,7 +111,7 @@ fun PopUpPublicarRuta(viewModel: MapaViewModel, mainviewModel: MainViewModel) {
                 // Botón Publicar
                 Button(
                     onClick = {
-                        viewModel.publicarRuta(mainviewModel)
+                        viewModel.publicarRuta(mainviewModel,onPublicado)
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
