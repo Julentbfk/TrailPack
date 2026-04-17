@@ -25,6 +25,7 @@ import com.julen.trailpack.vistas.ajustes.cambiarpassword.VistaCambiarPassword
 import com.julen.trailpack.vistas.marcogeneral.ScaffoldTrailPack
 import com.julen.trailpack.vistas.login.VistaLogin
 import com.julen.trailpack.vistas.mapa.MapaViewModel
+import com.julen.trailpack.vistas.mapa.VistaCrearRuta
 import com.julen.trailpack.vistas.mapa.VistaRutaDetalladaMapa
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 import com.julen.trailpack.vistas.perfilusuario.VistaCompletarPerfil
@@ -120,6 +121,23 @@ fun AppNavegation() {
                VistaCambiarPassword(
                    guardarCambioPasswordClick = {enrutador.popBack()}
                )
+           }
+
+
+           composable(
+               route = "crearruta"
+           ){
+                val scaffoldEntry = remember(navHost.currentBackStackEntry) {
+                    navHost.getBackStackEntry("scaffoldtrailpack")
+                }
+                val mapaViewModel: MapaViewModel = viewModel(scaffoldEntry)
+
+               VistaCrearRuta(
+                   mapaviewModel = mapaViewModel,
+                   mainviewModel = mainViewModel,
+                   onBack = {enrutador.popBack()}
+               )
+
            }
 
            composable(

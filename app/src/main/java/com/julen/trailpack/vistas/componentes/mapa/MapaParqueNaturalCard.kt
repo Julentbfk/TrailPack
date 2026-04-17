@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +36,8 @@ fun MapaParqueNaturalCard (
     parque: ParqueNatural,
     rutas: List<Ruta>,
     onRutaClick: (Ruta) -> Unit,
-    onPublicarClick: (Ruta) -> Unit
+    onPublicarClick: (Ruta) -> Unit,
+    onCrearRutaClick: () -> Unit
 ) {
 
     Column(
@@ -102,6 +104,15 @@ fun MapaParqueNaturalCard (
                 onRutaClick = { onRutaClick(ruta)},
                 onPublicarClick = { onPublicarClick(ruta) }
             )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = { onCrearRutaClick() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("+ Crear ruta en este parque")
         }
 
     }

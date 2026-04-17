@@ -11,7 +11,7 @@ import com.julen.trailpack.data.UserRepository
 import com.julen.trailpack.modelos.Actividad
 import com.julen.trailpack.modelos.ActividadConRuta
 import com.julen.trailpack.modelos.Usuario
-import com.julen.trailpack.vistas.mapa.PublicacionFormModel
+import com.julen.trailpack.vistas.mapa.PublicarRutaFormModel
 
 class DetalleActividadViewModel: ViewModel() {
     private val actividadesrepository = ActividadesRepository()
@@ -106,10 +106,10 @@ class DetalleActividadViewModel: ViewModel() {
 
     //POPUP DE EDICION
     var isEditPopUpVisible by mutableStateOf(false)
-    var editForm by mutableStateOf(PublicacionFormModel()) //Cargamos el form model con los datos del form model del popupPublicarRuta ya que seran los mismos cambios
+    var editForm by mutableStateOf(PublicarRutaFormModel()) //Cargamos el form model con los datos del form model del popupPublicarRuta ya que seran los mismos cambios
 
     fun abrirPopUpEdicion(actividad: Actividad,fechaStr: String, horaStr: String) {
-        editForm = PublicacionFormModel(
+        editForm = PublicarRutaFormModel(
             numparticipantes = actividad.maxparticipantes.toString(),
             fecha = fechaStr,
             horasalida = horaStr,

@@ -62,14 +62,15 @@ class Enrutador(private val navController: NavController) {
         }
     }
 
-
+    //Nav to crear Ruta
+    fun navToCrearRuta() {
+        navController.navigate("crearruta")
+    }
     //Nav to ruta detallada mapa
     fun navToRutaDetalladaMapa(rutaId: String) {
         navController.navigate("detalleruta/$rutaId")
 
     }
-
-
     //Nav to actividad detallada
     fun navToActividadDetallada(actividadId: String,mostrarAcciones: Boolean = true) {
         navController.navigate("detalleactividad/$actividadId/$mostrarAcciones")

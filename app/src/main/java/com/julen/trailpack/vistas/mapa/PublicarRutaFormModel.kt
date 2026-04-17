@@ -1,6 +1,6 @@
 package com.julen.trailpack.vistas.mapa
 
-data class PublicacionFormModel(
+data class PublicarRutaFormModel(
     val numparticipantes: String = "",
     val fecha: String = "",
     val horasalida: String = "",

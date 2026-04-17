@@ -8,7 +8,11 @@ import com.julen.trailpack.vistas.componentes.mapa.MapaParqueNaturalCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaRutasParqueBottomSheet(viewModel: MapaViewModel, navToRutaDetalladaMapa: (String) -> Unit) {
+fun ListaRutasParqueBottomSheet(
+    viewModel: MapaViewModel,
+    navToRutaDetalladaMapa: (String) -> Unit,
+    navToCrearRuta: () -> Unit
+) {
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -34,6 +38,10 @@ fun ListaRutasParqueBottomSheet(viewModel: MapaViewModel, navToRutaDetalladaMapa
                 
                 //Abrimos el popup de publicación
                 viewModel.togglePopupPublicacion(true, ruta)
+            },
+            onCrearRutaClick = {
+                viewModel.parqueSeleccionado = null //Cierra el bottomsheet
+                navToCrearRuta()
             }
         )
     }

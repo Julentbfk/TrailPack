@@ -47,6 +47,9 @@ fun VistaMapa (enrutador: Enrutador, mainviewModel: MainViewModel, mapaviewModel
                     mapaviewModel.rutaSeleccionada = null
                     //NAVEGAMOS
                     enrutador.navToRutaDetalladaMapa(rutaId)
+                },
+                navToCrearRuta = {
+                    enrutador.navToCrearRuta()
                 }
             )
         }

@@ -51,6 +51,17 @@ class MapsRepository {
         }
     }
 
+    fun repoGuardarRuta(ruta: Ruta, onResult: (Boolean, String?) -> Unit) {
+        db.collection("ruta").document(ruta.idruta).set(ruta)
+            .addOnSuccessListener {
+                limpiarCacheRutas()
+                onResult(true,null)
+            }
+            .addOnFailureListener { error ->
+                onResult(false,error.localizedMessage)
+            }
+    }
+
     fun repoGuardarActividad(nuevaActividad: Actividad, onResult: (Boolean, String? ) -> Unit) {
 
         db.collection("actividades").add(nuevaActividad).addOnSuccessListener { task ->
@@ -122,6 +133,6 @@ class MapsRepository {
         cacheUnaRutaPorId.clear()
     }
 
-    //enregion
+    //endregion
 
 }
