@@ -65,3 +65,4 @@ Ver definición completa en `meta/AGENTES.md`.
 - **Notificaciones:** siempre via `mainViewModel.showNotification(mensaje)`, nunca Toasts directos.
 - **Repositorios:** prefijo `repo` en todas las funciones públicas (ej: `repoObtenerActividades`).
 - **No inventar campos:** leer el modelo real antes de proponer cualquier acceso a datos.
+- **Código comentado:** todo el código propuesto debe ir comentado línea a línea como guía didáctica, explicando el porqué de cada decisión, no solo el qué.

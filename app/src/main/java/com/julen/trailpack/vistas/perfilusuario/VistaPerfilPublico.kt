@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -108,6 +110,34 @@ fun VistaPerfilPublico(
                 }
             }//Cierro row datos personales
 
+            //region Boton seguir
+
+            // Check de si estamos viendo nuestro propio perfil
+            val esPropioPerfil = mainViewModel.usuarioGlobal?.uid == uid
+
+            //reactivo: true si el uid del perfil visitado está en nuestra lista de siguiendo
+            val siguiendo = mainViewModel.usuarioGlobal?.listasiguiendo?.contains(uid) == true
+
+            if(!esPropioPerfil){
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    {
+                        mainViewModel.followUsuario(uid) { delta ->
+                            perfilPublicoViewModel.actualizarContadorSeguidores(delta)
+                        }
+                    }, Modifier.fillMaxWidth(), colors = if (siguiendo)
+                        ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    else
+                        ButtonDefaults.buttonColors()
+                ) {
+                    Text(
+                        text = if (siguiendo) "Siguiendo" else "Seguir",
+                        color = if (siguiendo) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            //endregion
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -131,7 +161,6 @@ fun VistaPerfilPublico(
                     )
                 }
             }
-
 
         }//Cierra el scaffold
 

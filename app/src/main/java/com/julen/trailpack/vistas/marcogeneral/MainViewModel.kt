@@ -96,5 +96,29 @@ class MainViewModel : ViewModel(){
 
     //endregion
 
+    //region Follow/Amistad updatean usuario
+
+    fun followUsuario(uidObjetivo: String,onToggle:(delta:Int) -> Unit = {}){
+        val user = usuarioGlobal ?: return
+        val estaSiguiendo = uidObjetivo in user.listasiguiendo
+        val nuevaLista = user.listasiguiendo.toMutableList().apply {
+            if(estaSiguiendo) remove(uidObjetivo) else add(uidObjetivo)
+        }
+        val delta = if(estaSiguiendo) -1 else 1
+
+        userRepository.repoToggleFollow(user.uid,uidObjetivo,!estaSiguiendo) {success, error ->
+            if(success) {
+                usuarioGlobal = user.copy(
+                    listasiguiendo = nuevaLista,
+                    siguiendocount = user.siguiendocount + delta
+                )
+                onToggle(delta)
+            }
+        }
+
+    }
+
+    //endregion
+
 
 }

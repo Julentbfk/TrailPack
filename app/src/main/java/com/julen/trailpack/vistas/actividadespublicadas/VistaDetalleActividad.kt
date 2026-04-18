@@ -253,7 +253,7 @@ fun VistaDetalleActividad(
                             UserAvatar(
                                 usuario = usuario,
                                 mostrarNombre = true,
-                                onAvatarClick = { onCreadorClick?.invoke(actividad.idcreador) }
+                                onAvatarClick = { onCreadorClick?.invoke(usuario.uid) }
                             )
                         }
                     }

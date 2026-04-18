@@ -59,4 +59,9 @@ class PerfilPublicoViewModel: ViewModel() {
         }
     }
 
+    fun actualizarContadorSeguidores(delta: Int) {
+        // usuario?.copy() crea una copia del objeto con solo seguidorescount modificado
+        usuario = usuario?.copy(seguidorescount = (usuario?.seguidorescount ?: 0) + delta)
+    }
+
 }
