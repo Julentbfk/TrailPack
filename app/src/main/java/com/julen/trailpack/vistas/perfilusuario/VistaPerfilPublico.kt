@@ -25,9 +25,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.julen.trailpack.routing.Enrutador
@@ -35,6 +38,7 @@ import com.julen.trailpack.vistas.actividadespublicadas.CardActividad
 import com.julen.trailpack.vistas.componentes.usuario.DatosPersonalesPerfil
 import com.julen.trailpack.vistas.componentes.usuario.FotoPerfil
 import com.julen.trailpack.vistas.componentes.usuario.NivelUsuarioPerfil
+import com.julen.trailpack.vistas.componentes.usuario.PopUpListaUsuarios
 import com.julen.trailpack.vistas.componentes.usuario.SeguidoresUsuarioPerfil
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
@@ -84,6 +88,33 @@ fun VistaPerfilPublico(
                 .padding(paddingValues)
                 .padding(12.dp)
         ) {
+            //region PopUp Lista Followers
+                var popupActivo by remember { mutableStateOf<String?>(null) }
+
+                // Se mostrara el popup correspondiente dependiendo el estado activo
+                when (popupActivo) {
+                    "seguidores" -> PopUpListaUsuarios(
+                        titulo = "Seguidores",
+                        usuarios = perfilPublicoViewModel.listaSeguidores,
+                        isLoading = perfilPublicoViewModel.isLoadingList,
+                        onDismiss = { popupActivo = null },
+                        onUsuarioClick = { uid ->
+                            popupActivo = null
+                            enrutador.navToPerfilPublico(uid)
+                        }
+                    )
+                    "siguiendo" -> PopUpListaUsuarios(
+                        titulo = "Siguiendo",
+                        usuarios = perfilPublicoViewModel.listaSiguiendo,
+                        isLoading = perfilPublicoViewModel.isLoadingList,
+                        onDismiss = { popupActivo = null },
+                        onUsuarioClick = { uid ->
+                            popupActivo = null
+                            enrutador.navToPerfilPublico(uid)
+                        }
+                    )
+                }
+            //endregion
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Top
@@ -103,39 +134,60 @@ fun VistaPerfilPublico(
                             .padding(vertical = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        SeguidoresUsuarioPerfil("Seguidores", usuario.seguidorescount, modifier = Modifier.weight(1f))
-                        SeguidoresUsuarioPerfil("Siguiendo", usuario.siguiendocount, modifier = Modifier.weight(1f))
+                        SeguidoresUsuarioPerfil(
+                            "Seguidores", usuario.seguidorescount,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                // Cargamos la lista solo la primera vez que se abre
+                                if (perfilPublicoViewModel.listaSeguidores.isEmpty()) {
+                                    perfilPublicoViewModel.cargarSeguidores()
+                                }
+                                popupActivo = "seguidores"
+                            }
+                        )
+                        SeguidoresUsuarioPerfil(
+                            "Siguiendo", usuario.siguiendocount,
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                if (perfilPublicoViewModel.listaSiguiendo.isEmpty()) {
+                                    perfilPublicoViewModel.cargarSiguiendo()
+                                }
+                                popupActivo = "siguiendo"
+                            }
+                        )
+                        //Amigos sin onClick por ahora hasta implementar la amistad
                         SeguidoresUsuarioPerfil("Amigos", usuario.amigoscount, modifier = Modifier.weight(1f))
+
                     }
                 }
             }//Cierro row datos personales
 
             //region Boton seguir
 
-            // Check de si estamos viendo nuestro propio perfil
-            val esPropioPerfil = mainViewModel.usuarioGlobal?.uid == uid
+                // Check de si estamos viendo nuestro propio perfil
+                val esPropioPerfil = mainViewModel.usuarioGlobal?.uid == uid
 
-            //reactivo: true si el uid del perfil visitado está en nuestra lista de siguiendo
-            val siguiendo = mainViewModel.usuarioGlobal?.listasiguiendo?.contains(uid) == true
+                //reactivo: true si el uid del perfil visitado está en nuestra lista de siguiendo
+                val siguiendo = mainViewModel.usuarioGlobal?.listasiguiendo?.contains(uid) == true
 
-            if(!esPropioPerfil){
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
-                    {
-                        mainViewModel.followUsuario(uid) { delta ->
-                            perfilPublicoViewModel.actualizarContadorSeguidores(delta)
-                        }
-                    }, Modifier.fillMaxWidth(), colors = if (siguiendo)
-                        ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                    else
-                        ButtonDefaults.buttonColors()
-                ) {
-                    Text(
-                        text = if (siguiendo) "Siguiendo" else "Seguir",
-                        color = if (siguiendo) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
-                    )
+                if(!esPropioPerfil){
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        {
+                            mainViewModel.followUsuario(uid) { delta ->
+                                perfilPublicoViewModel.actualizarContadorSeguidores(delta)
+                            }
+                        }, Modifier.fillMaxWidth(), colors = if (siguiendo)
+                            ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                        else
+                            ButtonDefaults.buttonColors()
+                    ) {
+                        Text(
+                            text = if (siguiendo) "Siguiendo" else "Seguir",
+                            color = if (siguiendo) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
-            }
             //endregion
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -120,7 +120,34 @@ class PerfilUsuarioViewModel : ViewModel() {
             rutasfavoritas = rutas ?: emptyList()
         }
     }
-
-
     //enderegion
+
+    //region SOCIAL
+
+    //----  FUNCIONES PARA LAS LISTAS SEGUIDORES/SIGUIENDO/AMIGOS ----
+    var listaSeguidores by mutableStateOf<List<Usuario>>(emptyList())
+        private set
+    var listaSiguiendo by mutableStateOf<List<Usuario>>(emptyList())
+        private set
+    var isLoadingList by mutableStateOf(false)
+        private set
+
+    //Lista de tus seguidores
+    fun cargarSeguidores(ids: List<String>) {
+        isLoadingList = true
+        userRepository.repoObtenerUsuariosPorIds(ids) { usuarios, _ ->
+            listaSeguidores = usuarios ?: emptyList()
+            isLoadingList = false
+        }
+    }
+    //Lista de la gente a la que sigues
+    fun cargarSiguiendo(ids: List<String>) {
+        isLoadingList = true
+        userRepository.repoObtenerUsuariosPorIds(ids) { usuarios, _ ->
+            listaSiguiendo = usuarios ?: emptyList()
+            isLoadingList = false
+        }
+    }
+
+    //endregion
 }

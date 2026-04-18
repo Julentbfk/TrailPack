@@ -79,5 +79,21 @@ class UserRepository {
 
     }
 
+    //Funcion para cargar los multiples usuarios a los que sigues y los que te siguen en una sola llamada evitando hacer N llamadas por cada usuario individual de la lista
+    fun repoObtenerUsuariosPorIds(ids: List<String>, onResult: (List<Usuario>?, String?) -> Unit) {
+        //Si la lista esta vacia
+        if(ids.isEmpty()) {
+            onResult(emptyList(),null)
+            return
+        }
+        //Problema!! con whereIn solo cargaran 30 ITEMS, si le siguen o sigue mas usuarios no se cargaran
+        db.collection("usuarios").whereIn("uid",ids).get().addOnSuccessListener { queryDocumentSnapshots ->
+            val usuarios = queryDocumentSnapshots.documents.mapNotNull { it.toObject(Usuario::class.java) }
+            onResult(usuarios,null)
+
+        }.addOnFailureListener { onResult(null, it.localizedMessage) }
+
+    }
+
 
 }

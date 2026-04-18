@@ -48,3 +48,11 @@
     - **Razón:** El concepto de "amigo" tendrá una funcionalidad propia: nivel de privacidad en actividades ("Solo amigos"). Una actividad podrá ser pública, solo para amigos, o privada por invitación. Si fuera seguimiento mutuo automático, cualquier usuario que te siga de vuelta accedería a tus actividades privadas sin control consciente. La solicitud explícita da al usuario control real sobre quién entra en ese círculo.
     - **Flujo de aceptación:** mediante sistema de notificaciones in-app. El receptor ve la solicitud en su bandeja de notificaciones (icono en TopBar de perfil con badge naranja) y acepta/rechaza desde ahí. No hay pantalla de confirmación separada.
     - **Pendiente:** Implementar el sistema de notificaciones (`notificaciones` en Firestore + `notificacionesSinLeer: Int` en `Usuario` + UI de bandeja) y el campo de privacidad en `Actividad` en una fase posterior.
+
+14. **Sistema de amistad diferido hasta buzón de notificaciones (2026-04-18):**
+    - **Decisión:** El botón "Añadir amigo" y el flujo de solicitud/aceptación se implementan en el mismo hito que el buzón de notificaciones in-app. No se construye antes.
+    - **Razón:** Sin el buzón no hay forma de que el receptor vea y acepte la solicitud. Construir el botón sin el receptor sería funcionalidad incompleta e inútil.
+
+15. **Carga lazy de listas sociales (seguidores/siguiendo) (2026-04-18):**
+    - **Decisión:** Las listas de `Usuario` para seguidores y siguiendo se cargan desde Firestore únicamente cuando el usuario pulsa el contador correspondiente, no al abrir el perfil.
+    - **Razón:** La mayoría de visitas a un perfil no necesitan ver la lista completa. Cargarla siempre sería un gasto innecesario de lecturas de Firestore y tiempo de carga inicial.

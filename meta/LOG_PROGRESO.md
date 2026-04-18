@@ -97,6 +97,20 @@
 - **`isBottomSheetVisible`:** Desacoplado de `parqueSeleccionado` para poder cerrar el sheet sin perder el contexto del parque durante la creación.
 - **Reglas Firestore:** Actualizadas a `allow read, write: if request.auth != null` para desarrollo. Pendiente de afinar en Fase 12.
 
+### Sesión 2026-04-18 — Perfiles públicos + Follow/Unfollow + Listas sociales (Fase 11, Hitos 4 y 5)
+
+- **Decisiones de producto:** `listaamigos` se mantiene como conexión explícita bidireccional (no seguimiento mutuo automático). El flujo de aceptación de amistad se implementará junto al buzón de notificaciones. Hito 6 Fase 10 (estilo de mapa) diferido indefinidamente por posible migración a Mapbox.
+- **`Actividad.estaCaducada()`:** Extraída de `ActividadesViewModel` y convertida en método del `data class Actividad`. Eliminada la dependencia de `ActividadesViewModel` en vistas que solo necesitan comprobar si una actividad ha caducado.
+- **`VistaPerfilPublico` + `PerfilPublicoViewModel`:** Nueva vista en `vistas/perfilusuario/`. Carga usuario por UID + actividades creadas con join actividad↔ruta (mismo patrón que `ActividadesViewModel`). `isLoading` gestionado en los dos caminos posibles (usuario null / actividades vacías).
+- **Navegación a perfil público:** `navToPerfilPublico(uid)` en `Enrutador`. Ruta `perfilpublico/{uid}` en `AppNavegation`. Accesible desde `CardActividad` (foto del creador como `AsyncImage` circular tappable) y desde `VistaDetalleActividad` (nueva fila de creador con `UserAvatar` + `UserAvatar` para cada participante).
+- **`UserAvatar` ampliado:** `onAvatarClick: (() -> Unit)? = null` + `mostrarNombre: Boolean = true`. El nombre se oculta cuando el avatar aparece junto a una fila de texto del creador.
+- **Follow/Unfollow:** `UserRepository.repoToggleSeguir` con batch write de Firestore (`arrayUnion`/`arrayRemove` + `FieldValue.increment`). `MainViewModel.seguirUsuario` con actualización optimista de `usuarioGlobal` en memoria + callback `onToggle(delta)`. `PerfilPublicoViewModel.actualizarContadorSeguidores(delta)` para reflejar el cambio en el perfil visitado sin recargar Firestore.
+- **`PopUpListaUsuarios`:** Nuevo componente en `vistas/componentes/usuario/`. `Dialog` de Compose con `LazyVerticalGrid` de 3 columnas de `UserAvatar`. Estado vacío y loader independiente (`isLoadingLista`). Carga lazy: solo se dispara cuando el usuario pulsa el contador por primera vez.
+- **`SeguidoresUsuarioPerfil` ampliado:** `onClick: (() -> Unit)? = null`. Número en color primario cuando es clickable como indicador visual de interactividad.
+- **`repoObtenerUsuariosPorIds`:** Nueva función en `UserRepository` con `whereIn("uid", ids)`. Guard para lista vacía (evita excepción de Firestore). Límite de 30 elementos documentado — suficiente para MVP.
+- **Convención añadida a `CLAUDE.md`:** Todo el código propuesto debe ir comentado línea a línea como guía didáctica.
+- **Protocolo de trabajo corregido:** Ningún archivo del proyecto (`.kt`, `.md`, `.py`, cualquier otro) se toca sin autorización explícita previa del usuario.
+
 ### Fase 8: Gestión de Actividades y Refinamiento
 - **Modelo de Datos:** Ampliación de `Actividad` con campos específicos para `horasalida` y `puntoencuentro`.
 - **UI de Entrada:** Implementación de `SelectorHoraMejorado` con `TimePicker` nativo de Compose.

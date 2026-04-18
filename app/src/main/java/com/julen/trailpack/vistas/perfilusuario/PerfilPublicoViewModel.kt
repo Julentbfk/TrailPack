@@ -59,9 +59,42 @@ class PerfilPublicoViewModel: ViewModel() {
         }
     }
 
+    //region SOCIAL
+
+    //Funcion que incrementa o decrementa a travaes del boton de follow unfollow
     fun actualizarContadorSeguidores(delta: Int) {
         // usuario?.copy() crea una copia del objeto con solo seguidorescount modificado
         usuario = usuario?.copy(seguidorescount = (usuario?.seguidorescount ?: 0) + delta)
+    }
+
+    //---- FUNCIONES PARA LAS LISTAS SEGUIDORES/SIGUIENDO/AMIGOS ----
+
+    var listaSeguidores by mutableStateOf<List<Usuario>>(emptyList())
+        private set
+    var listaSiguiendo by mutableStateOf<List<Usuario>>(emptyList())
+        private set
+
+    //Loader para las listas
+    var isLoadingList by mutableStateOf(false)
+        private set
+
+    //Carga los seguidores del perfil visitado
+    fun cargarSeguidores() {
+        val ids = usuario?.listaseguidores ?: return
+        isLoadingList = true
+        userRepo.repoObtenerUsuariosPorIds(ids) {usuarios,_ ->
+            listaSeguidores = usuarios ?: emptyList()
+            isLoadingList = false
+        }
+    }
+    //Carga los usuarios que sigue el perfil visitado
+    fun cargarSiguiendo() {
+        val ids = usuario?.listasiguiendo ?: return
+        isLoadingList = true
+        userRepo.repoObtenerUsuariosPorIds(ids) { usuarios, _ ->
+            listaSiguiendo = usuarios ?: emptyList()
+            isLoadingList = false
+        }
     }
 
 }

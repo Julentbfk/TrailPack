@@ -45,6 +45,7 @@ import com.julen.trailpack.vistas.componentes.mapa.MapaRutaCard
 import com.julen.trailpack.vistas.componentes.usuario.DatosPersonalesPerfil
 import com.julen.trailpack.vistas.componentes.usuario.FotoPerfil
 import com.julen.trailpack.vistas.componentes.usuario.NivelUsuarioPerfil
+import com.julen.trailpack.vistas.componentes.usuario.PopUpListaUsuarios
 import com.julen.trailpack.vistas.componentes.usuario.SeguidoresUsuarioPerfil
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
@@ -80,7 +81,33 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
             .fillMaxSize()
             .padding(12.dp)
     ) {
+        //region PopUp Lista Followers
+            var popupActivo by remember { mutableStateOf<String?>(null) }
 
+            when (popupActivo) {
+                "seguidores" -> PopUpListaUsuarios(
+                    titulo = "Seguidores",
+                    usuarios = perfilviewModel.listaSeguidores,
+                    isLoading = perfilviewModel.isLoadingList,
+                    onDismiss = { popupActivo = null },
+                    onUsuarioClick = { uid ->
+                        popupActivo = null
+                        enrutador.navToPerfilPublico(uid)
+                    }
+                )
+                "siguiendo" -> PopUpListaUsuarios(
+                    titulo = "Siguiendo",
+                    usuarios = perfilviewModel.listaSiguiendo,
+                    isLoading = perfilviewModel.isLoadingList,
+                    onDismiss = { popupActivo = null },
+                    onUsuarioClick = { uid ->
+                        popupActivo = null
+                        enrutador.navToPerfilPublico(uid)
+                        enrutador.navToPerfilPublico(uid)
+                    }
+                )
+            }
+        //endregion
         Row(//FILA DATOS
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top
@@ -107,9 +134,27 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
                         .padding(vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    SeguidoresUsuarioPerfil("Seguidores",user.seguidorescount, modifier = Modifier.weight(1f))
-                    SeguidoresUsuarioPerfil("Siguiendo",user.siguiendocount, modifier = Modifier.weight(1f))
-                    SeguidoresUsuarioPerfil("Amigos",user.amigoscount, modifier = Modifier.weight(1f))
+                    SeguidoresUsuarioPerfil(
+                        "Seguidores", user.seguidorescount,
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            if (perfilviewModel.listaSeguidores.isEmpty()) {
+                                perfilviewModel.cargarSeguidores(user.listaseguidores)
+                            }
+                            popupActivo = "seguidores"
+                        }
+                    )
+                    SeguidoresUsuarioPerfil(
+                        "Siguiendo", user.siguiendocount,
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            if (perfilviewModel.listaSiguiendo.isEmpty()) {
+                                perfilviewModel.cargarSiguiendo(user.listasiguiendo)
+                            }
+                            popupActivo = "siguiendo"
+                        }
+                    )
+                    SeguidoresUsuarioPerfil("Amigos", user.amigoscount, modifier = Modifier.weight(1f))
                 }
             }
 

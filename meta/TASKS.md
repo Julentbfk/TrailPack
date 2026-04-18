@@ -22,8 +22,8 @@ _(ninguna)_
 ## Pendientes — Fase 11 (Flujo MVP Completo)
 
 - [x] **Publicar actividades:** Flujo completo restaurado. Bugs resueltos: form no reseteaba tras cerrar popup, no navegaba atrás tras publicar (callback `onPublicado`), foto de card y detalle vacía (`ThumbnailRuta` + mapa polyline), foto de perfil no se actualizaba sin reiniciar app (`cargarUsuarioGlobal` tras `subirFotoPerfil`).
-- [ ] **Hito 4 (social) — Visitar perfiles:** Ver el perfil público de otro usuario desde una actividad o ruta. Foto, nivel, actividades publicadas.
-- [ ] **Hito 5 (social) — Amigos / Seguidores:** Botón Seguir/Dejar de seguir. `listasiguiendo` y `listaseguidores` ya existen en el modelo `Usuario`.
+- [x] **Hito 4 (social) — Visitar perfiles:** `VistaPerfilPublico` + `PerfilPublicoViewModel` en `vistas/perfilusuario/`. Carga usuario por UID, actividades creadas con join actividad↔ruta. Navegación desde `CardActividad` (foto creador tappable), `VistaDetalleActividad` (fila creador + avatares participantes). `navToPerfilPublico(uid)` en `Enrutador` + ruta `perfilpublico/{uid}` en `AppNavegation`.
+- [x] **Hito 5 (social) — Seguir / Siguiendo:** Botón Seguir/Dejar de seguir en `VistaPerfilPublico`. Batch write atómico en `UserRepository.repoToggleSeguir` (arrayUnion/arrayRemove + increment). `MainViewModel.seguirUsuario` con actualización optimista de `usuarioGlobal`. Contadores reactivos en ambos perfiles. `PopUpListaUsuarios` con `LazyVerticalGrid` de `UserAvatar` al pulsar contadores de Seguidores/Siguiendo. Carga lazy de listas desde `repoObtenerUsuariosPorIds`. Sistema de amistad diferido al hito del buzón de notificaciones.
 - [ ] **Hito 6 (social) — Feed prioritario:** Sección "De tus amigos" en el desplegable de actividades publicadas. Filtra por `listaparticipantesIds` o `idcreador` de usuarios seguidos.
 
 ---
