@@ -1,6 +1,8 @@
 package com.julen.trailpack.routing
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,6 +32,7 @@ import com.julen.trailpack.vistas.mapa.VistaRutaDetalladaMapa
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 import com.julen.trailpack.vistas.perfilusuario.VistaCompletarPerfil
 import com.julen.trailpack.vistas.perfilusuario.VistaEditarPerfil
+import com.julen.trailpack.vistas.perfilusuario.VistaPerfilPublico
 import com.julen.trailpack.vistas.registro.VistaRegistro
 import com.julen.trailpack.vistas.perfilusuario.VistaPerfilUsuario
 import com.julen.trailpack.vistas.registro.VistaConfirmacionEmail
@@ -37,6 +40,7 @@ import com.julen.trailpack.vistas.registro.VistaConfirmacionEmail
 // ------------------ CLASE CONTROLADORA DE LAS VISTAS ----------------
 
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun AppNavegation() {
 
@@ -97,6 +101,18 @@ fun AppNavegation() {
                VistaPerfilUsuario(mainViewModel, actividadesViewModel,enrutador)
            }
 
+           composable(
+               route="perfilpublico/{uid}",
+               arguments = listOf(navArgument("uid") {type = NavType.StringType})
+           ){ backstackEntry ->
+               val uid = backstackEntry.arguments?.getString("uid") ?: ""
+               VistaPerfilPublico(
+                   uid = uid,
+                   mainViewModel = mainViewModel,
+                   enrutador = enrutador
+               )
+           }
+
            composable(route="scaffoldtrailpack"){
                ScaffoldTrailPack(navHost,mainViewModel)
            }
@@ -108,6 +124,7 @@ fun AppNavegation() {
                    cancelarEditClick = { enrutador.popBack() }
                )
            }
+
            
            composable(route="ajustes") {
                VistaAjustes(
@@ -195,6 +212,7 @@ fun AppNavegation() {
                    mainviewModel = mainViewModel,
                    mostrarAcciones = mostrarAcciones,
                    onBack = { enrutador.popBack()},
+                   onCreadorClick = {uid -> enrutador.navToPerfilPublico(uid)}
                )
            }
        }

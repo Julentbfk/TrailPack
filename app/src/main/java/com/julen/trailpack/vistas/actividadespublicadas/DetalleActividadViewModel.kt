@@ -26,7 +26,7 @@ class DetalleActividadViewModel: ViewModel() {
         isLoading = true
         Log.d("DEBUG_DETALLE", "Iniciando carga para actividad ID: $actividadId")
 
-        actividadesrepository.repoObtenerActividadPorId(actividadId) { actividad, error ->
+        actividadesrepository.repoObtenerUnaActividadPorId(actividadId) { actividad, error ->
             if (actividad != null) {
                 Log.d("DEBUG_DETALLE", "Actividad encontrada: ${actividad.nombre}. ID Ruta: ${actividad.idruta}")
                 

@@ -39,10 +39,17 @@ class Enrutador(private val navController: NavController) {
     fun navToPerfilUsuario(){
         navController.navigate("perfilusuario")
     }
+
+    //Nav to VistaPerfilPublico
+    fun navToPerfilPublico(uid: String) {
+        navController.navigate("perfilpublico/$uid")
+    }
+
     //Nav to EditarPerfil
     fun navToEditarPerfil() {
         navController.navigate("editarperfil")
     }
+
 
     //Nav to Ajustes
     fun navToAjustes() {

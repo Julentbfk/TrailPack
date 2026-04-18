@@ -54,7 +54,7 @@ fun VistaRutasPublicadas(
             SeccionDesplegableActividades ("Creadas por ti", actcreadas.size) {
                 Column {
                     actcreadas.take(paginaCreadas * 10).forEach { acr ->
-                        val esCaducada = actividadesviewModel.actividadCaducada(acr.actividad)
+                        val esCaducada = acr.actividad.estaCaducada()
                         CardActividad(
                             actividadConRuta = acr,
                             fechaFormateada = mainViewModel.formatearFecha(acr.actividad.fechasalida),
@@ -62,7 +62,8 @@ fun VistaRutasPublicadas(
                             caducada = esCaducada,
                             onUnirseClick = {},
                             onAbandonarClick = {},
-                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) }
+                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) },
+                            onCreadorClick = {enrutador.navToPerfilPublico(acr.actividad.idcreador)}
                         )
                     }
                     if (actcreadas.size > paginaCreadas * 10) {
@@ -84,7 +85,7 @@ fun VistaRutasPublicadas(
             SeccionDesplegableActividades ("Unido", actunido.size) {
                 Column {
                     actunido.take(paginaUnido * 10).forEach { acr ->
-                        val esCaducada = actividadesviewModel.actividadCaducada(acr.actividad)
+                        val esCaducada = acr.actividad.estaCaducada()
                         CardActividad(
                             actividadConRuta = acr,
                             fechaFormateada = mainViewModel.formatearFecha(acr.actividad.fechasalida),
@@ -95,7 +96,9 @@ fun VistaRutasPublicadas(
                                 actividadesviewModel.gestionarParticipacionCard(acr.actividad.idactividad, uid, false)
                                 mainViewModel.showNotification("Has abandonado la actividad")
                             },
-                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) }
+                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) },
+                            onCreadorClick = {enrutador.navToPerfilPublico(acr.actividad.idcreador)}
+
                         )
                     }
                     if (actunido.size > paginaUnido * 10) {
@@ -130,7 +133,9 @@ fun VistaRutasPublicadas(
                                 actividadesviewModel.gestionarParticipacionCard(acr.actividad.idactividad, uid, false)
                                 mainViewModel.showNotification("Has abandonado la actividad")
                             },
-                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) }
+                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) },
+                            onCreadorClick = {enrutador.navToPerfilPublico(acr.actividad.idcreador)}
+
                         )
                     }
                     if(actpublicadas.size > paginaPublicadas*10){
@@ -157,7 +162,9 @@ fun VistaRutasPublicadas(
                             caducada = true,
                             onUnirseClick = {},
                             onAbandonarClick = {},
-                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) }
+                            onCardClick = { enrutador.navToActividadDetallada(acr.actividad.idactividad) },
+                            onCreadorClick = {enrutador.navToPerfilPublico(acr.actividad.idcreador)}
+
                         )
                     }
                     if (actcaducada.size > paginaCaducadas * 10) {

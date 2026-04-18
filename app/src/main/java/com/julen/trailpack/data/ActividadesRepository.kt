@@ -20,7 +20,7 @@ class ActividadesRepository {
             onResult(null, error.localizedMessage)
         }
     }
-    fun repoObtenerActividadPorId(id: String, onResult: (Actividad?, String?) -> Unit) {
+    fun repoObtenerUnaActividadPorId(id: String, onResult: (Actividad?, String?) -> Unit) {
         db.collection("actividades").document(id).get()
             .addOnSuccessListener { documentSnapshot ->
                 val actividad = documentSnapshot.toObject(Actividad::class.java)
@@ -28,6 +28,16 @@ class ActividadesRepository {
             }
             .addOnFailureListener { error ->
                 onResult(null, error.localizedMessage)
+            }
+    }
+    //Funcion para obtener las actividades
+    fun repoObtenerActividadesPorCreador(uid: String, onResult: (List<Actividad>?, String?) -> Unit){
+        db.collection("actividades").whereEqualTo("idcreador",uid).get()
+            .addOnSuccessListener { query ->
+                val actividades = query.documents.mapNotNull { it.toObject(Actividad::class.java) }
+                onResult(actividades, null)
+            }.addOnFailureListener { error ->
+                onResult(null,error.localizedMessage)
             }
     }
 
@@ -85,5 +95,8 @@ class ActividadesRepository {
             .addOnSuccessListener { onResult(true, null) }
             .addOnFailureListener { onResult(false, it.localizedMessage) }
     }
+
+
+
 
 }

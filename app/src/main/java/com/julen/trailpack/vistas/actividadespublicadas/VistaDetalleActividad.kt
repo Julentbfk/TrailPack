@@ -1,6 +1,7 @@
 package com.julen.trailpack.vistas.actividadespublicadas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -38,12 +40,19 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.julen.trailpack.modelos.Usuario
 import com.julen.trailpack.vistas.componentes.actividades.StatItem
 import com.julen.trailpack.vistas.componentes.actividades.UserAvatar
 import com.julen.trailpack.vistas.marcogeneral.MainViewModel
 
 @Composable
-fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mostrarAcciones: Boolean=true, onBack:()-> Unit) {
+fun VistaDetalleActividad(
+    actividadId: String,
+    mainviewModel: MainViewModel,
+    mostrarAcciones: Boolean=true,
+    onBack:()-> Unit,
+    onCreadorClick: ((String) -> Unit) ? = null
+) {
 
     val detalleviewModel: DetalleActividadViewModel = viewModel()
 
@@ -93,7 +102,9 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                     AsyncImage(
                         model = ruta.fotosRuta.first(),
                         contentDescription = null,
-                        modifier = Modifier.fillMaxWidth().height(250.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -107,7 +118,9 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                     val cameraPositionState = rememberCameraPositionState()
 
                     GoogleMap(
-                        modifier = Modifier.fillMaxWidth().height(250.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
                         cameraPositionState = cameraPositionState,
                         properties = MapProperties(mapType = MapType.TERRAIN),
                         uiSettings = MapUiSettings(
@@ -157,6 +170,41 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Creador
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                        .then(
+                            if (onCreadorClick != null)
+                                Modifier.clickable { onCreadorClick(actividad.idcreador) }
+                            else Modifier
+                        )
+                ) {
+                    UserAvatar(
+                        usuario = Usuario(
+                            uid = actividad.idcreador,
+                            username = actividad.nombrecreador,
+                            fotoperfil = actividad.fotocreador
+                        ),
+                        mostrarNombre = false
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column {
+                        Text(
+                            text = actividad.nombrecreador,
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Organizador",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+
                 // Stats GRID
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     StatItem("Distancia", "${ruta?.distancia ?: "--"} km")
@@ -175,7 +223,9 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                 // Información de la Actividad
                 Text(text = "Informacion de la salida", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top=4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ){
                     StatItem("Fecha", mainviewModel.formatearFecha(actividad.fechasalida))
@@ -200,7 +250,11 @@ fun VistaDetalleActividad(actividadId: String, mainviewModel: MainViewModel, mos
                         Text("Cargando participantes...", style = MaterialTheme.typography.bodySmall)
                     } else {
                         detalleviewModel.participantes.forEach { usuario ->
-                            UserAvatar(usuario)
+                            UserAvatar(
+                                usuario = usuario,
+                                mostrarNombre = true,
+                                onAvatarClick = { onCreadorClick?.invoke(actividad.idcreador) }
+                            )
                         }
                     }
                 }

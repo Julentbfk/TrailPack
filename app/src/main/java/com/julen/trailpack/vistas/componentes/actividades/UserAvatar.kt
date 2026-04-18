@@ -1,5 +1,6 @@
 package com.julen.trailpack.vistas.componentes.actividades
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,13 +15,22 @@ import coil.compose.AsyncImage
 import com.julen.trailpack.modelos.Usuario
 
 @Composable
-fun UserAvatar(usuario: Usuario) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun UserAvatar(
+    usuario: Usuario,
+    mostrarNombre: Boolean = true,
+    onAvatarClick: (() -> Unit)? = null
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = if (onAvatarClick != null) Modifier.clickable { onAvatarClick() } else Modifier
+    ) {
         AsyncImage(
             model = usuario.fotoperfil,
             contentDescription = null,
             modifier = Modifier.size(40.dp).clip(CircleShape)
         )
-        Text(text = usuario.username ?: "", style = MaterialTheme.typography.labelSmall, maxLines = 1)
+        if (mostrarNombre) {
+            Text(text = usuario.username ?: "", style = MaterialTheme.typography.labelSmall, maxLines = 1)
+        }
     }
 }

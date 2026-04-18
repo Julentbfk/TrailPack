@@ -159,7 +159,7 @@ fun VistaPerfilUsuario(mainviewModel: MainViewModel, actividadesviewModel: Activ
                             actividadConRuta = acr,
                             fechaFormateada = mainviewModel.formatearFecha(acr.actividad.fechasalida),
                             usuarioActualUid = uid,
-                            caducada = actividadesviewModel.actividadCaducada(acr.actividad),
+                            caducada = acr.actividad.estaCaducada(),
                             mostrarBoton = false,
                             onUnirseClick = {},
                             onAbandonarClick = {},

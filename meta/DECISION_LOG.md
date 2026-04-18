@@ -38,3 +38,13 @@
 9. **Clasificación de actividades como funciones, no propiedades (2026-04-15):**
     - **Decisión:** Los 4 filtros de actividades en `ActividadesViewModel` son funciones que reciben `uid: String`, no propiedades computadas.
     - **Razón:** El `uid` vive en `MainViewModel`, no en `ActividadesViewModel`. Las funciones evitan el acoplamiento entre ViewModels manteniendo la lógica de clasificación en el lugar correcto (ViewModel de negocio).
+
+12. **Hito 6 Fase 10 (estilo de mapa) — diferido indefinidamente (2026-04-18):**
+    - **Decisión:** No implementar estilos visuales sobre Google Maps SDK (JSON de estilo, polyline con caps neón, etc.).
+    - **Razón:** Alta probabilidad de migración futura a Mapbox u otra API con soporte nativo de terreno 3D, polylines con relieve y efectos visuales avanzados. Cualquier trabajo de estilización sobre Google Maps sería descartado en esa migración. Se retoma únicamente si se descarta la migración a otra API de mapas.
+
+13. **Modelo social: mantener `listaamigos` como conexión explícita bidireccional (2026-04-18):**
+    - **Decisión:** Conservar `listaamigos` y `amigoscount` en el modelo `Usuario`. "Amigo" se define como una solicitud explícita aceptada por ambas partes, distinto del follow asimétrico.
+    - **Razón:** El concepto de "amigo" tendrá una funcionalidad propia: nivel de privacidad en actividades ("Solo amigos"). Una actividad podrá ser pública, solo para amigos, o privada por invitación. Si fuera seguimiento mutuo automático, cualquier usuario que te siga de vuelta accedería a tus actividades privadas sin control consciente. La solicitud explícita da al usuario control real sobre quién entra en ese círculo.
+    - **Flujo de aceptación:** mediante sistema de notificaciones in-app. El receptor ve la solicitud en su bandeja de notificaciones (icono en TopBar de perfil con badge naranja) y acepta/rechaza desde ahí. No hay pantalla de confirmación separada.
+    - **Pendiente:** Implementar el sistema de notificaciones (`notificaciones` en Firestore + `notificacionesSinLeer: Int` en `Usuario` + UI de bandeja) y el campo de privacidad en `Actividad` en una fase posterior.

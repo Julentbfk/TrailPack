@@ -16,4 +16,7 @@ data class Actividad(
     val participantes: Int = 1,
     val espublica: Boolean = true,
     val estado: String = "ABIERTA"
-)
+){
+    fun estaCaducada(): Boolean =
+        horasalida > 0L && horasalida < System.currentTimeMillis()
+}
