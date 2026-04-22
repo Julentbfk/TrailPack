@@ -22,7 +22,7 @@
 | **Pasos atómicos** | Cada tarea se divide en pasos numerados. No se entrega el Paso 2 hasta confirmar el Paso 1. |
 | **Pedagógico** | Explicar siempre el "porqué" antes del "qué". El objetivo es que el usuario entienda, no solo que funcione. |
 | **Logs automáticos** | Al cerrar cada tarea: actualizar `meta/TASKS.md` y expandir `meta/LOG_PROGRESO.md`. |
-| **Código real** | Leer siempre los archivos `.kt` actuales antes de proponer cambios. Los archivos en `meta/GODagentes/ARCHIVO/` son históricos. |
+| **Código real** | Leer siempre los archivos `.kt` actuales antes de proponer cambios.|
 
 ---
 
