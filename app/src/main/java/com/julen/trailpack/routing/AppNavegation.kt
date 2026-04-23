@@ -49,7 +49,6 @@ fun AppNavegation() {
     val mainViewModel: MainViewModel = viewModel()
 
     // --- OBSERVADOR GLOBAL DE NOTIFICACIONES ---
-    // Al estar aquí, funcionará para TODAS las pantallas de la app
     val context = LocalContext.current
     LaunchedEffect(mainViewModel.notificationMessage) {
         mainViewModel.notificationMessage?.let { mensaje ->
@@ -91,7 +90,7 @@ fun AppNavegation() {
            composable(route="completarperfil"){
                VistaCompletarPerfil(
                    guardarClick = {
-                       enrutador.navToScaffoldTrailPack()
+
                    }
                )
            }

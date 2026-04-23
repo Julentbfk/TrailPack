@@ -50,8 +50,6 @@ fun ScaffoldTrailPack(navController: NavHostController, mainviewModel: MainViewM
         }
     }
 
-    // El observador de notificaciones (Toast) se ha movido a AppNavegation para ser global y visible en todas las capas.
-
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {

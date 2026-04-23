@@ -3,7 +3,7 @@ package com.julen.trailpack.modelos
 
 data class Ruta(
     val idruta: String = "",
-    val idparquenatural: String = "", //Referenciara al Id del parque al que pertenece la ruta
+    val idparquenatural: String = "",
     val pais: String = "",
     val region: String ="",
     val nombre: String = "",
@@ -16,8 +16,8 @@ data class Ruta(
     val esOficial: Boolean = false,
     val creadorId: String = "",
     val nombreCreador: String = "",
-    val descripcion: String = "",// Solo se ve en el detalle
+    val descripcion: String = "",
     val fotosRuta: List<String> = emptyList(),
-    val coordenadas: List<Coordenada> = emptyList(),// Para el mapa del detalle
+    val coordenadas: List<Coordenada> = emptyList(),
     val fechacreacion: Long = System.currentTimeMillis()
 )

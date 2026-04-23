@@ -24,6 +24,7 @@ data class Usuario(
     //Info de mas
     val biografia: String = "",
     val fotoperfil: String ="",
+
     //Gamificacion
     val nivel: Int = 0,
 
