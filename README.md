@@ -117,4 +117,4 @@ Maps SDK     19.0.0
 
 ---
 
-*Julen Tabuyo Murillo · [julen.tabuyo@gmail.com](mailto:julen.tabuyo@gmail.com)*
+*Julen Tabuyo Murillo*
