@@ -20,30 +20,6 @@ class RegistroViewModel : ViewModel() {
 
     var registroExitoso by mutableStateOf(false)//check para el regoistro
     fun registroClick(){
-        //Checkeamos el usuario
-        val errorUsuario = ValidadorCampos.validarUsuario(registroFormstate.username)
-        if(errorUsuario.isNotEmpty()){
-            errorMessage = errorUsuario
-            return
-        }
-        //Checkeamos el email
-        val errorEmail = ValidadorCampos.validarEmail(registroFormstate.email)
-        if(errorEmail.isNotEmpty()){
-            errorMessage = errorEmail
-            return
-        }
-        //Checkeamos el passsword
-        val errorPassword = ValidadorCampos.validarPassword(registroFormstate.password)
-        if(errorPassword.isNotEmpty()){
-            errorMessage = ValidadorCampos.validarPassword(registroFormstate.password)
-            return
-        }
-        //Checkeamos que las passwords sean iguales
-        if(!ValidadorCampos.validarMatch(registroFormstate.password,registroFormstate.repassword) ){
-            errorMessage = "Las contraseñas no coinciden"
-            return
-        }
-
         isLoading = true
         //Registramos en Firebase si ha pasado todas las validaciones
         repository.authRegistroUsuario(registroFormstate.username,registroFormstate.email,registroFormstate.password){ success, error ->

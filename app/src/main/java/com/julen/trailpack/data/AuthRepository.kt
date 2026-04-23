@@ -64,7 +64,7 @@ class AuthRepository {
                 val user = auth.currentUser
 
                 //Chequeamos si ha verificado el correo
-                if(user != null && user.isEmailVerified){//Cuando en el registro enviamos el email, se crea un campo en firebase llamado isEmailVerified a false que cuando verificas cambia a true
+                if(user != null && user.isEmailVerified){
 
                     //Chequeamos si esta ya verificado de antes
                     firestoreDB.collection("usuarios").document(user.uid).get().addOnSuccessListener { docTask ->

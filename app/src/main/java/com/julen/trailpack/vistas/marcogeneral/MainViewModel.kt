@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter
 import com.julen.trailpack.data.UserRepository
 import com.julen.trailpack.modelos.Usuario
 
-// CLASE EN FABRICACION, SE OCUPARA DE GESTIONAR ESTADOS GLOBALES COMO AUTH O SESION DE USUARIO CONECTADO
-// POR EL MOMENTO SOLO GESTIONA LA NAVEGACION ENTRE PAGINAS Y REVISA SI EL USUARIO ESTA CONECTADO Y AUTENTIFICADO
+
 class MainViewModel : ViewModel(){
 
     //region UI GLOBAL

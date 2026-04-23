@@ -90,7 +90,7 @@ fun AppNavegation() {
            composable(route="completarperfil"){
                VistaCompletarPerfil(
                    guardarClick = {
-
+                        enrutador.navToScaffoldTrailPack()
                    }
                )
            }

@@ -16,7 +16,6 @@ class LoginViewModel : ViewModel() {
     var password by mutableStateOf("")
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
-    //var isSuccess by mutableStateOf(false)
 
     fun loginClick(navToPerfilUsuario: () -> Unit){
         isLoading = true
