@@ -1,15 +1,32 @@
+# --- Carpetas de compilación y caché ---
+.gradle/
+build/
+/*/build/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# --- Configuración del IDE (Android Studio / IntelliJ) ---
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.ipr
+*.iws
+/out/
+
+# --- Configuración local y seguridad (OBLIGATORIO) ---
 local.properties
+secrets.properties
+*.jks
+*.keystore
+
+# --- Archivos de servicios externos ---
+app/google-services.json
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Carpetas personales / Proyecto ---
+/meta/
+/scripts/
